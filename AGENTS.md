@@ -19,9 +19,9 @@ signatures, module paths, and feature flags.
 ## Fast Loop
 
 - Iterate with `cargo nextest run --locked --profile local -p <crate> [filter]`;
-  leave workspace-wide and facade `--all-features` runs to CI.
-- Before pushing, run `cargo xtask verify --affected --base origin/main`: the
-  checks CI's plan selects for the diff, but the Docker and macOS jobs.
+  leave workspace-wide runs to CI.
+- Before pushing, run `cargo clippy --workspace --all-targets -- -D warnings`
+  and `cargo nextest run --workspace`: the same commands CI runs.
 - Keep incremental compilation on.
 
 ## Efficient Investigation
@@ -44,9 +44,6 @@ signatures, module paths, and feature flags.
 - Core crate: `crates/rig-core`
 - Companion provider, vector-store, memory, and integration crates: `crates/rig-*`
 - Derive macros: `crates/rig-derive`
-- The rig coding agent: its launcher `crates/rig-cli` (the `rig` binary), its core `crates/rig-harness` (on `crates/rig-ecs` and `crates/rig-tools`), the settings and layout both share in `crates/rig-harness-protocol`, the markdown rendering and word wrapping its terminal view and print mode share in `crates/rig-markdown`, its plugin crates `plugins/rig-*`, their shared test support `test-support/rig-harness-test-support`, and `test-support/rig-defaults-test-support` (the default plugins for tests, and the test that each can be left out); all but the two test-support crates are published
-- The plugin corpus `corpus/*`: plugins written against the harness's public API that shaped and prove the kernel, one per module (`src/<plugin>.rs` with its tests in `src/<plugin>/tests.rs`) of a few `publish = false` packages named `corpus-<directory>` (`shared`, which the others build on; `base`; one per held-out series; `library`, programs with no Bevy), so their tests link nine binaries, not one per plugin. CI builds, lints and tests every one, so a kernel change that breaks one fails CI
-- Verification planner and source-tree checks: `xtask/`
 - Workspace example packages: `examples/*`; per-crate examples: `crates/<crate>/examples/`
 - Integration tests: one binary per package, `integration`, with one module per suite (`tests/integration/main.rs`, or `tests/integration.rs` in `rig-cassette`); rig-core also keeps `websocket_off_runtime`, which needs its own process
 - Record/replay home: `crates/rig-cassette` — the engine (`src/`), the provider cassette corpus (`fixtures/cassettes/<provider>/`), the effect-log golden corpus (`fixtures/effects/`), every cassette-backed provider suite (`tests/providers/<provider>/`, with the shared drivers in `tests/common/`), the cache-prefix guard, and the effect-bus verification suite `verify`. Corpora and `tests/` are excluded from the published package.
@@ -120,8 +117,7 @@ errors, and use the WASM-compatible bounds.
 - Follow local naming, module layout, and test patterns.
 - Test modules are sibling files, never inline blocks: write
   `#[cfg(test)] mod tests;` and put the body in `foo/tests.rs` (for `foo.rs`)
-  or `tests.rs` beside `mod.rs`/`lib.rs`. `cargo xtask check-test-layout`
-  enforces this in CI.
+  or `tests.rs` beside `mod.rs`/`lib.rs`.
 - Avoid unrelated refactors.
 - Prefer the cleanest implementation.
 - Break things if the result is better.
@@ -135,7 +131,7 @@ to make verification pass.
 
 ## Verification
 
-Follow [DEVELOPING.md](DEVELOPING.md) for check selection, independent review,
+Follow [DEVELOPING.md](DEVELOPING.md) for the check list, independent review,
 and authorized publication. Run the smallest useful local check; docs-only
 edits get diff and link review, not Rust builds. Keep progress reports outside
 the repository and never claim merge readiness with required checks pending.

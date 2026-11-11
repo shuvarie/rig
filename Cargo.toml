@@ -40,9 +40,8 @@ autoexamples = false
 # not `license-file`, so cargo does not add the file on its own.
 #
 # Packaging emits a `warning: ignoring test 'x'` line per test target. Do NOT
-# silence those with `autotests = false`: that stops local discovery too and
-# recreates the "tests run in no CI job" hole in the `default-members` comment
-# below (#2258). `cargo xtask check-packaging` gates the result.
+# silence those with `autotests = false`: that stops local discovery too, and a
+# test target discovered nowhere runs in no CI job.
 include = [
     "/src/**",
     "/README.md",
@@ -59,7 +58,7 @@ include = [
 
 # docs.rs builds with a current nightly, on which `surrealdb`'s `diskann`
 # dependency does not compile, so every feature but `surrealdb` is documented.
-# `cargo xtask check-packaging` requires the list to cover every other feature.
+# Keep the list covering every other feature in the manifest.
 [package.metadata.docs.rs]
 features = [
     "agent",
@@ -108,18 +107,11 @@ rustdoc-args = ["--cfg", "docsrs"]
 resolver = "3"
 members = [
     "crates/*",
-    # The rig agent's plugin crates, built on rig-harness's public API.
-    "plugins/*",
-    # The plugin corpus: plugins written to shape and prove the kernel.
-    "corpus/*",
     "crates/rig-cassette/tests/minimal",
     "examples/*",
-    "xtask",
     "test-support/service-tests",
     "test-support/rig-test-support",
     "test-support/rig-history-conformance",
-    "test-support/rig-harness-test-support",
-    "test-support/rig-defaults-test-support",
 ]
 # The root manifest is itself the `rig` facade package, so without an
 # explicit `default-members` a bare `cargo nextest run` resolved to the
@@ -130,13 +122,9 @@ members = [
 # opt-in.
 # rig-derive is deliberately absent: a proc-macro crate's test binary links
 # libstd dynamically, which breaks under toolchains installed without the
-# dylib component. Absent from the default set is not absent from CI — its
-# own suite (trybuild cases and the dependency-rename fixtures) runs in the
-# `stable / test rig-derive` job, which names `-p rig-derive` explicitly, and
-# the macro-hygiene consumer runs in the `test guards` job's
-# `macro-hygiene` check (the `macro_hygiene` suite of rig-core's tests). Both are required for
-# this exclusion to stay honest: until the first existed, every test in
-# rig-derive ran nowhere.
+# dylib component. Absent from the default set is not absent from CI: the
+# `test` lane runs `cargo nextest run --workspace`, which names it, and the
+# `macro_hygiene` suite of rig-core's tests consumes the expanded macros.
 # The nested cassette runner is selected separately by bus-verification:
 # default-member feature unification defeats its minimal JSON graph.
 default-members = [
@@ -240,7 +228,6 @@ arrow-json = "58.2"
 assert_fs = "1"
 # 2.3: `force_send`, which Bevy Remote answers an in-process request with
 # (`BrpMessage::sender`).
-async-channel = "2.3"
 async-stream = "0.3"
 axum = "0.8"
 aws-config = { version = "1", default-features = false }
@@ -251,36 +238,15 @@ aws-smithy-http-client = { version = "1", default-features = false }
 aws-smithy-runtime-api = "1"
 aws-smithy-types = "1"
 base64 = "0.23.1"
-# Bevy is pinned exactly: a Bevy plugin only links against the one Bevy
-# version of its app, and rig-harness is the app. `bevy_tasks` is also the
-# runtime-agnostic executor of the `agent_no_tokio` example. crates.io, never
-# git; the tooling check verifies Bevy sources, and that these requirements
-# are `rig_harness_protocol::BEVY_VERSION`, the version the launcher enforces.
-# `bevy` itself only for `MinimalPlugins` (in `bevy_internal`, no feature
-# needed); default features off keeps render, window and audio out.
-# `bevy_remote` without `http`, `bevy_asset` or `bevy_render`: in-process
-# BRP only, never a server. `reflect_documentation` puts doc comments in
-# the type registry.
-bevy = { version = "=0.20.1", default-features = false }
-bevy_app = { version = "=0.20.1", default-features = false, features = ["std", "bevy_reflect", "reflect_auto_register"] }
-bevy_ecs = { version = "=0.20.1", default-features = false, features = ["std", "multi_threaded", "bevy_reflect", "reflect_auto_register"] }
-bevy_log = "=0.20.1"
-bevy_reflect = { version = "=0.20.1", default-features = false, features = ["std", "auto_register_inventory", "reflect_documentation"] }
-bevy_remote = { version = "=0.20.1", default-features = false }
-bevy_tasks = { version = "=0.20.1", default-features = false, features = ["multi_threaded"] }
-bevy_time = { version = "=0.20.1", default-features = false, features = ["std", "bevy_reflect"] }
 bytes = "1"
 candle-core = "0.11"
 candle-nn = "0.11"
 candle-transformers = "0.11"
 chrono = "0.4"
 convert_case = "0.11"
-crossbeam-channel = "0.5.15"
-crossterm = "0.29"
 # Benchmarks (`benches/`, compiled in CI, never run there). 0.1.15: timings
 # net of the allocation counter (`AllocProfiler`).
 divan = "0.1.15"
-ctrlc = "3.4.4"
 dotenvy = "0.15"
 epub = "2"
 # 4.5: the `hf-hub-*` feature split rig-fastembed forwards.
@@ -301,12 +267,10 @@ http-body = "1"
 httpdate = "1"
 # 0.8.2: `Recording::export_async` (cassette harness).
 httpmock = "0.8.2"
-ignore = "0.4.25"
 # Decodes the JPEG frames of rig-candle's pose test and example.
 image = { version = "0.25.10", default-features = false }
 indexmap = "2"
 lancedb = { version = "0.30", default-features = false }
-libc = "0.2.186"
 log = "0.4"
 lopdf = { version = "0.44", default-features = false, features = ["rayon"] }
 memchr = "2"
@@ -315,8 +279,6 @@ mime_guess = "2"
 # 3.4.1: `Client::append_metadata`, which rig-mongodb tags its handshake with.
 mongodb = "3.4.1"
 neo4rs = "0.8"
-# rig-tools' `Local::watch`: file events instead of polling.
-notify = "8"
 opentelemetry = "0.32"
 opentelemetry-otlp = "0.32"
 opentelemetry_sdk = "0.32"
@@ -324,17 +286,13 @@ ordered-float = "5"
 # 0.4.2: the first release whose `sqlx` feature accepts sqlx 0.9.
 pgvector = "0.4.2"
 proc-macro2 = "1"
-pulldown-cmark = { version = "0.13", default-features = false }
 # 1.10: the `Qdrant` client, `Payload`, and the query/upsert builders.
 qdrant-client = { version = "1.10", default-features = false, features = [
     "serde",
 ] }
 quick-xml = "0.41"
 quote = "1"
-ratatui = "0.30.2"
-ratatui-core = { version = "0.1.2", features = ["std"] }
 redis = "1"
-regex = "1.12.3"
 reqwest = { version = "0.13", default-features = false }
 reqwest-middleware = { version = "0.5", default-features = false }
 reqwest-retry = "0.9"
@@ -349,16 +307,10 @@ serde_yaml = "0.9"
 serde_json = "1.0.54"
 safetensors = "0.8"
 sha2 = "0.11.1"
-signal-hook = "0.4.6"
-similar = "3.2.1"
-syntect = { version = "5.3", default-features = false, features = ["parsing", "regex-fancy"] }
-terminal-colorsaurus = "1.0"
-two-face = { version = "0.5", default-features = false, features = ["syntect-fancy"] }
 serde_path_to_error = "0.1"
 sqlite-vec = "0.1"
 sqlx = "0.9"
 # 0.8.3: `Engine::new_sandboxed` and the thread state controller rig-steel uses.
-steel-core = "0.8.3"
 # At least 3.2.5: earlier releases no longer build against the newest
 # `surrealdb-core` their requirement accepts.
 surrealdb = "3.3.5"
@@ -371,11 +323,8 @@ tokio = "1"
 tokio-rusqlite = { version = "0.6", default-features = false }
 tokio-test = "0.4"
 tokio-tungstenite = { version = "0.29", default-features = false }
-toml = "1"
-toml_edit = "0.25"
 tokenizers = { version = "0.22", default-features = false }
 tonic = "0.14"
-tonic-build = "0.14"
 tonic-prost = "0.14"
 tonic-prost-build = "0.14"
 prost = "0.14"
@@ -386,8 +335,6 @@ tracing = "0.1"
 tracing-futures = "0.2.5"
 tracing-opentelemetry = "0.33"
 tracing-subscriber = "0.3"
-unicode-segmentation = "1.13"
-unicode-width = "0.2"
 uuid = "1"
 wasm-bindgen-futures = "0.4"
 wasm-bindgen = "0.2"

@@ -4,61 +4,41 @@
 //! into this binary are linked through
 //! [`SUITE_WIRES`](super::history_conformance::SUITE_WIRES); the ones that
 //! live in a companion crate's own test binary are listed in
-//! [`OUT_OF_BINARY_WIRES`], each with the file that expands it and the CI
-//! check that runs it.
+//! [`OUT_OF_BINARY_WIRES`] with the file that expands them.
 
 use std::collections::BTreeSet;
 use std::path::Path;
 
 use rig_history_conformance::{HISTORY_WIRES, TESTS};
 
-use super::{history_conformance, verification_checks};
+use super::history_conformance;
 
 /// A wire whose suite compiles into a companion crate's test binary.
 struct OutOfBinaryWire {
     wire: &'static str,
     suite_file: &'static str,
-    ci_check: &'static str,
-    package: &'static str,
-    /// The nextest predicate inside that check which selects the suite.
-    selector: &'static str,
 }
 
 const OUT_OF_BINARY_WIRES: &[OutOfBinaryWire] = &[
     OutOfBinaryWire {
         wire: "candle",
         suite_file: "crates/rig-candle/tests/integration/history_conformance.rs",
-        ci_check: "conformance",
-        package: "rig-candle",
-        selector: "test(/^history_conformance::/)",
     },
     OutOfBinaryWire {
         wire: "gemini_grpc",
         suite_file: "crates/rig-gemini-grpc/tests/integration/history_conformance.rs",
-        ci_check: "conformance",
-        package: "rig-gemini-grpc",
-        selector: "test(/^history_conformance::/)",
     },
     OutOfBinaryWire {
         wire: "vertexai",
         suite_file: "crates/rig-vertexai/tests/integration/history_conformance.rs",
-        ci_check: "conformance",
-        package: "rig-vertexai",
-        selector: "test(/^history_conformance::/)",
     },
     OutOfBinaryWire {
         wire: "bedrock_claude",
         suite_file: "crates/rig-bedrock/tests/history_conformance.rs",
-        ci_check: "conformance",
-        package: "rig-bedrock",
-        selector: "binary(history_conformance)",
     },
     OutOfBinaryWire {
         wire: "bedrock_nova",
         suite_file: "crates/rig-bedrock/tests/history_conformance.rs",
-        ci_check: "conformance",
-        package: "rig-bedrock",
-        selector: "binary(history_conformance)",
     },
 ];
 
@@ -91,37 +71,6 @@ fn every_completion_wire_has_a_history_suite() {
         unknown.is_empty(),
         "suites name wires missing from HISTORY_WIRES: {unknown:?}"
     );
-}
-
-/// Each out-of-binary suite runs in a check that compiles its package and
-/// selects its suite.
-#[test]
-fn out_of_binary_history_suites_name_a_live_check() {
-    let checks = verification_checks::all();
-    for entry in OUT_OF_BINARY_WIRES {
-        assert!(
-            !history_conformance::SUITE_WIRES.contains(&entry.wire),
-            "{} is linked here; drop it from OUT_OF_BINARY_WIRES",
-            entry.wire
-        );
-        let check = checks
-            .iter()
-            .find(|check| check.id == entry.ci_check)
-            .unwrap_or_else(|| panic!("{} names the missing check {}", entry.wire, entry.ci_check));
-        let run = check
-            .steps
-            .iter()
-            .map(|step| format!("{} {}", step.program, step.args.join(" ")))
-            .collect::<Vec<_>>()
-            .join("\n");
-        assert!(
-            run.contains(&format!("-p {}", entry.package)) && run.contains(entry.selector),
-            "{}'s check compiles `-p {}` and selects {}",
-            entry.wire,
-            entry.package,
-            entry.selector
-        );
-    }
 }
 
 /// Provider modules with no completion wire of their own, so no suite.

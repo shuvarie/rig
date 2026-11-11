@@ -2,11 +2,12 @@ nextest-version = { required = "0.9.130" }
 
 # A test that runs past a minute is reported as slow, and killed after three:
 # a hang fails in minutes and names itself, not when the CI job times out.
-# The suites that start a nested Cargo build (ignored tests the compile
-# guards run), trybuild or Docker containers get longer.
 [profile.default]
 slow-timeout = { period = "60s", terminate-after = 3 }
 
+# The suites that start a nested Cargo build (the compile guards run their
+# ignored tests explicitly) or trybuild cases, and the Docker-backed storage
+# suites, get longer.
 [[profile.default.overrides]]
 filter = '''
     package(rig-service-tests)
@@ -15,18 +16,9 @@ filter = '''
 '''
 slow-timeout = { period = "120s", terminate-after = 10 }
 
-# Preserve CI retries for ordinary tests while running drift tripwires once.
-# Do not pass --retries to the guards run: it overrides per-test settings.
-[profile.guards]
-retries = 2
-
-[[profile.guards.overrides]]
-filter = 'test(telemetry::) + test(span_safety_net::)'
-retries = 0
-
-# The inner loop: skips the service suites (`rig-service-tests`, mostly
-# Docker-backed) and the trybuild cases. The nested-Cargo guards are ignored
-# tests, so no run reaches them but `--run-ignored`.
+# The inner loop: skips the service suites and the trybuild cases. The
+# nested-Cargo guards are ignored tests, so no run reaches them but
+# `--run-ignored`.
 [profile.local]
 retries = 0
 fail-fast = true

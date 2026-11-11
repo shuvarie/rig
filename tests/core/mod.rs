@@ -38,9 +38,6 @@ mod streaming_conformance;
 mod streaming_conformance_registry;
 mod streaming_conformance_suites;
 mod user_agent;
-#[allow(dead_code)]
-#[path = "../../xtask/src/verify/checks.rs"]
-mod verification_checks;
 
 mod pull_parser;
 

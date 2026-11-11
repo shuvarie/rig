@@ -1,44 +1,22 @@
-# The gate. A plan job asks `cargo xtask verify --plan` which checks the
-# change selects: on a PR, the tests of every package that can observe the
-# diff (each with only the features that observe it) and every check whose
-# build compiles a changed package; on the merge queue, the nightly schedule,
-# manual dispatch and cd.yaml's push to main, every check in full. Each job
-# below runs the checks of its group (`cargo xtask verify --job ID`, defined
-# in xtask/src/verify/checks.rs) that the plan selected, and is skipped when
-# it selected none. `stable / required` is the one context to require: it
-# fails unless every planned job succeeded and every other job was skipped.
-# Each job restores its warm entry and saves only on a trusted push (cd.yaml
-# on main), so fork PRs never write shared caches.
-name: Lint & Test
+# Direct checks. The upstream workflow asked `cargo xtask verify` which checks
+# to select from a diff; this fork's surface is a library plus its examples, so
+# every lane below is one Cargo command and none needs a planner.
+#
+# The Docker-backed vector-store suites (`test-support/service-tests`) and the
+# cassette engine have their own lanes while they are still in the tree.
+name: CI
 
 on:
   pull_request:
     branches: ["**"]
   merge_group:
-  schedule:
-    - cron: "0 6 * * *"
-  # With `base`, a dispatch runs the plan a PR from this branch into `base`
-  # would get; without it, every check. With `cold`, no job restores a cache.
   workflow_dispatch:
-    inputs:
-      base:
-        description: Plan against this branch, as a PR into it would be
-        required: false
-        default: ""
-      cold:
-        description: Restore no cache (measures a cold run)
-        type: boolean
-        default: false
-  workflow_call:
 
 permissions:
   contents: read
 
 env:
   CARGO_TERM_COLOR: always
-  # rust-cache keys hash every CARGO_* variable, so a per-run value here
-  # matches no saved entry.
-  CARGO_CACHE_SALT: ${{ inputs.cold && github.run_id || '' }}
 
 # One run per PR: a newer push cancels the in-flight run. Keyed on the PR
 # number, not head_ref, so two forks with the same branch name do not cancel
@@ -48,238 +26,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # `schedule` fires on forks too; the repository guard keeps a fork from
-  # running a suite it did not ask for. The output `jobs` lists the jobs
-  # below that must succeed; `plan` holds each selected check's scope.
-  plan:
-    name: stable / plan
-    runs-on: ubuntu-latest
-    if: github.event_name != 'schedule' || github.repository == '0xPlaygrounds/rig'
-    outputs:
-      plan: ${{ steps.plan.outputs.plan }}
-      jobs: ${{ steps.plan.outputs.jobs }}
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: ${{ (github.event_name == 'pull_request' || inputs.base != '') && '0' || '1' }}
-      - uses: ./.github/actions/rust-setup
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      # `shell: bash` gives pipefail: a planner failure fails this job, and
-      # `stable / required` then fails too.
-      - id: plan
-        shell: bash
-        env:
-          BASE_REF: ${{ github.base_ref || inputs.base }}
-        run: |
-          if [ -n "$BASE_REF" ]; then
-            git fetch --no-tags origin "$BASE_REF"
-            cargo xtask verify --plan --base "origin/$BASE_REF" | tee "$RUNNER_TEMP/plan.txt"
-          else
-            cargo xtask verify --plan --full | tee "$RUNNER_TEMP/plan.txt"
-          fi
-          grep -E '^(plan|jobs)=' "$RUNNER_TEMP/plan.txt" >> "$GITHUB_OUTPUT"
-
-  # CHANGELOG.md, crates/*/CHANGELOG.md, MIGRATING.md and docs/migrations/ are
-  # written on the release PR only; the script exempts release PRs (a
-  # `release-plz-*` head or the `release` label).
-  release-docs:
-    name: stable / release docs untouched
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'release-docs')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-      - env:
-          BASE: ${{ github.base_ref || inputs.base }}
-          BASE_REF: origin/${{ github.base_ref || inputs.base }}
-          HEAD_REF: ${{ github.head_ref }}
-          LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
-        run: |
-          git fetch --no-tags origin "$BASE"
-          bash .github/scripts/check-frozen-release-docs.sh
-
-  # Formatting, source guards, xtask's own tests, the cassette acceptance
-  # index and the reply bank. Compiles only xtask, and rig-core for xtask's
-  # tests.
-  guards:
-    name: stable / guards
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'guards')
+  fmt:
+    name: fmt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/rust-setup
         with:
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job guards
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # The runtime suite under all features: in full, every workspace package
-  # but the Docker suites and the two packages with their own checks. No
-  # provider keys anywhere in CI: cassettes replay with a dummy key and live
-  # tests are `#[ignore]`.
-  test:
-    name: stable / test
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'test')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          nextest: "true"
-          protoc: "true"
-          # The repository-repair tests format proposed patches.
           components: rustfmt
-          alsa: "true"
-      # The all-features dependency graph, saved by this job on push to
-      # main and shared with the doctests.
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          shared-key: all-features
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job test
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # The Docker-backed storage suites (`test-support/service-tests`), each
-  # store behind its own feature: their dependency graph (lancedb, mongodb,
-  # neo4rs, sqlx, testcontainers) stays off the main suite's critical path.
-  services:
-    name: stable / services
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'services')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          nextest: "true"
-          protoc: "true"
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job services
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # Cross-crate contract tripwires, each in its own feature graph: rig-core
-  # and its transports under all features with zero retries for the
-  # telemetry contracts, the bus verification runner, the streaming
-  # conformance binaries, and rig-derive's trybuild and proc-macro tests.
-  test-guards:
-    name: stable / test guards
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'test-guards')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          nextest: "true"
-          protoc: "true"
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job test-guards
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # The agent golden producers and the golden-pairing guard, in the two
-  # dependency graphs they must hold in.
-  effect-corpus:
-    name: stable / effect corpus
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'effect-corpus')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          nextest: "true"
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job effect-corpus
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # Builds that start a nested Cargo: facade feature forwarding, the
-  # middleware TLS selectors, the runtime-free agent stepper, the telemetry
-  # macro's hygiene and derive's dependency renames. Each guard keeps its own
-  # target directory under `target/`.
-  compile-guards:
-    name: stable / compile guards
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'compile-guards')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          nextest: "true"
-          protoc: "true"
-          alsa: "true"
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job compile-guards
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # nextest does not run doctests. All features of each selected package, so
-  # feature-gated examples compile.
-  doctest:
-    name: stable / doctest
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'doctest')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          protoc: "true"
-          alsa: "true"
-      # The all-features entry `stable / test` saves.
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          shared-key: all-features
-          save-if: "false"
-      - run: cargo xtask verify --job doctest
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  doc:
-    name: stable / doc
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'doc')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          components: rust-docs
-          protoc: "true"
-          alsa: "true"
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job doc
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
+      - run: cargo fmt --all --check
 
   clippy:
-    name: stable / clippy
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'clippy')
+    name: clippy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -287,166 +45,98 @@ jobs:
         with:
           components: clippy
           protoc: "true"
-          alsa: "true"
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
         with:
           save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job clippy
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
+      - run: cargo clippy --workspace --all-targets -- -D warnings
 
-  # `cargo check` of the root test targets with default features only, and
-  # the divan benches, which run nowhere in CI.
-  check-default:
-    name: stable / check default features
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'check-default')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job check-default
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # Each package checked on its own for the browser target (cargo unifies
-  # features across packages built together, which hides a manifest that
-  # forgot a feature), plus the crates that must fail on wasm with exactly
-  # one diagnostic. Every selected check runs even after one fails.
-  wasm:
-    name: stable / check wasm targets
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'wasm')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          target: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job wasm
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
-
-  # The kernel on its own: rig-ecs native and for the browser, and its
-  # kernel-only turn test. Builds no rig-harness.
-  kernel-only:
-    name: stable / kernel-only rig-ecs
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'kernel-only')
+  test:
+    name: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/rust-setup
         with:
           nextest: "true"
-          target: wasm32-unknown-unknown
+          protoc: "true"
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
         with:
           save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job kernel-only
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
+      - run: cargo nextest run --workspace -E 'not package(rig-service-tests)'
 
-  # Declared requirements are floors, not pins; the workspace must build at
-  # the lowest versions it declares (#2195). Selected when a manifest changes;
-  # a source-only change that starts using a newer API is caught on the merge
-  # queue, the schedule or the release gate instead of on its own PR.
-  floors:
-    name: stable / dependency floors
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'floors')
+  # The cassette engine and the facade's cassette-backed provider suites, which
+  # default features leave out.
+  cassette:
+    name: cassette
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/rust-setup
+        with:
+          nextest: "true"
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
+      - run: cargo nextest run -p rig-cassette
+      - run: cargo nextest run -p rig --features cassette --test integration
+
+  # The Docker-backed storage suites, each store behind its own feature.
+  services:
+    name: services
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/rust-setup
+        with:
+          nextest: "true"
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
+      - run: cargo nextest run -p rig-service-tests --features lancedb,mongodb,neo4j,qdrant,sqlite
+
+  doctest:
+    name: doctest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/rust-setup
         with:
           protoc: "true"
-          alsa: "true"
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
         with:
           save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job floors
-        env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
+      - run: cargo test --workspace --doc
 
-  # Native macOS coverage for the subscription plugin, and for the agent's
-  # signal and process handling.
-  macos:
-    name: stable / rig-claude-cloak macOS
-    needs: plan
-    if: contains(fromJSON(needs.plan.outputs.jobs), 'macos')
-    runs-on: macos-latest
+  doc:
+    name: doc
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/rust-setup
         with:
-          nextest: "true"
+          components: rust-docs
+          protoc: "true"
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
         with:
           save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo xtask verify --job macos
+      - run: cargo doc --workspace --no-deps
         env:
-          RIG_CI_PLAN: ${{ needs.plan.outputs.plan }}
+          RUSTDOCFLAGS: -D warnings
 
-  # The one context branch protection and the merge queue require. A planned
-  # job must succeed; a job the plan left out must be skipped; a failed,
-  # cancelled or missing job, or a failed plan, fails this one.
-  required:
-    name: stable / required
-    if: always() && (github.event_name != 'schedule' || github.repository == '0xPlaygrounds/rig')
-    needs:
-      - plan
-      - release-docs
-      - guards
-      - test
-      - services
-      - test-guards
-      - effect-corpus
-      - compile-guards
-      - doctest
-      - doc
-      - clippy
-      - check-default
-      - wasm
-      - kernel-only
-      - floors
-      - macos
+  # Each package checked on its own for the browser target: cargo unifies
+  # features across packages built together, which hides a manifest that forgot
+  # a feature.
+  wasm:
+    name: wasm
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        env:
-          NEEDS: ${{ toJSON(needs) }}
-          EXPECTED: ${{ needs.plan.outputs.jobs }}
-        run: |
-          plan=$(jq -r '.plan.result' <<<"$NEEDS")
-          if [ "$plan" != success ]; then
-            echo "::error::the plan job ended: $plan"
-            exit 1
-          fi
-          fail=0
-          for job in $(jq -r 'keys[] | select(. != "plan")' <<<"$NEEDS"); do
-            got=$(jq -r --arg j "$job" '.[$j].result' <<<"$NEEDS")
-            if jq -e --arg j "$job" 'any(.[]; . == $j)' <<<"$EXPECTED" >/dev/null; then
-              want=success
-            else
-              want=skipped
-            fi
-            printf '%-15s planned: %-8s result: %s\n' "$job" "$([ $want = success ] && echo yes || echo no)" "$got"
-            if [ "$got" != "$want" ]; then
-              echo "::error::$job: expected $want, got $got"
-              fail=1
-            fi
-          done
-          for job in $(jq -r '.[]' <<<"$EXPECTED"); do
-            if ! jq -e --arg j "$job" 'has($j)' <<<"$NEEDS" >/dev/null; then
-              echo "::error::the plan expects job $job, which this workflow does not define"
-              fail=1
-            fi
-          done
-          exit "$fail"
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/rust-setup
+        with:
+          target: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+        with:
+          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
+      - run: cargo check -p rig-core --target wasm32-unknown-unknown
+      - run: cargo check -p rig-agent --target wasm32-unknown-unknown
+      - run: cargo check -p rig --target wasm32-unknown-unknown
