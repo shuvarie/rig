@@ -49,7 +49,6 @@ signatures, module paths, and feature flags.
 - Record/replay home: `crates/rig-cassette` — the engine (`src/`), the provider cassette corpus (`fixtures/cassettes/<provider>/`), the effect-log golden corpus (`fixtures/effects/`), every cassette-backed provider suite (`tests/providers/<provider>/`, with the shared drivers in `tests/common/`), the cache-prefix guard, and the effect-bus verification suite `verify`. Corpora and `tests/` are excluded from the published package.
 - Live-only provider test modules stay in the facade: `tests/providers/<provider>/`, declared in `tests/integration/main.rs`
 - External-service integration tests: `tests/integrations/`
-- Unpublished vector-store test runner: `test-support/service-tests`
 
 Check the root manifest and facade source before documenting or changing
 exposed features, integrations, or module paths. When adding or exposing a

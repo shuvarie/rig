@@ -49,7 +49,7 @@ This will be reviewed on a case by case basis, but generally unjustifiable break
 
 ## Project Structure
 
-Rig is a monorepo: the root `rig` facade, `crates/rig-core`, and companion `crates/rig-*` crates (see `AGENTS.md` for the full layout). `rig-core` avoids adding many dependencies and only contains simple provider integrations on top of the base abstractions; side crates add first-party behavior with heavier dependencies (for example, `rig-mongodb` depends on `mongodb`).
+Rig is a monorepo: the root `rig` facade, `crates/rig-core`, and companion `crates/rig-*` crates (see `AGENTS.md` for the full layout). `rig-core` avoids adding many dependencies and only contains simple provider integrations on top of the base abstractions; side crates add first-party behavior with heavier dependencies (for example, `rig-bedrock` depends on the AWS SDK).
 
 If you are unsure whether a side-crate should live in the main repo, spin up a personal repo containing your crate and create an issue making the case for integrating and maintaining it here.
 

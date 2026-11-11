@@ -8,7 +8,7 @@ usually to whatever their lockfile already holds, so rig must actually compile
 against the *lowest* version it declares — otherwise the floor is a lie that
 surfaces as a build break in someone else's tree (#2195). Cargo has no stable
 switch for this: `-Zdirect-minimal-versions` is nightly-only and dead-ends in
-this workspace's transitive graph (lancedb/datafusion), so this script does the
+this workspace's transitive graph (heavy optional providers), so this script does the
 one thing the flag would do that matters here — for each direct dependency,
 `cargo update --precise` the lockfile entry to the lowest version that
 satisfies the declared requirement — and then runs `cargo check`.

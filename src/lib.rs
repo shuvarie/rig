@@ -227,17 +227,5 @@ companion_modules! {
         "fastembed-ort-download-binaries",
     ];
     gemini_grpc = rig_gemini_grpc ["gemini-grpc"];
-    helixdb = rig_helixdb ["helixdb"];
-    lancedb = rig_lancedb ["lancedb"];
-    milvus = rig_milvus ["milvus"];
-    mongodb = rig_mongodb ["mongodb"];
-    neo4j = rig_neo4j ["neo4j"];
-    postgres = rig_postgres ["postgres"];
-    qdrant = rig_qdrant ["qdrant"];
-    s3vectors = rig_s3vectors ["s3vectors"];
-    scylladb = rig_scylladb ["scylladb"];
-    sqlite = rig_sqlite ["sqlite"];
-    surrealdb = rig_surrealdb ["surrealdb"];
-    vectorize = rig_vectorize ["vectorize"];
     vertexai = rig_vertexai ["vertexai"];
 }

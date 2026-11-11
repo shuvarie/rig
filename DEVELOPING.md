@@ -26,14 +26,14 @@ subset worth running before a push is:
 ```sh
 cargo fmt --all --check
 cargo clippy --workspace --all-targets -- -D warnings
-cargo nextest run --workspace -E 'not package(rig-service-tests)'
+cargo nextest run --workspace
 ```
 
 The remaining lanes are `cargo test --workspace --doc`, `cargo doc --workspace
 --no-deps` with `RUSTDOCFLAGS=-D warnings`, the cassette lanes (`cargo nextest run
--p rig-cassette`, and `-p rig --features cassette --test integration`), the
-Docker-backed storage suites, and per-package `cargo check --target
-wasm32-unknown-unknown` for `rig-core`, `rig-agent` and `rig`.
+-p rig-cassette`, and `-p rig --features cassette --test integration`), and
+per-package `cargo check --target wasm32-unknown-unknown` for `rig-core`,
+`rig-agent` and `rig`.
 
 ## Choosing a focused check
 

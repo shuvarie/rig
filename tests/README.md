@@ -27,7 +27,7 @@ Provider suites have two owners:
 - The facade's `core` suite (`tests/core/`) contains provider-agnostic core
   behavior tests and the guards that scan the source tree, which need the
   repository root.
-- `test-support/service-tests/integrations.rs` runs the vector-store suites from `tests/integrations/` as the unpublished `rig-service-tests` package. The facade's `integrations` suite (`tests/integration/integrations.rs`) retains the root Bedrock integrations.
+- The facade's `integrations` suite (`tests/integration/integrations.rs`) holds the root Bedrock integrations. Vector stores are contracts in `rig-core`; their backends are not part of this tree.
 
 Cassette suites require a checkout of this repository: `rig-cassette` excludes
 its fixtures and integration tests from the published package. The unpublished
@@ -780,20 +780,11 @@ must not weaken the universal assertions or silently mark the scenario passed.
 ## Integration Tests
 
 External-service integration tests are collected under the `integrations` target and are gated by
-feature flags. Some start Docker containers through `testcontainers`, so Docker must be running:
-without it they fail. Others are ignored because they need external credentials or
-pre-provisioned services. Check each integration module for required environment variables
-(Vectorize requires `VECTORIZE_INDEX_NAME`; Bedrock needs AWS credentials plus access to the
-configured Bedrock models).
+feature flags. They are ignored because they need external credentials or pre-provisioned
+services. Check each integration module for required environment variables (Bedrock needs AWS
+credentials plus access to the configured Bedrock models).
 
 ```bash
-# all enabled non-ignored integration tests
-cargo test -p rig-service-tests --all-features --test integrations
-# one feature-gated group
-cargo test -p rig-service-tests --features qdrant --test integrations qdrant -- --nocapture
-cargo test -p rig-service-tests --features mongodb --test integrations mongodb -- --nocapture
-cargo test -p rig-service-tests --features sqlite --test integrations sqlite -- --nocapture
-cargo test -p rig-service-tests --features vectorize --test integrations vectorize -- --nocapture --test-threads=1
 # ignored groups
 cargo test -p rig --features bedrock --test integration integrations::bedrock -- --ignored --nocapture --test-threads=1
 ```

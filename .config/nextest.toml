@@ -6,20 +6,17 @@ nextest-version = { required = "0.9.130" }
 slow-timeout = { period = "60s", terminate-after = 3 }
 
 # The suites that start a nested Cargo build (the compile guards run their
-# ignored tests explicitly) or trybuild cases, and the Docker-backed storage
-# suites, get longer.
+# ignored tests explicitly) or trybuild cases get longer.
 [[profile.default.overrides]]
 filter = '''
-    package(rig-service-tests)
-    | (binary_id(rig-derive::integration) & test(/^ui::/))
+    (binary_id(rig-derive::integration) & test(/^ui::/))
     | (kind(test) & test(/(^|::)(middleware_features|agent_run_stepper|macro_hygiene|dependency_rename)::/))
 '''
 slow-timeout = { period = "120s", terminate-after = 10 }
 
-# The inner loop: skips the service suites and the trybuild cases. The
-# nested-Cargo guards are ignored tests, so no run reaches them but
-# `--run-ignored`.
+# The inner loop: skips the trybuild cases. The nested-Cargo guards are ignored
+# tests, so no run reaches them but `--run-ignored`.
 [profile.local]
 retries = 0
 fail-fast = true
-default-filter = 'not (package(rig-service-tests) | (binary_id(rig-derive::integration) & test(=ui::ui_cases)))'
+default-filter = 'not (binary_id(rig-derive::integration) & test(=ui::ui_cases))'

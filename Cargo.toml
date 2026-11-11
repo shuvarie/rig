@@ -109,7 +109,6 @@ members = [
     "crates/*",
     "crates/rig-cassette/tests/minimal",
     "examples/*",
-    "test-support/service-tests",
     "test-support/rig-test-support",
     "test-support/rig-history-conformance",
 ]
@@ -118,8 +117,7 @@ members = [
 # facade alone and every `crates/*` unit test ran only where a CI step named
 # its package (#2258: ~1,200 rig-core lib unit tests executed in no step).
 # The default set is the facade plus the crates whose unit tests must always
-# run; the service-backed vector-store integrations and examples stay
-# opt-in.
+# run; the examples stay opt-in.
 # rig-derive is deliberately absent: a proc-macro crate's test binary links
 # libstd dynamically, which breaks under toolchains installed without the
 # dylib component. Absent from the default set is not absent from CI: the
@@ -139,7 +137,6 @@ default-members = [
     "crates/rig-bedrock",
     "crates/rig-candle",
     "crates/rig-gemini-grpc",
-    "test-support/service-tests",
     "test-support/rig-test-support",
     "test-support/rig-history-conformance",
     # The design record's Frozen API programs: clippy and the full test
@@ -222,12 +219,7 @@ rig-rmcp = { path = "crates/rig-rmcp", version = "0.46.0" }
 rig-core = { path = "crates/rig-core", version = "0.46.0" }
 rig-cassette = { path = "crates/rig-cassette", version = "0.46.0", default-features = false }
 anyhow = "1"
-arrow-array = "58"
-# 58.2: decodes `FixedSizeList` columns, which rig-lancedb inserts embeddings through.
-arrow-json = "58.2"
 assert_fs = "1"
-# 2.3: `force_send`, which Bevy Remote answers an in-process request with
-# (`BrpMessage::sender`).
 async-stream = "0.3"
 axum = "0.8"
 aws-config = { version = "1", default-features = false }
@@ -270,26 +262,16 @@ httpmock = "0.8.2"
 # Decodes the JPEG frames of rig-candle's pose test and example.
 image = { version = "0.25.10", default-features = false }
 indexmap = "2"
-lancedb = { version = "0.30", default-features = false }
 log = "0.4"
 lopdf = { version = "0.44", default-features = false, features = ["rayon"] }
 memchr = "2"
 mime = "0.3"
 mime_guess = "2"
-# 3.4.1: `Client::append_metadata`, which rig-mongodb tags its handshake with.
-mongodb = "3.4.1"
-neo4rs = "0.8"
 opentelemetry = "0.32"
 opentelemetry-otlp = "0.32"
 opentelemetry_sdk = "0.32"
 ordered-float = "5"
-# 0.4.2: the first release whose `sqlx` feature accepts sqlx 0.9.
-pgvector = "0.4.2"
 proc-macro2 = "1"
-# 1.10: the `Qdrant` client, `Payload`, and the query/upsert builders.
-qdrant-client = { version = "1.10", default-features = false, features = [
-    "serde",
-] }
 quick-xml = "0.41"
 quote = "1"
 redis = "1"
@@ -298,8 +280,6 @@ reqwest-middleware = { version = "0.5", default-features = false }
 reqwest-retry = "0.9"
 rmcp = "3.9"
 url = "2"
-rusqlite = "0.32"
-scylla = "1"
 schemars = "1"
 serde = "1"
 serde_yaml = "0.9"
@@ -308,19 +288,14 @@ serde_json = "1.0.54"
 safetensors = "0.8"
 sha2 = "0.11.1"
 serde_path_to_error = "0.1"
-sqlite-vec = "0.1"
-sqlx = "0.9"
 # 0.8.3: `Engine::new_sandboxed` and the thread state controller rig-steel uses.
 # At least 3.2.5: earlier releases no longer build against the newest
 # `surrealdb-core` their requirement accepts.
-surrealdb = "3.3.5"
 syn = "3"
 term_size = "0.3"
-testcontainers = "0.28.0"
 textwrap = "0.16"
 thiserror = "2"
 tokio = "1"
-tokio-rusqlite = { version = "0.6", default-features = false }
 tokio-test = "0.4"
 tokio-tungstenite = { version = "0.29", default-features = false }
 tokenizers = { version = "0.22", default-features = false }
@@ -359,20 +334,8 @@ rig-bedrock = { path = "crates/rig-bedrock", version = "0.46.0", optional = true
 rig-candle = { path = "crates/rig-candle", version = "0.46.0", optional = true, default-features = false }
 rig-fastembed = { path = "crates/rig-fastembed", version = "0.46.0", optional = true, default-features = false }
 rig-gemini-grpc = { path = "crates/rig-gemini-grpc", version = "0.46.0", optional = true, default-features = false }
-rig-helixdb = { path = "crates/rig-helixdb", version = "0.46.0", optional = true, default-features = false }
-rig-lancedb = { path = "crates/rig-lancedb", version = "0.46.0", optional = true, default-features = false }
 rig-memory = { path = "crates/rig-memory", version = "0.46.0", optional = true, default-features = false }
 rig-derive = { path = "crates/rig-derive", version = "0.46.0", optional = true }
-rig-milvus = { path = "crates/rig-milvus", version = "0.46.0", optional = true, default-features = false }
-rig-mongodb = { path = "crates/rig-mongodb", version = "0.46.0", optional = true, default-features = false }
-rig-neo4j = { path = "crates/rig-neo4j", version = "0.46.0", optional = true, default-features = false }
-rig-postgres = { path = "crates/rig-postgres", version = "0.46.0", optional = true, default-features = false }
-rig-qdrant = { path = "crates/rig-qdrant", version = "0.46.0", optional = true, default-features = false }
-rig-s3vectors = { path = "crates/rig-s3vectors", version = "0.46.0", optional = true, default-features = false }
-rig-scylladb = { path = "crates/rig-scylladb", version = "0.46.0", optional = true, default-features = false }
-rig-sqlite = { path = "crates/rig-sqlite", version = "0.46.0", optional = true, default-features = false }
-rig-surrealdb = { path = "crates/rig-surrealdb", version = "0.46.0", optional = true, default-features = false }
-rig-vectorize = { path = "crates/rig-vectorize", version = "0.46.0", optional = true, default-features = false }
 rig-vertexai = { path = "crates/rig-vertexai", version = "0.46.0", optional = true, default-features = false }
 
 # The bundled websocket backend is native-only (tungstenite needs a tokio
@@ -442,20 +405,7 @@ fastembed = [
 fastembed-hf-hub = ["dep:rig-fastembed", "rig-fastembed/hf-hub"]
 fastembed-ort-download-binaries = ["dep:rig-fastembed", "rig-fastembed/ort-download-binaries"]
 gemini-grpc = ["dep:rig-gemini-grpc"]
-helixdb = ["dep:rig-helixdb"]
-lancedb = ["dep:rig-lancedb"]
-# With `sqlite` or `postgres`, also their rig-memory session stores.
-memory = ["dep:rig-memory", "rig-postgres?/memory", "rig-sqlite?/memory"]
-milvus = ["dep:rig-milvus"]
-mongodb = ["dep:rig-mongodb"]
-neo4j = ["dep:rig-neo4j"]
-postgres = ["dep:rig-postgres"]
-qdrant = ["dep:rig-qdrant"]
-s3vectors = ["dep:rig-s3vectors"]
-scylladb = ["dep:rig-scylladb"]
-sqlite = ["dep:rig-sqlite"]
-surrealdb = ["dep:rig-surrealdb"]
-vectorize = ["dep:rig-vectorize"]
+memory = ["dep:rig-memory"]
 vertexai = ["dep:rig-vertexai"]
 audio = ["rig-core/audio", "rig-agent?/audio"]
 image = ["rig-core/image", "rig-agent?/image"]
@@ -494,20 +444,12 @@ rustls = [
   "rig-reqwest?/rustls",
   "rig-tungstenite?/rustls",
   "rig-fastembed?/hf-hub-rustls-tls",
-  "rig-helixdb?/rustls",
-  "rig-lancedb?/rig-rustls",
-  "rig-milvus?/rustls",
-  "rig-vectorize?/rustls",
 ]
 native-tls = [
   "rig-core/native-tls",
   "rig-reqwest?/native-tls",
   "rig-tungstenite?/native-tls",
   "rig-fastembed?/hf-hub-native-tls",
-  "rig-helixdb?/native-tls",
-  "rig-lancedb?/rig-native-tls",
-  "rig-milvus?/native-tls",
-  "rig-vectorize?/native-tls",
 ]
 reqwest-middleware = ["reqwest", "rig-reqwest/reqwest-middleware"]
 reqwest-middleware-rustls = ["reqwest", "rig-reqwest/reqwest-middleware-rustls"]
