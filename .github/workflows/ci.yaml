@@ -2,7 +2,6 @@
 # to select from a diff; this fork's surface is a library plus its examples, so
 # every lane below is one Cargo command and none needs a planner.
 #
-# The cassette engine has its own lane while it is still in the tree.
 name: CI
 
 on:
@@ -62,22 +61,6 @@ jobs:
         with:
           save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
       - run: cargo nextest run --workspace
-
-  # The cassette engine and the facade's cassette-backed provider suites, which
-  # default features leave out.
-  cassette:
-    name: cassette
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/rust-setup
-        with:
-          nextest: "true"
-      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
-        with:
-          save-if: ${{ github.repository == '0xPlaygrounds/rig' && github.event_name == 'push' }}
-      - run: cargo nextest run -p rig-cassette
-      - run: cargo nextest run -p rig --features cassette --test integration
 
   doctest:
     name: doctest

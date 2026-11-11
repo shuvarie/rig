@@ -242,7 +242,7 @@ fn a_blocked_prompt_reply_decodes_to_a_response_error() {
 }
 
 /// The 200 reply recorded in
-/// `crates/rig-cassette/fixtures/cassettes/gemini/image_generation/nano_banana_image_generation_smoke.yaml`,
+/// `tests/fixtures/cassettes/gemini/image_generation/nano_banana_image_generation_smoke.yaml`,
 /// verbatim except for `inlineData.data`: the recorded PNG is 1 MB of base64,
 /// so only its first four base64 groups — the PNG signature and the start of
 /// the `IHDR` chunk — are kept here.

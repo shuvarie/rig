@@ -230,10 +230,6 @@ pub const TESTS: &[(&str, &str)] = &[
         "every_messages_dialect_has_a_history_suite",
     ),
     (
-        "crates/rig-cassette/tests/providers/anthropic/cassette/malformed_tool_args_matrix.rs",
-        "streaming_malformed_call_is_answered_with_an_error",
-    ),
-    (
         "crates/rig-core/src/providers/openai/responses_api/streaming/tests.rs",
         "reasoning_done_without_ciphertext_keeps_its_item_in_a_stream_without_indices",
     ),

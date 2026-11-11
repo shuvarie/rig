@@ -21,9 +21,7 @@
 //! application dependency above restores the previous configuration. Without
 //! those features, schema properties and JSON text in prompts, embeddings and
 //! tool results use sorted object keys, and parsed floats can differ in their
-//! low bits. Cargo unifies features: `rig-cassette` with `traffic` (including
-//! `rig-traffic`) enables both; `rig-claude-cloak`, `rig-mcp-client` and
-//! `rig-mongodb` through BSON enable `preserve_order`. Rig has no forwarding feature for either setting.
+//! low bits. Rig has no forwarding feature for either setting.
 
 pub use rig_core::*;
 
@@ -65,11 +63,6 @@ pub use rig_core as __core;
 #[cfg(feature = "agent")]
 #[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
 pub use rig_agent::handlers;
-
-/// Effect-log recording and replay; optional runtime and native HTTP integrations.
-#[cfg(feature = "cassette")]
-#[cfg_attr(docsrs, doc(cfg(feature = "cassette")))]
-pub use rig_cassette as cassette;
 
 /// The sans-IO run layer of rig-agent (`rig_agent::run`): `AgentRun` and its
 /// step/turn types, the run's spec, request preparation, output policy and

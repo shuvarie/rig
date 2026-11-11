@@ -1,10 +1,11 @@
 //! The root package's integration tests, one module per suite, linked into one
 //! binary. The live-only provider suites live in `tests/providers/` and the
-//! Bedrock integrations in `tests/integrations/`.
-
-use rig_test_support::{goldens, reasoning, support};
+//! ignored Bedrock integrations in `tests/integrations/`.
 
 mod api_surface;
+#[allow(clippy::expect_used, clippy::panic)]
+mod support;
+
 #[allow(clippy::expect_used)]
 #[path = "../providers/azure/mod.rs"]
 mod azure;

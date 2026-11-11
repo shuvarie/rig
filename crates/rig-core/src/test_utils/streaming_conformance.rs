@@ -179,7 +179,6 @@ pub const WIRE_FAMILIES: &[&str] = &[
     "gemini_grpc",
     "xai",
     "copilot",
-    "bedrock",
     "candle",
 ];
 

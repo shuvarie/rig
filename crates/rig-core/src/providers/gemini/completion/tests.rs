@@ -550,10 +550,10 @@ use crate::test_utils::{MockStreamingClient, RecordingHttpClient};
 use crate::wire::{Mode, Wire};
 use futures::StreamExt;
 
-/// `crates/rig-cassette/fixtures/cassettes/gemini/thought_text_matrix/blocking_keeps_a_trailing_thought_signature.yaml`
+/// `tests/fixtures/cassettes/gemini/thought_text_matrix/blocking_keeps_a_trailing_thought_signature.yaml`
 const SIGNED_UNARY: &str = r#"{"candidates":[{"content":{"parts":[{"text":"289","thoughtSignature":"c2lnbmF0dXJl"}],"role":"model"},"finishReason":"STOP","index":0}],"modelVersion":"gemini-3-flash-preview","responseId":"id_REDACTED_1","usageMetadata":{"candidatesTokenCount":2,"promptTokenCount":14,"promptTokensDetails":[{"modality":"TEXT","tokenCount":14}],"serviceTier":"standard","thoughtsTokenCount":43,"totalTokenCount":59}}"#;
 
-/// `crates/rig-cassette/fixtures/cassettes/gemini/thought_text_matrix/streaming_twin_agrees_on_a_trailing_thought_signature.yaml`
+/// `tests/fixtures/cassettes/gemini/thought_text_matrix/streaming_twin_agrees_on_a_trailing_thought_signature.yaml`
 /// — the same turn, streamed across two events, the signature riding a
 /// trailing part that carries no `thought` flag.
 const SIGNED_STREAM: &str = concat!(

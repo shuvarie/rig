@@ -518,7 +518,7 @@ impl aws_smithy_runtime_api::client::http::HttpClient for Recorded {
 fn recorded(relative: &str, content_type: &'static str) -> crate::client::BedrockRuntime {
     use aws_sdk_bedrockruntime::config::{BehaviorVersion, Credentials, Region};
     let file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../rig-cassette/fixtures/cassettes/bedrock")
+        .join("../../tests/fixtures/cassettes/bedrock")
         .join(relative);
     let cassette = std::fs::read_to_string(&file).expect("the cassette is readable");
     let body = rig_core::test_utils::raw_parity::recorded_reply(&cassette, 1)

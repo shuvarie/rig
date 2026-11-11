@@ -87,7 +87,7 @@ async fn image_embeddings_2xx_error_envelope_preserves_status_and_body() {
     assert_eq!(stored.status, Some(http::StatusCode::OK));
 }
 
-/// A `/v1/embed` reply, shaped as `crates/rig-cassette/fixtures/cassettes/cohere/embeddings/
+/// A `/v1/embed` reply, shaped as `tests/fixtures/cassettes/cohere/embeddings/
 /// embed_texts_smoke.yaml` records it (`id`, `embeddings`, `texts`, and
 /// `meta.billed_units`), with two-element vectors in place of the recorded
 /// 1024-element ones.

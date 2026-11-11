@@ -57,12 +57,12 @@ where
 }
 
 /// The reply body of recorded interaction `index` (from 0) of
-/// `rig-cassette/fixtures/cassettes/<provider>/<scenario>.yaml`, a unary
+/// `tests/fixtures/cassettes/<provider>/<scenario>.yaml`, a unary
 /// body or an event stream, as
 /// [`raw_parity::recorded_reply`](super::raw_parity::recorded_reply) reads it.
 pub(crate) fn recorded_reply(provider: &str, scenario: &str, index: usize) -> String {
     let file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../rig-cassette/fixtures/cassettes")
+        .join("../../tests/fixtures/cassettes")
         .join(provider)
         .join(format!("{scenario}.yaml"));
     let text = std::fs::read_to_string(&file)

@@ -21,7 +21,7 @@ use bytes::Bytes;
 /// dependency, and never written.
 fn cassette_body(path: &str, section: &str) -> String {
     let file = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../rig-cassette/fixtures/cassettes/copilot")
+        .join("../../tests/fixtures/cassettes/copilot")
         .join(path);
     let text = std::fs::read_to_string(&file)
         .unwrap_or_else(|error| panic!("{} should be readable: {error}", file.display()));
@@ -264,7 +264,7 @@ async fn the_responses_route_folds_its_recorded_turn() {
 /// Copilot's Responses route answers a tool-calling turn with a
 /// *contentless* reasoning item — empty `content`, empty `summary`, no
 /// encrypted payload, just an id. The next turn has to replay it verbatim:
-/// `crates/rig-cassette/fixtures/cassettes/copilot/typed_prompt_tools/prompt_typed_with_tool_call_roundtrip.yaml`
+/// `tests/fixtures/cassettes/copilot/typed_prompt_tools/prompt_typed_with_tool_call_roundtrip.yaml`
 /// records `{"id":"id_REDACTED_1","summary":[],"type":"reasoning"}` ahead of
 /// the tool result in its second request, so the block has to survive the
 /// fold or the replayed history is missing an item the provider sent.

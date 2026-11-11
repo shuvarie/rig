@@ -1,8 +1,8 @@
 # Test Suites
 
 Run the smallest useful local check for changed behavior and leave comprehensive
-execution to CI; see [DEVELOPING.md](../DEVELOPING.md) for check selection,
-`cargo xtask verify` modes, review, and publication.
+execution to CI; see [DEVELOPING.md](../DEVELOPING.md) for the command list,
+review, and publication.
 
 Each package links its integration tests into one binary, `integration`, whose
 root (`tests/integration.rs`, or `tests/integration/main.rs` when the suites
@@ -11,44 +11,22 @@ its module (`kernel_only::...`), so select one with
 `cargo nextest run -p <package> -E 'test(/^<suite>::/)'` or a `cargo test
 --test integration <suite>::` name filter. rig-core's `websocket_off_runtime`
 stays a binary of its own: it asserts the calling thread has no tokio runtime.
-Tests that start a nested Cargo build are `#[ignore]`d and run only by their
-`guard-*` check (`cargo xtask verify --check guard-facade-features`).
+Tests that start a nested Cargo build are `#[ignore]`d.
 
-Provider suites have two owners:
+Provider suites:
 
-- Cassette-backed suites are modules of `rig-cassette`'s binary, beside the
-  corpus they replay: `crates/rig-cassette/tests/providers/<provider>/` with
-  its `cassette/` cells (and `live/` for the ignored live cells those suites
-  still carry). The shared drivers they include live in
-  `crates/rig-cassette/tests/common/`.
-- Providers with no recorded corpus keep their live-only suites in the facade:
-  `tests/providers/<provider>/`, a module of the facade's binary. These are
-  ignored tests that require a real service.
+- Live suites are modules of the facade's binary: `tests/providers/<provider>/`.
+  They are ignored tests that require a real service.
 - The facade's `core` suite (`tests/core/`) contains provider-agnostic core
   behavior tests and the guards that scan the source tree, which need the
   repository root.
 - The facade's `integrations` suite (`tests/integration/integrations.rs`) holds the root Bedrock integrations. Vector stores are contracts in `rig-core`; their backends are not part of this tree.
 
-Cassette suites require a checkout of this repository: `rig-cassette` excludes
-its fixtures and integration tests from the published package. The unpublished
-`rig-cassette-minimal` runner at
-`crates/rig-cassette/tests/minimal/Cargo.toml` executes the same `verify`
-source, plus the shared effect-log/classic-replay regressions. It selects only
-cassette's `agent` feature, without the native HTTP engine.
-
-```sh
-RIG_PROVIDER_TEST_MODE=replay cargo nextest run --locked -p rig-cassette-minimal --all-features --retries 0
-```
-
-Keep `RIG_REGENERATE_GOLDEN` unset. This execution complements, rather than
-replaces, the unified verification runs through `rig-cassette`.
-The default/all-features cassette library still owns the unified library
-regressions; `core-all` also retains the migrated classic replay cases.
-Minimal verification runs with zero retries; unified verification and both
-standalone/default-member effect-corpus configurations retain their existing
-two. The standalone effect-corpus lane explicitly includes the
-`rig-test-support` corpus regressions. Source ownership includes the library
-tests shared by the minimal runner, not only its verification entrypoint.
+Recorded provider replies live in `tests/fixtures/cassettes/<provider>/`. They
+are read, never written: the wire tests decode them with
+`rig_core::test_utils::raw_parity::recorded_reply`, and
+`rig_core::test_utils::provider_extensions::recorded_reply` is the shared
+loader. The cassette engine that recorded them is gone; these are fixtures now.
 
 ## Testing Doctrine
 

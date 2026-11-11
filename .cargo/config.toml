@@ -1,10 +1,1 @@
 [env]
-# Cassette replays in this workspace check every request against the
-# snapshot beside its fixture. The engine leaves snapshots off unless this is
-# set, so published users never see them; a value already in the environment
-# (`write`, `off`) wins.
-RIG_CASSETTE_SNAPSHOTS = "check"
-# They also match request bodies by coarse shape, so a change to how Rig
-# writes a request replays without a re-record; the snapshot still pins its
-# bytes. The engine matches exactly unless this is set.
-RIG_CASSETTE_MATCHING = "shape"

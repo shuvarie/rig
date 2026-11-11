@@ -1,10 +1,7 @@
 //! Dependency-graph invariants for the runtime/transport-agnostic split.
 //!
 //! Runtime crates retain only execution mechanisms and the shared vocabulary.
-//! Concrete recording and replay live in rig-cassette, whose runtime adapter
-//! and native HTTP engine are independently selectable. Workspace graph checks
-//! cover runtime back-edges; separate downstream manifests prove cassette
-//! feature isolation without workspace dev-dependency unification.
+//! Workspace graph checks cover runtime back-edges.
 
 use std::process::Command;
 
@@ -14,61 +11,37 @@ use std::process::Command;
 type Graph = (&'static str, &'static str, &'static str, &'static str);
 
 const GRAPHS: &[Graph] = &[
-    ("rig-core", "", "tokio reqwest rig-cassette", ""),
+    ("rig-core", "", "tokio reqwest", ""),
     // The `reqwest` and `tungstenite` features bring in the bundled transports,
     // and with them reqwest and tokio: only through those two crates.
     (
         "rig-core",
         "--all-features",
-        "rig-agent rig-cassette rig-effect-log",
+        "rig-agent",
         "rig-reqwest rig-tungstenite",
     ),
     (
         "rig-core",
         "--no-default-features --features derive,rustls,audio,image,pdf,epub,websocket",
-        "tokio reqwest rig-reqwest rig-tungstenite rig-cassette",
+        "tokio reqwest rig-reqwest rig-tungstenite",
         "rig-http",
     ),
-    (
-        "rig-agent",
-        "",
-        "tokio reqwest rmcp rig-cassette rig-effect-log",
-        "rig-core",
-    ),
+    ("rig-agent", "", "tokio reqwest rmcp", "rig-core"),
     (
         "rig-agent",
         "--no-default-features",
-        "tokio reqwest rmcp rig-cassette rig-effect-log",
+        "tokio reqwest rmcp",
         "rig-core",
     ),
-    (
-        "rig-agent",
-        "--all-features",
-        "reqwest rmcp rig-cassette rig-effect-log",
-        "rig-core",
-    ),
-    ("rig-rmcp", "", "rig-agent rig-cassette", ""),
-    // `rig::cassette` is opt-in: the classic agent alone does not bring the
-    // recorder in.
+    ("rig-agent", "--all-features", "reqwest rmcp", "rig-core"),
+    ("rig-rmcp", "", "rig-agent", ""),
     (
         "rig",
         "--no-default-features --features agent,derive",
-        "tokio reqwest rmcp rig-cassette",
+        "tokio reqwest rmcp",
         "rig-core rig-agent",
     ),
-    ("rig", "", "rig-cassette", "rig-core rig-agent"),
-    (
-        "rig",
-        "--no-default-features --features cassette",
-        "tokio reqwest rig-agent",
-        "rig-core rig-cassette",
-    ),
-    (
-        "rig",
-        "--no-default-features --features agent,cassette",
-        "tokio reqwest rmcp",
-        "rig-core rig-agent rig-cassette",
-    ),
+    ("rig", "", "", "rig-core rig-agent"),
 ];
 
 /// `cargo` with `args`, run from the workspace root; stdout on success.
@@ -121,147 +94,6 @@ fn crate_boundaries_hold_in_the_resolved_dependency_graph() {
             assert!(
                 names.iter().any(|name| name == crate_name),
                 "`{package}` ({selection}) must depend on `{crate_name}`"
-            );
-        }
-    }
-
-    // Optional and target-specific declarations, and manifest renames, show up
-    // only in the metadata.
-    let metadata: serde_json::Value = serde_json::from_str(&cargo_stdout(&[
-        "metadata",
-        "--locked",
-        "--no-deps",
-        "--format-version",
-        "1",
-    ]))
-    .expect("metadata JSON");
-    let package = metadata["packages"]
-        .as_array()
-        .expect("packages")
-        .iter()
-        .find(|package| package["name"] == "rig-agent")
-        .expect("runtime package");
-    for dependency in package["dependencies"].as_array().expect("dependencies") {
-        if dependency["kind"].is_null() {
-            assert!(
-                !matches!(
-                    dependency["name"].as_str(),
-                    Some("rig-cassette" | "rig-effect-log")
-                ),
-                "rig-agent must not declare a concrete recording dependency, even optional or target-specific: {dependency}"
-            );
-        }
-    }
-}
-
-#[test]
-fn cassette_features_are_isolated_for_downstream_consumers() {
-    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
-    let path = serde_json::to_string(&root.join("crates/rig-cassette")).expect("manifest path");
-    for (features, forbidden, required) in [
-        (
-            "",
-            "rig rig-agent tokio reqwest rig-reqwest axum httpmock aws-smithy-eventstream aws-smithy-types",
-            "rig-core",
-        ),
-        (
-            "agent",
-            "rig tokio reqwest rig-reqwest axum httpmock aws-smithy-eventstream aws-smithy-types",
-            "rig-core rig-agent",
-        ),
-        (
-            "traffic",
-            "rig rig-agent tokio reqwest rig-reqwest axum httpmock flate2 aws-smithy-eventstream aws-smithy-types",
-            "rig-core url",
-        ),
-        (
-            "http",
-            "rig rig-agent httpmock aws-smithy-eventstream aws-smithy-types",
-            "rig-core rig-reqwest reqwest tokio axum",
-        ),
-        (
-            "bedrock",
-            "rig rig-agent",
-            "rig-core rig-reqwest aws-smithy-eventstream aws-smithy-types",
-        ),
-    ] {
-        let scratch = assert_fs::TempDir::new().expect("isolated downstream package");
-        std::fs::create_dir(scratch.path().join("src")).expect("source directory");
-        std::fs::write(
-            scratch.path().join("src/lib.rs"),
-            "pub use rig_cassette::effect_log::EffectLog;\n",
-        )
-        .expect("consumer source");
-        let selected: Vec<_> = features
-            .split(',')
-            .filter(|feature| !feature.is_empty())
-            .collect();
-        let selected = serde_json::to_string(&selected).expect("feature list");
-        std::fs::write(
-            scratch.path().join("Cargo.toml"),
-            format!(
-                "[package]\nname = \"cassette-feature-probe\"\nversion = \"0.0.0\"\nedition = \"2024\"\n[workspace]\n[dependencies]\nrig-cassette = {{ path = {path}, features = {selected} }}\n"
-            ),
-        )
-        .expect("consumer manifest");
-        std::fs::copy(root.join("Cargo.lock"), scratch.path().join("Cargo.lock"))
-            .expect("seed locked dependency versions");
-        let output = Command::new(std::env::var_os("CARGO").unwrap_or_else(|| "cargo".into()))
-            .current_dir(scratch.path())
-            .args([
-                "tree",
-                // Neither `--offline` nor `--locked`: `--target all` resolves
-                // the platform-gated crates (Apple's `block2`, the Windows
-                // bindings) that a host build never downloads, so an offline
-                // probe fails on a cache warmed only by this workspace's own
-                // targets; and the seeded lockfile has no entry for the probe
-                // package itself, which `--locked` refuses to add. The seeded
-                // lockfile still pins every version the graph shares with the
-                // workspace.
-                "-e", "normal", "--target", "all", "--prefix", "none", "--format", "{p} {f}",
-            ])
-            .output()
-            .expect("resolve isolated downstream");
-        assert!(
-            output.status.success(),
-            "{features}: {}",
-            String::from_utf8_lossy(&output.stderr)
-        );
-        let graph = String::from_utf8(output.stdout).expect("graph UTF-8");
-        let names: Vec<_> = graph
-            .lines()
-            .filter_map(|line| line.split_whitespace().next())
-            .collect();
-        for name in forbidden.split_whitespace() {
-            assert!(
-                !names.contains(&name),
-                "{features} unexpectedly enables {name}:\n{graph}"
-            );
-        }
-        for name in required.split_whitespace() {
-            assert!(
-                names.contains(&name),
-                "{features} is missing {name}:\n{graph}"
-            );
-        }
-        if matches!(features, "" | "agent") {
-            assert_minimal_json_features(&graph, features);
-        }
-    }
-}
-
-fn assert_minimal_json_features(graph: &str, selection: &str) {
-    let json: Vec<_> = graph
-        .lines()
-        .filter(|line| line.starts_with("serde_json "))
-        .collect();
-    assert!(!json.is_empty(), "{selection} must include serde_json");
-    for line in json {
-        let features = line.split_whitespace().nth(2).unwrap_or_default();
-        for forbidden in ["preserve_order", "float_roundtrip"] {
-            assert!(
-                !features.split(',').any(|feature| feature == forbidden),
-                "{selection} must not enable serde_json/{forbidden}: {line}"
             );
         }
     }

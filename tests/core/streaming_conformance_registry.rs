@@ -54,12 +54,6 @@ const OUT_OF_BINARY_FAMILIES: &[OutOfBinaryFamily] = &[
         suite_file: "crates/rig-gemini-grpc/tests/integration/streaming_conformance.rs",
         reason: "rig-gemini-grpc is a separate package; the facade does not depend on it",
     },
-    OutOfBinaryFamily {
-        family: "bedrock",
-        suite_file: "crates/rig-cassette/tests/providers/bedrock/streaming_conformance.rs",
-        reason: "lives in the `rig-cassette` package behind its `bedrock` feature, so it compiles \
-                 into that package's integration binary rather than the facade's",
-    },
 ];
 
 /// Union of the suite families compiled into THIS binary.

@@ -1,7 +1,7 @@
 use super::*;
 use crate::test_utils::RecordingHttpClient;
 
-/// The reply shape of `crates/rig-cassette/fixtures/cassettes/ollama/models/list_models_smoke.yaml`
+/// The reply shape of `tests/fixtures/cassettes/ollama/models/list_models_smoke.yaml`
 /// (`GET /api/tags`), with two of its entries.
 const MODELS_BODY: &str = r#"{"models":[{"name":"all-minilm:latest","model":"all-minilm:latest","modified_at":"2026-06-19T17:15:40.188240254-07:00","size":45960996},{"name":"qwen3:4b","model":"qwen3:4b","modified_at":"2026-06-19T16:26:52.429441648-07:00","size":2497293931}]}"#;
 

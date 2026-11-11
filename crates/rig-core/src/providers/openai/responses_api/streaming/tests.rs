@@ -1020,7 +1020,7 @@ fn recorded_whole_replies(provider: &str) -> Vec<serde_json::Value> {
     let mut replies = Vec::new();
     let mut stack = vec![
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../rig-cassette/fixtures/cassettes")
+            .join("../../tests/fixtures/cassettes")
             .join(provider),
     ];
     while let Some(dir) = stack.pop() {

@@ -10,16 +10,11 @@ repository = "https://github.com/0xPlaygrounds/rig"
 # Examples now live in their own packages under `examples/*`; don't auto-discover
 # them as examples of this crate.
 autoexamples = false
-# The published tarball no longer sweeps the provider cassettes: they live with
-# the engine that reads them (`crates/rig-cassette/fixtures/cassettes`), which
-# Cargo skips here because it is its own package.
-#
 # This manifest is both the workspace root and the `rig` facade package, so the
 # package directory is the whole repository and `cargo package` sweeps it: CI
 # workflows, README artwork, the Nix flake, release tooling, `examples/` data
-# and a `tests/` tree that cannot compile from the tarball at all, since its
-# `rig-test-support` dev dependency is path-only and Cargo strips it when
-# publishing. The facade's own source is one file of re-exports.
+# and a `tests/` tree that cannot compile from the tarball at all. The facade's
+# own source is one file of re-exports.
 #
 # An allowlist, not an exclude list (#2349): "not shipped" is the safe default,
 # so this does not need extending every time the repository grows a directory,
@@ -65,7 +60,6 @@ features = [
     "audio",
     "bedrock",
     "candle",
-    "cassette",
     "derive",
     "epub",
     "fastembed",
@@ -107,9 +101,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 resolver = "3"
 members = [
     "crates/*",
-    "crates/rig-cassette/tests/minimal",
     "examples/*",
-    "test-support/rig-test-support",
     "test-support/rig-history-conformance",
 ]
 # The root manifest is itself the `rig` facade package, so without an
@@ -123,12 +115,9 @@ members = [
 # dylib component. Absent from the default set is not absent from CI: the
 # `test` lane runs `cargo nextest run --workspace`, which names it, and the
 # `macro_hygiene` suite of rig-core's tests consumes the expanded macros.
-# The nested cassette runner is selected separately by bus-verification:
-# default-member feature unification defeats its minimal JSON graph.
 default-members = [
     ".",
     "crates/rig-core",
-    "crates/rig-cassette",
     "crates/rig-agent",
     "crates/rig-http",
     "crates/rig-reqwest",
@@ -137,7 +126,6 @@ default-members = [
     "crates/rig-bedrock",
     "crates/rig-candle",
     "crates/rig-gemini-grpc",
-    "test-support/rig-test-support",
     "test-support/rig-history-conformance",
     # The design record's Frozen API programs: clippy and the full test
     # lane compile them.
@@ -217,7 +205,6 @@ rig-agent = { path = "crates/rig-agent", version = "0.46.0" }
 rig-reqwest = { path = "crates/rig-reqwest", version = "0.46.0" }
 rig-rmcp = { path = "crates/rig-rmcp", version = "0.46.0" }
 rig-core = { path = "crates/rig-core", version = "0.46.0" }
-rig-cassette = { path = "crates/rig-cassette", version = "0.46.0", default-features = false }
 anyhow = "1"
 assert_fs = "1"
 async-stream = "0.3"
@@ -257,7 +244,6 @@ google-cloud-aiplatform-v1 = { version = "1.8", default-features = false, featur
 http = "1"
 http-body = "1"
 httpdate = "1"
-# 0.8.2: `Recording::export_async` (cassette harness).
 httpmock = "0.8.2"
 # Decodes the JPEG frames of rig-candle's pose test and example.
 image = { version = "0.25.10", default-features = false }
@@ -326,7 +312,6 @@ workspace = true
 [dependencies]
 rig-typesafeai = { path = "crates/rig-typesafeai", version = "0.46.0", optional = true, default-features = false }
 rig-core = { path = "crates/rig-core", version = "0.46.0", default-features = false }
-rig-cassette = { path = "crates/rig-cassette", version = "0.46.0", optional = true, default-features = false }
 rig-reqwest = { path = "crates/rig-reqwest", version = "0.46.0", optional = true, default-features = false }
 rig-agent = { path = "crates/rig-agent", version = "0.46.0", optional = true, default-features = false }
 rig-rmcp = { path = "crates/rig-rmcp", version = "0.46.0", optional = true }
@@ -357,10 +342,7 @@ rig-vertexai = { path = "crates/rig-vertexai", version = "0.46.0", optional = tr
 rig-tungstenite = { path = "crates/rig-tungstenite", version = "0.46.0", optional = true }
 
 [dev-dependencies]
-rig-test-support = { path = "test-support/rig-test-support" }
 rig-history-conformance = { path = "test-support/rig-history-conformance" }
-# The facade's tests use the recorder directly, whatever `cassette` is set to.
-rig-cassette = { path = "crates/rig-cassette", default-features = false, features = ["agent"] }
 anyhow = { workspace = true }
 assert_fs = { workspace = true }
 rig-core = { path = "crates/rig-core", version = "0.46.0", default-features = false, features = [
@@ -378,11 +360,8 @@ httpmock = { workspace = true }
 reqwest = { workspace = true, features = ["json", "stream"] }
 schemars = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-# float_roundtrip keeps cassette scrubbing idempotent on float-heavy bodies
-# (e.g. embedding vectors): without it, parse→print can oscillate between two
-# representations of the same decimal and the recorded YAML never stabilizes.
-# Golden logs preserve JSON object insertion order. Declare that requirement
-# directly instead of inheriting it from a database driver's feature graph.
+# Preserve JSON object insertion order. Declare that requirement directly
+# instead of inheriting it from a database driver's feature graph.
 serde_json = { workspace = true, features = ["float_roundtrip", "preserve_order"] }
 serde_yaml = { workspace = true }
 syn = { workspace = true, features = ["full", "visit"] }
@@ -390,10 +369,7 @@ tracing = { workspace = true }
 [features]
 typesafeai = ["dep:rig-typesafeai"]
 default = ["rig-core/default", "reqwest", "agent", "derive", "rustls"]
-agent = ["dep:rig-agent", "rig-cassette?/agent"]
-# `rig::cassette`: effect-log recording and replay. With `agent`, also the
-# classic-agent adapter (`rig::cassette::agent`).
-cassette = ["dep:rig-cassette"]
+agent = ["dep:rig-agent"]
 test-utils = ["rig-core/test-utils", "rig-agent?/test-utils"]
 bedrock = ["dep:rig-bedrock"]
 candle = ["dep:rig-candle"]

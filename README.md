@@ -76,7 +76,6 @@ that `#[tokio::main]` uses, and anyhow
 - Agents with tools, multi-turn streaming and typed hooks
 - Completion, embedding, transcription, audio and image generation
 - [GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/) for OpenTelemetry
-- Recording and replay of an agent's effects ([`rig-cassette`](crates/rig-cassette/README.md))
 - Browser WASM (`wasm32-unknown-unknown`) for the core and the agent runtime ([target support](crates/rig-agent/README.md#target-support))
 
 More in [`examples/`](examples), the [docs](https://rig.rs/docs) and the
@@ -92,7 +91,6 @@ feature.
 | [`rig-core`](crates/rig-core) | always | Provider-neutral messages, completion and embedding models, tool contracts, the conversation type, vector-store contracts with an in-memory store, and the providers |
 | [`rig-agent`](crates/rig-agent) | `agent` (default) | The agent builder, prompting and streaming, hooks, the tool registry and the serializable `AgentRun` |
 | [`rig-memory`](crates/rig-memory) | `memory` | Windows, compaction, and saving, resuming and forking conversations |
-| [`rig-cassette`](crates/rig-cassette) | `cassette` | Effect logs: recording, replay and checkpoints |
 
 ### Integrations
 

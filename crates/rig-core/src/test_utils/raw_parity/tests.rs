@@ -18,7 +18,7 @@ use crate::providers::openai::wire::{
 
 /// The cassette corpus, beside this crate.
 fn corpus() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../rig-cassette/fixtures/cassettes")
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/cassettes")
 }
 
 /// One recorded interaction: its request path and body, and its reply.

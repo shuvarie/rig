@@ -174,7 +174,7 @@ fn store_and_labels_are_unsupported() {
 
 /// A gRPC reply, read as the transport hands it over. There is no gRPC
 /// recording: this is the Gemini API's recorded reply in
-/// `rig-cassette/fixtures/cassettes/gemini/raw_capture_matrix/raw_exposes_forced_function_call.yaml`
+/// `tests/fixtures/cassettes/gemini/raw_capture_matrix/raw_exposes_forced_function_call.yaml`
 /// without `usageMetadata.serviceTier`, which the proto does not declare.
 #[test]
 fn extras_read_a_grpc_reply() {

@@ -5416,7 +5416,6 @@ dependencies = [
  "rig-agent",
  "rig-bedrock",
  "rig-candle",
- "rig-cassette",
  "rig-core",
  "rig-derive",
  "rig-fastembed",
@@ -5425,7 +5424,6 @@ dependencies = [
  "rig-memory",
  "rig-reqwest",
  "rig-rmcp",
- "rig-test-support",
  "rig-tungstenite",
  "rig-typesafeai",
  "rig-vertexai",
@@ -5510,64 +5508,6 @@ dependencies = [
  "tokenizers 0.22.2",
  "tokio",
  "web-time",
-]
-
-[[package]]
-name = "rig-cassette"
-version = "0.46.0"
-dependencies = [
- "anyhow",
- "assert_fs",
- "async-stream",
- "aws-config",
- "aws-sdk-bedrockruntime",
- "aws-smithy-eventstream",
- "aws-smithy-http-client",
- "aws-smithy-runtime-api",
- "aws-smithy-types",
- "axum",
- "base64 0.23.1",
- "bytes",
- "divan",
- "futures",
- "http",
- "httpdate",
- "httpmock",
- "proptest",
- "reqwest 0.13.5",
- "rig",
- "rig-agent",
- "rig-core",
- "rig-memory",
- "rig-reqwest",
- "rig-test-support",
- "rmcp",
- "schemars 1.2.1",
- "serde",
- "serde_json",
- "serde_path_to_error",
- "serde_yaml",
- "sha2 0.11.1",
- "syn 3.0.3",
- "thiserror 2.0.21",
- "tokio",
- "tokio-test",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "rig-cassette-minimal"
-version = "0.0.0"
-dependencies = [
- "futures",
- "proptest",
- "rig-agent",
- "rig-cassette",
- "rig-core",
- "serde",
- "serde_json",
- "tokio",
 ]
 
 [[package]]
@@ -5740,31 +5680,6 @@ dependencies = [
  "thiserror 2.0.21",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "rig-test-support"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "base64 0.23.1",
- "bytes",
- "futures",
- "http",
- "proc-macro2",
- "quote",
- "reqwest 0.13.5",
- "rig-agent",
- "rig-cassette",
- "rig-core",
- "rig-reqwest",
- "schemars 1.2.1",
- "serde",
- "serde_json",
- "serde_yaml",
- "syn 3.0.3",
- "thiserror 2.0.21",
- "tokio",
 ]
 
 [[package]]

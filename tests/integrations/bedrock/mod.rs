@@ -1,6 +1,6 @@
-use rig_test_support::support;
-
 use rig::Model;
+
+use crate::support;
 use rig::agent::AgentBuilder;
 use rig::bedrock::{
     client::BedrockRuntime,

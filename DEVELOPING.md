@@ -30,10 +30,8 @@ cargo nextest run --workspace
 ```
 
 The remaining lanes are `cargo test --workspace --doc`, `cargo doc --workspace
---no-deps` with `RUSTDOCFLAGS=-D warnings`, the cassette lanes (`cargo nextest run
--p rig-cassette`, and `-p rig --features cassette --test integration`), and
-per-package `cargo check --target wasm32-unknown-unknown` for `rig-core`,
-`rig-agent` and `rig`.
+--no-deps` with `RUSTDOCFLAGS=-D warnings`, and per-package `cargo check
+--target wasm32-unknown-unknown` for `rig-core`, `rig-agent` and `rig`.
 
 ## Choosing a focused check
 
@@ -98,22 +96,14 @@ tests), Clippy, rustfmt, protoc, and Docker for the storage suites.
 ## Hosted CI
 
 `ci.yaml` runs on every pull request, merge group and manual dispatch: `fmt`,
-`clippy`, `test`, `cassette`, `services`, `doctest`, `doc` and `wasm`, each a
-single Cargo command. `cd.yaml` runs the same workflow on every push to `main`
-and then release-plz. Tokens are read-only except release-plz. No job receives
-provider secrets: cassettes replay with a dummy key and live tests are
-`#[ignore]`.
+`clippy`, `test`, `doctest`, `doc` and `wasm`, each a single Cargo command.
+`cd.yaml` runs the same workflow on every push to `main` and then release-plz.
+Tokens are read-only except release-plz. No job receives provider secrets: live
+provider tests are `#[ignore]`.
 
 Each package links its integration tests into one binary, `integration`, with one
-module per suite (see [tests/README.md](tests/README.md)). Every cassette-backed
-test source lives in `crates/rig-cassette`: the provider suites, the agent corpus
-cells inside them, the cache-prefix guard, the verification suite `verify`, and
-the effect-log and runtime-adapter library regressions. The unpublished
-`rig-cassette-minimal` runner in `tests/minimal/Cargo.toml` shares the
-verification suite and the effect-log/classic-replay regression sources. The
-facade keeps live-only provider suites, `core`, feature guards and integrations.
-The agent runtime remains free of normal dependencies on the concrete
-cassette/log implementation.
+module per suite (see [tests/README.md](tests/README.md)). Recorded provider
+replies live in `tests/fixtures/cassettes/` and are read only.
 
 ## Refreshing the model catalog
 
@@ -123,10 +113,3 @@ sync` tool that regenerated it from models.dev was removed with the rest of
 `xtask`; it is recoverable from the `fork-point` tag (`xtask/src/catalog.rs`)
 while this fork still carries the multi-crate tooling. Until it returns, edit
 the JSON directly and review the result as data.
-
-## Cassette fixtures
-
-Replay is the default and recording always requires the explicit `write` value
-of the provider test mode. Never record or rewrite fixtures merely to make
-verification pass. Details and the fixture safety review are in
-[tests/README.md](tests/README.md#cassette-provider-tests).

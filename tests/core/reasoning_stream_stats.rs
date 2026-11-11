@@ -1,10 +1,59 @@
-use futures::stream;
+use futures::{StreamExt, stream};
 use rig::agent::MultiTurnStreamItem;
-use rig::completion::Usage;
+use rig::completion::{PromptError, Usage};
 use rig::message::{AssistantContent, ToolCall, ToolFunction, ToolResult, ToolResultContent};
-use rig::streaming::{Item, StreamRecord};
+use rig::streaming::{Item, StreamEvent, StreamRecord};
 
-use crate::reasoning::collect_stream_stats;
+/// Observations of a streamed run's reasoning, tool and text events.
+#[derive(Default)]
+struct StreamStats {
+    /// Tool-call names in stream order.
+    tool_calls_in_stream: Vec<String>,
+    /// Number of tool-result events observed.
+    tool_results_in_stream: usize,
+    /// Text accumulated for the final model turn.
+    final_turn_text: String,
+    /// Output carried by the agent's final response, when present.
+    final_response_text: Option<String>,
+    /// Whether the stream emitted an agent final response.
+    got_final_response: bool,
+}
+
+/// Drain an agent stream into observations, resetting the turn text at each tool result.
+async fn collect_stream_stats(
+    stream: impl futures::Stream<Item = Result<MultiTurnStreamItem, PromptError>>,
+) -> StreamStats {
+    let mut stats = StreamStats::default();
+
+    futures::pin_mut!(stream);
+
+    while let Some(item) = stream.next().await {
+        match item {
+            Ok(MultiTurnStreamItem::ToolCall { ref tool_call, .. }) => {
+                stats
+                    .tool_calls_in_stream
+                    .push(tool_call.function.name.clone().into());
+            }
+            Ok(MultiTurnStreamItem::StreamAssistantItem(Item::Event(StreamEvent::Text {
+                ref text,
+                ..
+            }))) => {
+                stats.final_turn_text.push_str(text);
+            }
+            Ok(MultiTurnStreamItem::ToolResult { .. }) => {
+                stats.tool_results_in_stream += 1;
+                stats.final_turn_text.clear();
+            }
+            Ok(MultiTurnStreamItem::FinalResponse(response)) => {
+                stats.final_response_text = Some(response.output().to_owned());
+                stats.got_final_response = true;
+            }
+            Ok(_) | Err(_) => {}
+        }
+    }
+
+    stats
+}
 
 /// A text fragment, cut from a stream that opened its part.
 fn text(text: &str) -> Item<rig::streaming::StreamEvent> {
@@ -49,7 +98,7 @@ async fn collect_stream_stats_tracks_only_final_turn_text() {
         )),
     ];
 
-    let stats = collect_stream_stats(stream::iter(items), "test").await;
+    let stats = collect_stream_stats(stream::iter(items)).await;
 
     assert_eq!(stats.tool_calls_in_stream, vec!["get_weather".to_string()]);
     assert_eq!(stats.tool_results_in_stream, 1);

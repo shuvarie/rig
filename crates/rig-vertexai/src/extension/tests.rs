@@ -211,7 +211,7 @@ fn media_resolution_reaches_generation_config() {
 /// A Vertex AI reply, read through a fake transport as the wire reads it.
 /// There is no Vertex AI recording: the GenerateContent fields are the
 /// Gemini API's recorded reply in
-/// `rig-cassette/fixtures/cassettes/gemini/raw_capture_matrix/raw_exposes_forced_function_call.yaml`,
+/// `tests/fixtures/cassettes/gemini/raw_capture_matrix/raw_exposes_forced_function_call.yaml`,
 /// and `createTime`, `trafficType` and the citation are added by hand.
 #[test]
 fn extras_read_a_vertex_reply() {

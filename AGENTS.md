@@ -45,8 +45,8 @@ signatures, module paths, and feature flags.
 - Companion provider, vector-store, memory, and integration crates: `crates/rig-*`
 - Derive macros: `crates/rig-derive`
 - Workspace example packages: `examples/*`; per-crate examples: `crates/<crate>/examples/`
-- Integration tests: one binary per package, `integration`, with one module per suite (`tests/integration/main.rs`, or `tests/integration.rs` in `rig-cassette`); rig-core also keeps `websocket_off_runtime`, which needs its own process
-- Record/replay home: `crates/rig-cassette` — the engine (`src/`), the provider cassette corpus (`fixtures/cassettes/<provider>/`), the effect-log golden corpus (`fixtures/effects/`), every cassette-backed provider suite (`tests/providers/<provider>/`, with the shared drivers in `tests/common/`), the cache-prefix guard, and the effect-bus verification suite `verify`. Corpora and `tests/` are excluded from the published package.
+- Integration tests: one binary per package, `integration`, with one module per suite (`tests/integration/main.rs`); rig-core also keeps `websocket_off_runtime`, which needs its own process
+- Recorded provider replies: `tests/fixtures/cassettes/<provider>/`. Fixtures are read only, by the wire tests that decode them; there is no recording engine in this tree.
 - Live-only provider test modules stay in the facade: `tests/providers/<provider>/`, declared in `tests/integration/main.rs`
 - External-service integration tests: `tests/integrations/`
 
@@ -121,12 +121,13 @@ errors, and use the WASM-compatible bounds.
 - Prefer the cleanest implementation.
 - Break things if the result is better.
 
-## Cassette Regression Tests
+## Recorded Provider Replies
 
-Provider regressions should usually include cassette-backed tests. Follow
-[tests/README.md](tests/README.md#cassette-provider-tests) for replay/record
-commands and fixture safety review; never record or rewrite fixtures merely
-to make verification pass.
+Provider regressions should decode a recorded reply from
+`tests/fixtures/cassettes/<provider>/` rather than pasting a body into the test,
+so the assertion and the wire bytes cannot drift. Fixtures are read only: never
+rewrite one to make verification pass. See
+[tests/README.md](tests/README.md).
 
 ## Verification
 
