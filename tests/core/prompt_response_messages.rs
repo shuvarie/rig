@@ -1,10 +1,10 @@
 //! Integration tests for `PromptResponse.messages` using mock models.
 //! Exercises the real agent loop code path with mocked LLM responses.
 
-use rig::agent::AgentBuilder;
+use rig::agent::agent::AgentBuilder;
+use rig::agent::test_utils::{MockAddTool, MockCompletionModel, MockTurn};
 use rig::completion::{Message, Usage};
 use rig::message::{AssistantContent, UserContent};
-use rig_agent::test_utils::{MockAddTool, MockCompletionModel, MockTurn};
 
 // ---------------------------------------------------------------------------
 // Mock model infrastructure
@@ -61,7 +61,7 @@ async fn standard_prompt_returns_string() {
 /// Test 6b: `PromptResponse` implements `Display`, delegating to `output`.
 #[tokio::test]
 async fn prompt_response_display_shows_output() {
-    use rig::agent::PromptResponse;
+    use rig::agent::agent::PromptResponse;
 
     let resp = PromptResponse::new("the answer is 42", Usage::default());
 

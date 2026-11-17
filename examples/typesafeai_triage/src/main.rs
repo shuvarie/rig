@@ -3,7 +3,7 @@
 
 use anyhow::Result;
 use rig::error::ProviderError;
-use rig::typesafeai::{
+use rig::providers::typesafeai::{
     Choice, ChoiceAnswer, Evaluate, Jev, Noul, NoulAnswer, Query, Score, ScoreAnswer,
 };
 use serde::{Deserialize, Serialize};

@@ -1,7 +1,7 @@
 //! Hyperbolic: text only, for it takes no tools, so calls and results
 //! reach it as text.
 
-use rig_core::providers::openai::wire::HYPERBOLIC;
+use rig::providers::openai::wire::HYPERBOLIC;
 use serde_json::{Value, json};
 
 use super::chat::ChatHistory;
@@ -19,8 +19,8 @@ fn rich_deltas() -> Vec<Value> {
 
 pub const FIXTURE: ChatHistory = ChatHistory {
     dialect: &HYPERBOLIC,
-    model: rig_core::providers::hyperbolic::LLAMA_3_3_70B,
-    other_model: rig_core::providers::hyperbolic::QWEN_2_5_72B,
+    model: rig::providers::hyperbolic::LLAMA_3_3_70B,
+    other_model: rig::providers::hyperbolic::QWEN_2_5_72B,
     text_only_model: None,
     rich,
     rich_deltas,
@@ -28,7 +28,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: false,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "hyperbolic",
     fixture: FIXTURE,
 }

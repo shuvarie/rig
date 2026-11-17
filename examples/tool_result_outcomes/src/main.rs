@@ -47,11 +47,14 @@ struct ProbeArgs {
     operation: Operation,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize, rig::ContextValue)]
-#[context(key = "example.failure_site")]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 struct FailureSite {
     operation: Operation,
     resource: String,
+}
+
+impl rig::tool::ContextValue for FailureSite {
+    const KEY: &'static str = "example.failure_site";
 }
 
 #[derive(Debug, thiserror::Error)]

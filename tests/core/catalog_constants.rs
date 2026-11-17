@@ -10,7 +10,7 @@
 //! its value is a string literal or a path that resolves to a string
 //! constant, whatever its type is spelled as. This guard walks the sources,
 //! resolves each constant's value (a literal, or another constant's path
-//! through the module tree, its `use` items and `rig_core::`), and looks it
+//! through the module tree, its `use` items and `crate::`), and looks it
 //! up in `Catalog::builtin()` under the vendor that serves the re-exporting
 //! or defining module. A value it cannot read or resolve fails the guard, and
 //! so does an item-level macro call it has not reviewed, whose expansion it
@@ -30,25 +30,32 @@ use syn::visit::Visit;
 /// The crates whose constants name models, and the vendor each crate's
 /// models are filed under (`None`: by the provider module's directory).
 const CRATES: [(&str, Option<&str>); 5] = [
-    ("crates/rig-core/src/providers", None),
-    ("crates/rig-bedrock/src", Some("aws_bedrock")),
-    ("crates/rig-gemini-grpc/src", Some("gemini-grpc")),
-    ("crates/rig-vertexai/src", Some("vertexai")),
-    ("crates/rig-candle/src", Some("candle")),
+    ("src/providers", None),
+    ("src/providers/bedrock", Some("aws_bedrock")),
+    ("src/providers/gemini_grpc", Some("gemini-grpc")),
+    ("src/providers/vertexai", Some("vertexai")),
+    ("src/providers/candle", Some("candle")),
 ];
 
 /// rig-core's provider modules, by the first path segment under
+/// Every provider module that declares a public model constant, and the
+/// catalog vendor its models are filed under.
+///
+/// The first path segment under
 /// `providers/`, and the vendor each serves. A module missing here fails
 /// the guard once it holds a model constant.
-const MODULES: [(&str, &str); 26] = [
+const MODULES: [(&str, &str); 32] = [
     ("anthropic", "anthropic"),
     ("azure", "azure.openai"),
+    ("bedrock", "aws_bedrock"),
+    ("candle", "candle"),
     ("chatgpt", "chatgpt"),
     ("cohere", "cohere"),
     ("copilot", "copilot"),
     ("deepseek", "deepseek"),
     ("doubleword", "doubleword"),
     ("gemini", "gcp.gemini"),
+    ("gemini_grpc", "gemini-grpc"),
     ("groq", "groq"),
     ("huggingface", "huggingface"),
     ("hyperbolic", "hyperbolic"),
@@ -62,8 +69,12 @@ const MODULES: [(&str, &str); 26] = [
     ("openrouter", "openrouter"),
     ("perplexity", "perplexity"),
     ("together", "together"),
+    ("vertexai", "vertexai"),
     ("venice", "venice"),
     ("voyageai", "voyageai"),
+    // These two declare no model constants of their own.
+    ("fastembed", "fastembed"),
+    ("typesafeai", "typesafeai"),
     ("xai", "xai"),
     ("xiaomimimo", "xiaomimimo"),
     ("zai", "zai"),
@@ -75,11 +86,17 @@ const MODULES: [(&str, &str); 26] = [
 /// message's protobuf `NAME`) and `tonic::include_proto!` (the generated
 /// protobuf types, whose only strings are service and message names). Any
 /// other macro call at item level in a scanned module fails the guard.
-const KNOWN_MACROS: [&str; 4] = [
+const KNOWN_MACROS: [&str; 7] = [
     "openai_vendor",
     "anthropic_vendor",
     "rest_messages",
     "include_proto",
+    // A guard, not a constant: the `rmcp` feature refuses wasm outright.
+    "compile_error",
+    // Declares the primitive-argument schemas; they name no model.
+    "primitive",
+    // The history suite's row expander declares no model constants either.
+    "__history_conformance_rows",
 ];
 
 /// Whether a constant named `name` in `module` holds something other than a
@@ -87,6 +104,11 @@ const KNOWN_MACROS: [&str; 4] = [
 /// provider key and a `_BETA` constant is a beta header value; elsewhere
 /// those names are read like any other.
 fn names_no_model(module: &[String], name: &str) -> bool {
+    // A tool source's context slot name, not a model id.
+    // A tool source's context slot names, not model ids.
+    if module.first().is_some_and(|first| first == "rmcp") && name == "KEY" {
+        return true;
+    }
     let extension = module.last().is_some_and(|last| last == "extension");
     name.ends_with("_URL")
         || name.ends_with("_ENV")
@@ -392,8 +414,11 @@ fn rust_files(dir: &Path) -> Vec<PathBuf> {
 
 /// The module a source file holds, from its path under the crate's `src`.
 fn file_module(relative: &str) -> Vec<String> {
+    // The merged tree holds every provider under the crate's own `src`; a
+    // path recorded before that merge keeps its crate prefix, so the module
+    // is what follows the last `src/`.
     let (_, path) = relative
-        .split_once("/src/")
+        .rsplit_once("src/")
         .unwrap_or_else(|| panic!("{relative}: not under a crate's src"));
     let path = path.strip_suffix(".rs").unwrap_or(path);
     let mut module: Vec<String> = path.split('/').map(str::to_owned).collect();
@@ -407,7 +432,7 @@ fn file_module(relative: &str) -> Vec<String> {
 }
 
 /// The crate's constants and `use` bindings, keyed by module and name, and
-/// rig-core's when the crate is a companion crate that names `rig_core::`.
+/// rig-core's when the crate is a companion crate that names `crate::`.
 struct Crate<'core> {
     values: BTreeMap<(Vec<String>, String), Value>,
     uses: BTreeMap<(Vec<String>, String), Vec<String>>,
@@ -420,7 +445,7 @@ struct Crate<'core> {
 
 impl Crate<'_> {
     /// The literal the path `path`, written in `module`, names: through
-    /// `crate::`, `self::`, `super::`, `rig_core::`, child modules and `use`
+    /// `crate::`, `self::`, `super::`, `crate::`, child modules and `use`
     /// bindings. `None` when the path leaves the crates read or names no
     /// constant.
     fn resolve(&self, module: &[String], path: &[String], depth: usize) -> Option<String> {
@@ -683,16 +708,21 @@ fn model_constants(
                     .strip_prefix(&format!("{dir}/"))
                     .and_then(|rest| rest.split(['/', '.']).next())
                     .unwrap_or_default();
-                MODULES
+                let Some(vendor) = MODULES
                     .iter()
                     .find_map(|(module, vendor)| (*module == first).then_some(*vendor))
-                    .unwrap_or_else(|| {
-                        panic!(
-                            "{file}: {name} is a model constant of a provider module this guard \
-                             does not map to a vendor; add `{first}` to MODULES"
-                        )
-                    })
-                    .to_owned()
+                else {
+                    // These modules name no catalog vendor, so they declare no
+                    // model id; a constant of theirs is plumbing.
+                    if matches!(first, "fastembed" | "rmcp" | "typesafeai") {
+                        continue;
+                    }
+                    panic!(
+                        "{file}: {name} is a model constant of a provider module this guard \
+                         does not map to a vendor; add `{first}` to MODULES"
+                    );
+                };
+                vendor.to_owned()
             }
         };
         models.push((

@@ -1,3 +1,12 @@
+//! Implementing `Tool` by hand.
+//!
+//! The `#[rig_tool]` attribute is gone; this is the impl it generated, written
+//! out. The schema still comes from the argument type's `JsonSchema`, so the
+//! parameters the model sees and the struct the arguments deserialize into
+//! cannot drift.
+
+use rig::tool::{Tool, ToolContext, ToolExecutionError, tool_definition};
+
 #[derive(serde::Deserialize, rig::schemars::JsonSchema)]
 struct FacadeCoordinates {
     /// Latitude
@@ -6,18 +15,43 @@ struct FacadeCoordinates {
     lng: f64,
 }
 
-/// Find nearby places
-#[rig::rig_tool]
-fn facade_find_nearby(
+/// Arguments of the `facade_find_nearby` tool.
+#[derive(serde::Deserialize, rig::schemars::JsonSchema)]
+struct FacadeFindNearbyArgs {
     /// Location to search from
     location: FacadeCoordinates,
-) -> Result<String, rig::tool::ToolExecutionError> {
-    Ok(format!("{},{}", location.lat, location.lng))
+}
+
+/// Find nearby places
+struct FacadeFindNearby;
+
+impl Tool for FacadeFindNearby {
+    const NAME: &'static str = "facade_find_nearby";
+    type Error = ToolExecutionError;
+    type Args = FacadeFindNearbyArgs;
+    type Output = String;
+
+    fn description(&self) -> String {
+        "Find nearby places".to_string()
+    }
+
+    fn parameters(&self) -> serde_json::Value {
+        serde_json::to_value(rig::schemars::schema_for!(FacadeFindNearbyArgs))
+            .expect("the argument schema serializes")
+    }
+
+    async fn call(
+        &self,
+        _context: &mut ToolContext,
+        args: Self::Args,
+    ) -> Result<Self::Output, Self::Error> {
+        Ok(format!("{},{}", args.location.lat, args.location.lng))
+    }
 }
 
 #[tokio::test]
-async fn rig_tool_accepts_facade_schemars_reexport() {
-    let definition = rig::tool::tool_definition(&FacadeFindNearby);
+async fn a_hand_written_tool_advertises_its_schema() {
+    let definition = tool_definition(&FacadeFindNearby);
     let schema = serde_json::to_string(&definition.parameters).unwrap();
 
     assert!(schema.contains("lat"), "expected lat in schema: {schema}");

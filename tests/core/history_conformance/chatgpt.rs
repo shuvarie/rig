@@ -1,9 +1,9 @@
 //! The ChatGPT (Codex) dialect of the Responses wire: every system message
 //! goes to `instructions`, and the gateway always answers with a stream.
 
-use rig_core::providers::chatgpt;
-use rig_core::providers::openai::OpenAIConfig;
-use rig_core::providers::openai::responses_api::wire::Responses;
+use rig::providers::chatgpt;
+use rig::providers::openai::OpenAIConfig;
+use rig::providers::openai::responses_api::wire::Responses;
 
 use super::openai_responses::ResponsesHistory;
 
@@ -19,7 +19,7 @@ fn wire(model: &str) -> Responses {
     )
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "chatgpt",
     fixture: ResponsesHistory {
         wire,

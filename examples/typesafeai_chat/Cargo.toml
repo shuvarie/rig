@@ -10,5 +10,5 @@ workspace = true
 [dependencies]
 rig = { workspace = true, features = ["typesafeai"] }
 anyhow.workspace = true
-serde = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = [] }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "time"] }

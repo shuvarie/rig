@@ -1,7 +1,7 @@
 //! Mistral: Magistral's thinking content parts, text, and calls it streams
 //! whole. Thinking goes back as the part it came as.
 
-use rig_core::providers::openai::wire::MISTRAL;
+use rig::providers::openai::wire::MISTRAL;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call};
@@ -51,7 +51,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "mistral",
     fixture: FIXTURE,
 }

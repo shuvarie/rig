@@ -1,6 +1,6 @@
 //! Macro-expanded wire-conformance suites for the byte-transport wire
 //! families whose fixtures live in
-//! `rig_core::test_utils::streaming_conformance::fixtures`.
+//! `rig::test_utils::streaming_conformance::fixtures`.
 //!
 //! Each invocation expands the full canonical scenario set plus the
 //! anti-tamper tests (`suite_is_complete`,
@@ -9,8 +9,8 @@
 //! registry test (`streaming_conformance_registry.rs`) fails CI when any wire
 //! family lacks an invocation.
 
-use rig_core::streaming_conformance_suite;
-use rig_core::test_utils::streaming_conformance::fixtures::{
+use rig::streaming_conformance_suite;
+use rig::test_utils::streaming_conformance::fixtures::{
     anthropic, gemini_rest, interactions, openai_chat, openai_responses,
 };
 

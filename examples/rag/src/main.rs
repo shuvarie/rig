@@ -13,12 +13,21 @@ use std::vec;
 // Data to be RAGged.
 // A vector search needs to be performed on the `definitions` field, so we derive the `Embed` trait for `WordDefinition`
 // and tag that field with `#[embed]`.
-#[derive(Embed, Serialize, Clone, Debug, Eq, PartialEq, Default)]
+#[derive(Serialize, Clone, Debug, Eq, PartialEq, Default)]
 struct WordDefinition {
     id: String,
     word: String,
-    #[embed]
     definitions: Vec<String>,
+}
+
+impl Embed for WordDefinition {
+    fn embed(
+        &self,
+        embedder: &mut rig::embeddings::TextEmbedder,
+    ) -> Result<(), rig::embeddings::embed::EmbedError> {
+        Embed::embed(&self.definitions, embedder)?;
+        Ok(())
+    }
 }
 
 #[tokio::main]

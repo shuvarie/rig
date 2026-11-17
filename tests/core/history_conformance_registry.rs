@@ -1,5 +1,5 @@
 //! Workspace registry for the history conformance suite: every wire in
-//! [`HISTORY_WIRES`](rig_history_conformance::HISTORY_WIRES)
+//! [`HISTORY_WIRES`](rig::test_utils::history_suite::HISTORY_WIRES)
 //! must expand `history_conformance_suite!`, or CI fails. Suites compiled
 //! into this binary are linked through
 //! [`SUITE_WIRES`](super::history_conformance::SUITE_WIRES); the ones that
@@ -9,7 +9,7 @@
 use std::collections::BTreeSet;
 use std::path::Path;
 
-use rig_history_conformance::{HISTORY_WIRES, TESTS};
+use rig::test_utils::history_suite::{HISTORY_WIRES, TESTS};
 
 use super::history_conformance;
 
@@ -22,23 +22,23 @@ struct OutOfBinaryWire {
 const OUT_OF_BINARY_WIRES: &[OutOfBinaryWire] = &[
     OutOfBinaryWire {
         wire: "candle",
-        suite_file: "crates/rig-candle/tests/integration/history_conformance.rs",
+        suite_file: "tests/candle/integration/history_conformance.rs",
     },
     OutOfBinaryWire {
         wire: "gemini_grpc",
-        suite_file: "crates/rig-gemini-grpc/tests/integration/history_conformance.rs",
+        suite_file: "tests/gemini_grpc/integration/history_conformance.rs",
     },
     OutOfBinaryWire {
         wire: "vertexai",
-        suite_file: "crates/rig-vertexai/tests/integration/history_conformance.rs",
+        suite_file: "tests/vertexai/integration/history_conformance.rs",
     },
     OutOfBinaryWire {
         wire: "bedrock_claude",
-        suite_file: "crates/rig-bedrock/tests/history_conformance.rs",
+        suite_file: "tests/bedrock/main.rs",
     },
     OutOfBinaryWire {
         wire: "bedrock_nova",
-        suite_file: "crates/rig-bedrock/tests/history_conformance.rs",
+        suite_file: "tests/bedrock/main.rs",
     },
 ];
 
@@ -74,14 +74,27 @@ fn every_completion_wire_has_a_history_suite() {
 }
 
 /// Provider modules with no completion wire of their own, so no suite.
-const NO_COMPLETION_WIRE: &[&str] = &["internal", "registry", "voyageai"];
+const NO_COMPLETION_WIRE: &[&str] = &[
+    // Provider plumbing with no wire of its own.
+    "internal",
+    "registry",
+    // Embedding and transcription only.
+    "voyageai",
+    "fastembed",
+    // Tool sources, not completion wires.
+    "rmcp",
+    "typesafeai",
+    // These four provider directories are the SDK providers; their suites live
+    // in `tests/<provider>/` and are covered by `OUT_OF_BINARY_WIRES`.
+    "gemini_grpc",
+];
 
 /// Every provider module has a suite: some wire in `HISTORY_WIRES` names it
 /// as one of its `_`-separated words, so a new provider cannot skip the
 /// suite.
 #[test]
 fn every_provider_module_has_a_history_suite() {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("crates/rig-core/src/providers");
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("src/providers");
     let mut modules: BTreeSet<String> = BTreeSet::new();
     for entry in std::fs::read_dir(&root).expect("the providers directory") {
         let path = entry.expect("a directory entry").path();
@@ -131,7 +144,7 @@ fn every_named_finding_test_exists() {
 /// `anthropic_<dialect>`, and `anthropic` for Anthropic itself.
 #[test]
 fn every_messages_dialect_has_a_history_suite() {
-    let missing: Vec<String> = rig_core::providers::anthropic::wire::all()
+    let missing: Vec<String> = rig::providers::anthropic::wire::all()
         .map(|dialect| match dialect.name {
             "anthropic" => "anthropic".to_owned(),
             name => format!("anthropic_{name}"),

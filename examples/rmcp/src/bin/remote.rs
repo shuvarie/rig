@@ -9,10 +9,11 @@
 //! `OPENAI_API_KEY`.
 
 use anyhow::Context;
+use rig::providers::rmcp::McpConnection;
 use rig::{
     prelude::*,
     providers::openai::{self, OpenAI},
-    tool::{DynamicTool, rmcp::McpConnection},
+    tool::DynamicTool,
 };
 use rmcp::{
     ServiceExt,

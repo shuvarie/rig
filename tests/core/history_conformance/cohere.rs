@@ -2,7 +2,7 @@
 //! text, and a tool call streamed in fragments. Only its vision models read
 //! images.
 
-use rig_core::providers::openai::wire::COHERE;
+use rig::providers::openai::wire::COHERE;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -37,7 +37,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "cohere",
     fixture: FIXTURE,
 }

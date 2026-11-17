@@ -1,7 +1,8 @@
-//! Dependency-graph invariants for the runtime/transport-agnostic split.
+//! Dependency-graph invariants for the contracts/transport/provider split,
+//! which is a feature split inside one package.
 //!
-//! Runtime crates retain only execution mechanisms and the shared vocabulary.
-//! Workspace graph checks cover runtime back-edges.
+//! The contracts compile with no transport and no provider SDK; each provider
+//! SDK arrives only with its own feature.
 
 use std::process::Command;
 
@@ -11,37 +12,27 @@ use std::process::Command;
 type Graph = (&'static str, &'static str, &'static str, &'static str);
 
 const GRAPHS: &[Graph] = &[
-    ("rig-core", "", "tokio reqwest", ""),
-    // The `reqwest` and `tungstenite` features bring in the bundled transports,
-    // and with them reqwest and tokio: only through those two crates.
-    (
-        "rig-core",
-        "--all-features",
-        "rig-agent",
-        "rig-reqwest rig-tungstenite",
-    ),
-    (
-        "rig-core",
-        "--no-default-features --features derive,rustls,audio,image,pdf,epub,websocket",
-        "tokio reqwest rig-reqwest rig-tungstenite",
-        "rig-http",
-    ),
-    ("rig-agent", "", "tokio reqwest rmcp", "rig-core"),
-    (
-        "rig-agent",
-        "--no-default-features",
-        "tokio reqwest rmcp",
-        "rig-core",
-    ),
-    ("rig-agent", "--all-features", "reqwest rmcp", "rig-core"),
-    ("rig-rmcp", "", "rig-agent", ""),
+    // Contracts alone: no transport, no async runtime, no provider SDK.
+    ("rig", "--no-default-features", "tokio reqwest", ""),
+    // Each provider SDK is reachable only through its own feature.
     (
         "rig",
-        "--no-default-features --features agent,derive",
-        "tokio reqwest rmcp",
-        "rig-core rig-agent",
+        "--no-default-features --features reqwest",
+        "bedrock candle fastembed gemini-grpc vertexai rmcp",
+        "reqwest tokio",
     ),
-    ("rig", "", "", "rig-core rig-agent"),
+    (
+        "rig",
+        "--no-default-features --features bedrock",
+        "candle fastembed vertexai gemini-grpc rmcp",
+        "aws-sdk-bedrockruntime",
+    ),
+    (
+        "rig",
+        "--no-default-features --features candle",
+        "bedrock fastembed vertexai gemini-grpc rmcp",
+        "candle-core",
+    ),
 ];
 
 /// `cargo` with `args`, run from the workspace root; stdout on success.

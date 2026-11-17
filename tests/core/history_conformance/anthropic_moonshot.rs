@@ -3,8 +3,8 @@
 //! item must replay verbatim (#1315), and Kimi K2 before K2.5 reads no
 //! images.
 
-use rig_core::providers::anthropic::wire::MOONSHOT;
-use rig_core::providers::moonshot::{KIMI_K2_6, KIMI_K3};
+use rig::providers::anthropic::wire::MOONSHOT;
+use rig::providers::moonshot::{KIMI_K2_6, KIMI_K3};
 
 use super::anthropic::MessagesHistory;
 
@@ -17,7 +17,7 @@ pub const MOONSHOT_HISTORY: MessagesHistory = MessagesHistory {
     hosted: false,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "anthropic_moonshot",
     fixture: MOONSHOT_HISTORY,
 }

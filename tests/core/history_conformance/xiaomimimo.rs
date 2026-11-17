@@ -1,7 +1,7 @@
 //! Xiaomi MiMo's Chat half: reasoning under `reasoning_content`, text,
 //! and a tool call. MiMo V2 Flash and Pro read no images.
 
-use rig_core::providers::openai::wire::XIAOMIMIMO;
+use rig::providers::openai::wire::XIAOMIMIMO;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -27,16 +27,16 @@ fn rich_deltas() -> Vec<Value> {
 
 pub const FIXTURE: ChatHistory = ChatHistory {
     dialect: &XIAOMIMIMO,
-    model: rig_core::providers::xiaomimimo::MIMO_V2_5,
-    other_model: rig_core::providers::xiaomimimo::MIMO_V2_6_FLASH,
-    text_only_model: Some(rig_core::providers::xiaomimimo::MIMO_V2_5_PRO),
+    model: rig::providers::xiaomimimo::MIMO_V2_5,
+    other_model: rig::providers::xiaomimimo::MIMO_V2_6_FLASH,
+    text_only_model: Some(rig::providers::xiaomimimo::MIMO_V2_5_PRO),
     rich,
     rich_deltas,
     interleaved: None,
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "xiaomimimo",
     fixture: FIXTURE,
 }

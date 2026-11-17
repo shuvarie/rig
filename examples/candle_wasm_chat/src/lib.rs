@@ -4,9 +4,9 @@ use std::cell::RefCell;
 
 use rig::{
     agent::{Agent, AgentBuilder},
-    candle::extension::CandleOptions,
-    candle::{CandleModel, GgufModelData},
     message::Message,
+    providers::candle::extension::CandleOptions,
+    providers::candle::{CandleModel, GgufModelData},
 };
 use wasm_bindgen::prelude::*;
 

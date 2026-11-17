@@ -1,6 +1,6 @@
 use anyhow::Context;
 use futures::StreamExt;
-use rig::candle::pose::{BodyPart, CandlePoseModel, ImageFrame, PoseRequest};
+use rig::providers::candle::pose::{BodyPart, CandlePoseModel, ImageFrame, PoseRequest};
 use rig::streaming::Item;
 
 #[tokio::main]

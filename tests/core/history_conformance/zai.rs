@@ -2,7 +2,7 @@
 //! tool call. GLM vision models put `v` after the version; the rest read
 //! no images.
 
-use rig_core::providers::openai::wire::ZAI;
+use rig::providers::openai::wire::ZAI;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -28,16 +28,16 @@ fn rich_deltas() -> Vec<Value> {
 
 pub const FIXTURE: ChatHistory = ChatHistory {
     dialect: &ZAI,
-    model: rig_core::providers::zai::GLM_4_5V,
-    other_model: rig_core::providers::zai::GLM_4_6,
-    text_only_model: Some(rig_core::providers::zai::GLM_4_6),
+    model: rig::providers::zai::GLM_4_5V,
+    other_model: rig::providers::zai::GLM_4_6,
+    text_only_model: Some(rig::providers::zai::GLM_4_6),
     rich,
     rich_deltas,
     interleaved: None,
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "zai",
     fixture: FIXTURE,
 }

@@ -1,9 +1,9 @@
 //! The default `user-agent` a gateway that asks for one is sent.
 
 use rig::completion::CompletionRequest;
+use rig::operation::Completion;
 use rig::providers::{chatgpt, openai};
-use rig_core::operation::Completion;
-use rig_core::wire::{Mode, Operation, Wire};
+use rig::wire::{Mode, Operation, Wire};
 
 #[test]
 fn the_default_user_agent_names_the_crate_version_and_this_host() -> anyhow::Result<()> {

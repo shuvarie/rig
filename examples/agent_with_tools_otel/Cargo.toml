@@ -13,7 +13,7 @@ anyhow = { workspace = true }
 opentelemetry = { workspace = true }
 opentelemetry-otlp = { workspace = true }
 opentelemetry_sdk = { workspace = true, features = ["rt-tokio"] }
-serde = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = [] }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["full"] }

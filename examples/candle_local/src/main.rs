@@ -2,9 +2,9 @@ use std::io::Write;
 
 use anyhow::Context;
 use futures::StreamExt;
-use rig::candle::extension::CandleExt;
-use rig::candle::{CandleModel, ModelData};
 use rig::completion::CompletionRequest;
+use rig::providers::candle::extension::CandleExt;
+use rig::providers::candle::{CandleModel, ModelData};
 use rig::streaming::{Item, StreamEvent};
 
 #[tokio::main]

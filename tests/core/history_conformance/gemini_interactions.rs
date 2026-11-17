@@ -2,16 +2,16 @@
 //! interaction resource; a streamed one is its `step.*` events, ended by
 //! `interaction.completed`.
 
+use rig::completion::CompletionRequest;
+use rig::error::EncodeError;
 use rig::json_utils::remove_preserving_order;
-use rig_core::completion::CompletionRequest;
-use rig_core::error::EncodeError;
-use rig_core::message::AssistantContent;
-use rig_core::providers::gemini::GeminiConfig;
-use rig_core::providers::gemini::interactions_api::Interactions;
-use rig_core::wire::{Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::message::AssistantContent;
+use rig::providers::gemini::GeminiConfig;
+use rig::providers::gemini::interactions_api::Interactions;
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Rng, Shape, http_body, replies,
 };
+use rig::wire::{Mode, Wire, WireFrame};
 use serde_json::{Value, json};
 
 pub struct InteractionsHistory;
@@ -279,7 +279,7 @@ impl HistoryFixture for InteractionsHistory {
     /// A step is its own whole interaction.
     fn decode_item(&self, block: &AssistantContent) -> Option<AssistantContent> {
         let step = block.native_item()?.clone();
-        let response = rig_core::test_utils::history::decode(
+        let response = rig::test_utils::history::decode(
             &self.wire(MODEL),
             Mode::Unary,
             [frame(resource(vec![step], "completed"))],
@@ -329,7 +329,7 @@ impl HistoryFixture for InteractionsHistory {
     }
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "gemini_interactions",
     fixture: InteractionsHistory,
 }

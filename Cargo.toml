@@ -100,42 +100,19 @@ rustdoc-args = ["--cfg", "docsrs"]
 [workspace]
 resolver = "3"
 members = [
-    "crates/*",
-    "examples/*",
-    "test-support/rig-history-conformance",
-]
-# The root manifest is itself the `rig` facade package, so without an
-# explicit `default-members` a bare `cargo nextest run` resolved to the
-# facade alone and every `crates/*` unit test ran only where a CI step named
-# its package (#2258: ~1,200 rig-core lib unit tests executed in no step).
-# The default set is the facade plus the crates whose unit tests must always
-# run; the examples stay opt-in.
-# rig-derive is deliberately absent: a proc-macro crate's test binary links
-# libstd dynamically, which breaks under toolchains installed without the
-# dylib component. Absent from the default set is not absent from CI: the
-# `test` lane runs `cargo nextest run --workspace`, which names it, and the
-# `macro_hygiene` suite of rig-core's tests consumes the expanded macros.
-default-members = [
     ".",
-    "crates/rig-core",
-    "crates/rig-agent",
-    "crates/rig-http",
-    "crates/rig-reqwest",
-    "crates/rig-tungstenite",
-    "crates/rig-typesafeai",
-    "crates/rig-bedrock",
-    "crates/rig-candle",
-    "crates/rig-gemini-grpc",
-    "test-support/rig-history-conformance",
-    # The design record's Frozen API programs: clippy and the full test
-    # lane compile them.
-    "examples/frozen_api",
+    # The examples are unpublished packages of their own; each `publish = false`.
+    "examples/*",
 ]
 exclude = [
     # Data/infra dirs under examples/ that are not Cargo packages.
     "examples/documents",
     "examples/otel",
 ]
+# A bare `cargo nextest run` resolves the default set, and every `crates/*`
+# unit test once ran in no CI step because nothing named it (#2258). The
+# library is the default member; the examples stay opt-in.
+default-members = ["."]
 
 [workspace.lints.clippy]
 dbg_macro = "forbid"
@@ -291,6 +268,7 @@ tonic-prost-build = "0.14"
 prost = "0.14"
 prost-reflect = { version = "0.16", features = ["serde"] }
 prost-types = "0.14"
+protoc-bin-vendored = "3"
 tracing = "0.1"
 # 0.2.5: `Instrumented<S>: Stream` under `futures-03` for futures 0.3 stable.
 tracing-futures = "0.2.5"
@@ -309,124 +287,307 @@ exclude-members = ["crates/rig-core", "crates/rig-derive"]
 [lints]
 workspace = true
 
+[lib]
+name = "rig"
+path = "src/lib.rs"
+doctest = true
+
 [dependencies]
-rig-typesafeai = { path = "crates/rig-typesafeai", version = "0.46.0", optional = true, default-features = false }
-rig-core = { path = "crates/rig-core", version = "0.46.0", default-features = false }
-rig-reqwest = { path = "crates/rig-reqwest", version = "0.46.0", optional = true, default-features = false }
-rig-agent = { path = "crates/rig-agent", version = "0.46.0", optional = true, default-features = false }
-rig-rmcp = { path = "crates/rig-rmcp", version = "0.46.0", optional = true }
-rig-bedrock = { path = "crates/rig-bedrock", version = "0.46.0", optional = true, default-features = false }
-rig-candle = { path = "crates/rig-candle", version = "0.46.0", optional = true, default-features = false }
-rig-fastembed = { path = "crates/rig-fastembed", version = "0.46.0", optional = true, default-features = false }
-rig-gemini-grpc = { path = "crates/rig-gemini-grpc", version = "0.46.0", optional = true, default-features = false }
-rig-memory = { path = "crates/rig-memory", version = "0.46.0", optional = true, default-features = false }
-rig-derive = { path = "crates/rig-derive", version = "0.46.0", optional = true }
-rig-vertexai = { path = "crates/rig-vertexai", version = "0.46.0", optional = true, default-features = false }
-
-# The bundled websocket backend is native-only (tungstenite needs a tokio
-# reactor and raises a `compile_error!` on wasm), so it is scoped to non-wasm
-# targets. That is what lets `websocket` mean "the protocol, plus the bundled
-# backend where one exists": on wasm the feature still enables
-# `rig-core/tungstenite`, which there is `rig-core/websocket` alone, so
-# `rig::ws_client` is reachable and a browser backend
-# can be implemented against it — which is the escape hatch the backend's own
-# wasm error message prescribes. Wiring the dependency unconditionally would
-# make that hatch unreachable through the facade.
-#
-# Not `default-features = false`, unlike the other optional companions: the
-# backend's own `default = ["rustls"]` is what guarantees that enabling
-# `websocket` always yields a socket that can do `wss://`. Turning defaults off
-# here would let `--no-default-features --features websocket` compile a
-# TLS-less backend that fails every handshake at runtime.
-[target.'cfg(not(target_family = "wasm"))'.dependencies]
-rig-tungstenite = { path = "crates/rig-tungstenite", version = "0.46.0", optional = true }
-
-[dev-dependencies]
-rig-history-conformance = { path = "test-support/rig-history-conformance" }
-anyhow = { workspace = true }
-assert_fs = { workspace = true }
-rig-core = { path = "crates/rig-core", version = "0.46.0", default-features = false, features = [
-  "test-utils",
-] }
-rig-agent = { path = "crates/rig-agent", version = "0.46.0", default-features = false, features = [
-  "test-utils",
-] }
-tokio = { workspace = true, features = ["full"] }
-tracing-subscriber = { workspace = true, features = ["env-filter"] }
+async-stream = { workspace = true }
 base64 = { workspace = true }
 bytes = { workspace = true }
+fastrand = { workspace = true }
+futures = { workspace = true }
+futures-timer = { workspace = true }
+glob = { workspace = true }
+http = { workspace = true }
+httpdate = { workspace = true }
+indexmap = { workspace = true, features = ["serde"] }
+memchr = { workspace = true }
+mime = { workspace = true }
+mime_guess = { workspace = true }
+ordered-float = { workspace = true }
+schemars = { workspace = true }
+serde = { workspace = true, features = ["derive", "rc"] }
+serde_json = { workspace = true, features = ["raw_value"] }
+serde_path_to_error = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tracing-futures = { workspace = true, features = ["futures-03"] }
+url = { workspace = true }
+uuid = { workspace = true, features = ["v4", "serde"] }
+web-time = { workspace = true }
+
+# Documents and books: `pdf` and `epub`.
+epub = { workspace = true, optional = true }
+lopdf = { workspace = true, optional = true }
+quick-xml = { workspace = true, optional = true }
+
+# The bundled HTTP transport (`reqwest_client`) and its middleware selectors.
+reqwest = { workspace = true, features = ["json", "stream", "multipart"], optional = true }
+reqwest-middleware = { workspace = true, optional = true, features = [
+  "json",
+  "multipart",
+  "charset",
+  "http2",
+] }
+# The roots the shared client trusts when the system has none (`rustls`).
+webpki-root-certs = { workspace = true, optional = true }
+
+# `test-utils`: the tracing capture the telemetry contracts need.
+tracing-subscriber = { workspace = true, optional = true }
+
+# The native runtime every bundled transport and SDK provider polls its I/O in.
+tokio = { workspace = true, optional = true, features = ["rt", "rt-multi-thread", "net", "time"] }
+
+# AWS Bedrock (`bedrock`).
+aws-config = { workspace = true, optional = true, features = ["behavior-version-latest"] }
+aws-sdk-bedrockruntime = { workspace = true, optional = true, features = [
+  "rt-tokio",
+  "default-https-client",
+] }
+aws-smithy-eventstream = { workspace = true, optional = true }
+aws-smithy-runtime-api = { workspace = true, optional = true, features = ["client"] }
+aws-smithy-types = { workspace = true, optional = true, features = ["http-body-1-x"] }
+http-body = { workspace = true, optional = true }
+
+# Local inference (`candle`).
+candle-core = { workspace = true, optional = true }
+candle-nn = { workspace = true, optional = true }
+candle-transformers = { workspace = true, optional = true }
+safetensors = { workspace = true, optional = true }
+tokenizers = { workspace = true, optional = true, features = ["onig"] }
+
+# Local embeddings (`fastembed`).
+fastembed = { workspace = true, optional = true }
+
+# Gemini over gRPC (`gemini-grpc`).
+prost = { workspace = true, optional = true }
+prost-reflect = { workspace = true, optional = true }
+prost-types = { workspace = true, optional = true }
+tonic = { workspace = true, optional = true, features = [
+  "transport",
+  "tls-ring",
+  "tls-webpki-roots",
+] }
+tonic-prost = { workspace = true, optional = true }
+
+# Google Vertex AI (`vertexai`).
+google-cloud-aiplatform-v1 = { workspace = true, optional = true }
+google-cloud-auth = { workspace = true, optional = true }
+google-cloud-gax = { workspace = true, optional = true }
+
+# MCP tool sources (`rmcp`).
+rmcp = { workspace = true, optional = true, features = ["client"] }
+
+# An `AsyncStore` over a database reaches Rig's `Files`/`Store` contracts, which
+# need no driver of their own.
+
+[build-dependencies]
+protoc-bin-vendored = { workspace = true }
+tonic-prost-build = { workspace = true }
+
+# tungstenite is a native-only backend: it needs a tokio reactor, and browser
+# wasm reaches websockets through `web_sys`. `ws_client` is the seam where such
+# a backend plugs in.
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+tokio-tungstenite = { workspace = true, optional = true, features = [
+  "connect",
+  "handshake",
+] }
+
+# Browser WASM cannot select a randomness backend from the target triple alone.
+[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
+lopdf = { workspace = true, optional = true, features = ["wasm_js"] }
+uuid = { workspace = true, features = ["js"] }
+
+[dev-dependencies]
+# Self-dependency: feature unification compiles the lib with `test-utils` for
+# every test and example target, so the test doubles and the sequence laws
+# apply in ALL of Rig's own suites while staying log-only for downstream
+# builds.
+rig = { path = ".", features = ["test-utils", "reqwest"] }
+
+# Test support.
+anyhow = { workspace = true }
+assert_fs = { workspace = true }
+base64 = { workspace = true }
+bytes = { workspace = true }
+divan = { workspace = true }
 futures = { workspace = true }
 httpmock = { workspace = true }
+proptest = "1"
 reqwest = { workspace = true, features = ["json", "stream"] }
 schemars = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 # Preserve JSON object insertion order. Declare that requirement directly
-# instead of inheriting it from a database driver's feature graph.
+# instead of inheriting it from a driver's feature graph.
 serde_json = { workspace = true, features = ["float_roundtrip", "preserve_order"] }
 serde_yaml = { workspace = true }
 syn = { workspace = true, features = ["full", "visit"] }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["full"] }
+tokio-test = { workspace = true }
+# The websocket test targets drive a local server through this backend.
+tokio-tungstenite = { workspace = true, features = ["handshake"] }
 tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+
+# The examples' own dependencies.
+axum = { workspace = true }
+http = { workspace = true }
+image = { workspace = true, features = ["jpeg", "png"] }
+opentelemetry = { workspace = true }
+opentelemetry-otlp = { workspace = true }
+opentelemetry_sdk = { workspace = true, features = ["rt-tokio"] }
+redis = { workspace = true }
+reqwest-middleware = { workspace = true }
+reqwest-retry = { workspace = true }
+rmcp = { workspace = true, features = ["client", "transport-streamable-http-server"] }
+tracing-opentelemetry = { workspace = true }
+
 [features]
-typesafeai = ["dep:rig-typesafeai"]
-default = ["rig-core/default", "reqwest", "agent", "derive", "rustls"]
-agent = ["dep:rig-agent"]
-test-utils = ["rig-core/test-utils", "rig-agent?/test-utils"]
-bedrock = ["dep:rig-bedrock"]
-candle = ["dep:rig-candle"]
-fastembed = [
-  "dep:rig-fastembed",
-  "rig-fastembed/hf-hub",
-  "rig-fastembed/ort-download-binaries",
+default = ["reqwest", "rustls"]
+audio = []
+image = []
+# The transport-agnostic websocket contract (`ws_client`). Adds no dependency,
+# but stays gated so the surface is opt-in, matching `audio`/`image`.
+websocket = []
+test-utils = ["dep:tracing-subscriber"]
+pdf = ["dep:lopdf"]
+epub = ["dep:epub", "dep:quick-xml"]
+# Provider clients default to the bundled reqwest transport: `OpenAI::from_env()`
+# and every other client constructor that names no transport.
+reqwest = [
+  "dep:reqwest",
+  "dep:tokio",
+  "dep:webpki-root-certs",
+  "dep:reqwest-middleware",
 ]
-fastembed-hf-hub = ["dep:rig-fastembed", "rig-fastembed/hf-hub"]
-fastembed-ort-download-binaries = ["dep:rig-fastembed", "rig-fastembed/ort-download-binaries"]
-gemini-grpc = ["dep:rig-gemini-grpc"]
-memory = ["dep:rig-memory"]
-vertexai = ["dep:rig-vertexai"]
-audio = ["rig-core/audio", "rig-agent?/audio"]
-image = ["rig-core/image", "rig-agent?/image"]
-derive = ["dep:rig-derive", "rig-core/derive", "rig-agent?/derive"]
-pdf = ["rig-core/pdf"]
-epub = ["rig-core/epub"]
-rmcp = ["dep:rig-rmcp"]
-socks = ["reqwest", "rig-reqwest/socks"]
-# Provider clients built with no transport named (`OpenAI::from_env()`) send
-# through the bundled reqwest client: rig-core's `reqwest` feature.
-reqwest = ["dep:rig-reqwest", "rig-core/reqwest", "rig-typesafeai?/reqwest"]
-# The bundled websocket backend (`rig-tungstenite`) and the provider websocket
-# sessions it drives, through rig-core's `tungstenite` feature. Independent of
-# the HTTP transport axis: a session borrows the provider client for its
-# request mapping, so `reqwest` comes along for the client, not for the socket.
-#
-# `websocket` is the API gate — it is what `pub use rig_tungstenite` is cfg'd
-# on — and each of the three spellings is usable on its own. `rig-tungstenite`'s own `default = ["rustls"]` applies (see its
-# dependency line), so `websocket` always has a working TLS stack; the
-# `websocket-*-tls` spellings add the workspace-wide TLS feature on top, which
-# is also what wires the backend up for `native-tls`.
-#
-# Additive features cannot express "replace rustls with native-tls": a
-# native-tls-ONLY socket means depending on `rig-tungstenite` directly with
-# `default-features = false, features = ["native-tls"]`. Through the facade,
-# `websocket-native-tls` gets you a working native-tls socket with rustls also
-# compiled in. That trade is deliberate — a build that silently cannot speak
-# `wss://` is worse than one that compiles a TLS stack it does not use.
-websocket = ["reqwest", "dep:rig-tungstenite", "rig-core/tungstenite"]
-# `dep:rig-tungstenite` above resolves to nothing on wasm, where the dependency
-# is not in the graph: the feature degrades to the protocol alone.
-websocket-rustls = ["websocket", "rustls"]
-websocket-native-tls = ["websocket", "native-tls"]
+# `reqwest-middleware` shares its name with the optional dependency it enables
+# (`dep:reqwest-middleware`); it is the spellings' common default, and the name
+# the facade forwarded.
+reqwest-middleware = ["reqwest-middleware-rustls"]
+reqwest-middleware-rustls = ["reqwest", "dep:reqwest-middleware"]
+reqwest-middleware-native-tls = ["reqwest", "dep:reqwest-middleware"]
+# The bundled tungstenite websocket backend: a Responses WebSocket session
+# opened with `connect()` and no backend.
+websocket-backend = ["websocket", "dep:tokio-tungstenite", "dep:tokio"]
+socks = ["reqwest", "reqwest/socks"]
+# TLS for the bundled transports. Enable exactly one; `rustls` is the default.
 rustls = [
-  "rig-core/rustls",
-  "rig-reqwest?/rustls",
-  "rig-tungstenite?/rustls",
-  "rig-fastembed?/hf-hub-rustls-tls",
+  "dep:tokio",
+  "dep:webpki-root-certs",
+  "reqwest/rustls",
+  "reqwest/charset",
+  "reqwest/http2",
+  "reqwest/system-proxy",
+  "reqwest-middleware?/rustls",
+  "tokio-tungstenite?/rustls-tls-webpki-roots",
 ]
 native-tls = [
-  "rig-core/native-tls",
-  "rig-reqwest?/native-tls",
-  "rig-tungstenite?/native-tls",
-  "rig-fastembed?/hf-hub-native-tls",
+  "dep:tokio",
+  "reqwest/native-tls",
+  "reqwest/charset",
+  "reqwest/http2",
+  "reqwest/system-proxy",
+  "tokio-tungstenite?/native-tls",
 ]
-reqwest-middleware = ["reqwest", "rig-reqwest/reqwest-middleware"]
-reqwest-middleware-rustls = ["reqwest", "rig-reqwest/reqwest-middleware-rustls"]
-reqwest-middleware-native-tls = ["reqwest", "rig-reqwest/reqwest-middleware-native-tls"]
+bedrock = [
+  "dep:aws-config",
+  "dep:aws-sdk-bedrockruntime",
+  "dep:aws-smithy-eventstream",
+  "dep:aws-smithy-runtime-api",
+  "dep:aws-smithy-types",
+  "dep:http-body",
+  "dep:tokio",
+  "image",
+]
+candle = [
+  "dep:candle-core",
+  "dep:candle-nn",
+  "dep:candle-transformers",
+  "dep:safetensors",
+  "dep:tokio",
+  "dep:tokenizers",
+]
+fastembed = ["dep:fastembed", "fastembed/hf-hub", "fastembed/ort-download-binaries"]
+fastembed-hf-hub = ["dep:fastembed", "fastembed/hf-hub"]
+fastembed-ort-download-binaries = ["dep:fastembed", "fastembed/ort-download-binaries"]
+gemini-grpc = [
+  "dep:prost",
+  "dep:prost-reflect",
+  "dep:prost-types",
+  "dep:tonic",
+  "dep:tonic-prost",
+]
+vertexai = [
+  "dep:google-cloud-aiplatform-v1",
+  "dep:google-cloud-auth",
+  "dep:google-cloud-gax",
+  "dep:tokio",
+]
+typesafeai = []
+rmcp = ["dep:rmcp", "dep:tokio"]
+
+# One binary per suite tree: each `tests/<area>/main.rs` declares its suites.
+[[test]]
+name = "engine"
+path = "tests/engine/main.rs"
+
+[[test]]
+name = "transport"
+path = "tests/transport/main.rs"
+
+[[test]]
+name = "agent"
+path = "tests/agent/main.rs"
+
+[[test]]
+name = "integration"
+path = "tests/integration/main.rs"
+
+[[test]]
+name = "bedrock"
+path = "tests/bedrock/main.rs"
+required-features = ["bedrock"]
+
+[[test]]
+name = "candle"
+path = "tests/candle/integration/main.rs"
+required-features = ["candle"]
+
+[[test]]
+name = "gemini_grpc"
+path = "tests/gemini_grpc/integration/main.rs"
+required-features = ["gemini-grpc"]
+
+[[test]]
+name = "vertexai"
+path = "tests/vertexai/integration/main.rs"
+required-features = ["vertexai"]
+
+[[test]]
+name = "rmcp"
+path = "tests/rmcp/main.rs"
+required-features = ["rmcp"]
+
+[[bench]]
+name = "vector_search"
+harness = false
+
+[[bench]]
+name = "session"
+harness = false
+
+# Its own process even under `cargo test`: it asserts the calling thread has no
+# tokio runtime, which another suite in a shared binary could break.
+[[test]]
+name = "websocket_off_runtime"
+required-features = ["websocket-backend"]
+
+[[test]]
+name = "off_runtime_ownership"
+path = "tests/off_runtime_ownership.rs"
+required-features = ["websocket-backend"]

@@ -26,7 +26,7 @@ where
 /// Every extension marker's key, as its crate's source directory, the
 /// marker's key and the pinned key.
 fn extension_keys() -> Vec<(&'static str, &'static str, &'static str)> {
-    let core = "crates/rig-core/src";
+    let core = "src";
     #[allow(unused_mut)]
     let mut keys = vec![
         (
@@ -125,26 +125,26 @@ fn extension_keys() -> Vec<(&'static str, &'static str, &'static str)> {
     ];
     #[cfg(feature = "bedrock")]
     keys.push((
-        "crates/rig-bedrock/src",
-        key::<rig::bedrock::extension::BedrockExt>(),
+        "src/providers/bedrock",
+        key::<rig::providers::bedrock::extension::BedrockExt>(),
         "aws_bedrock",
     ));
     #[cfg(feature = "candle")]
     keys.push((
-        "crates/rig-candle/src",
-        key::<rig::candle::extension::CandleExt>(),
+        "src/providers/candle",
+        key::<rig::providers::candle::extension::CandleExt>(),
         "candle",
     ));
     #[cfg(feature = "gemini-grpc")]
     keys.push((
-        "crates/rig-gemini-grpc/src",
-        key::<rig::gemini_grpc::extension::GeminiGrpcExt>(),
+        "src/providers/gemini_grpc",
+        key::<rig::providers::gemini_grpc::extension::GeminiGrpcExt>(),
         "gemini-grpc",
     ));
     #[cfg(feature = "vertexai")]
     keys.push((
-        "crates/rig-vertexai/src",
-        key::<rig::vertexai::extension::VertexExt>(),
+        "src/providers/vertexai",
+        key::<rig::providers::vertexai::extension::VertexExt>(),
         "vertexai",
     ));
     keys
@@ -232,16 +232,25 @@ fn every_provider_extension_key_is_pinned() {
     for (_, actual, pinned) in &keys {
         assert_eq!(actual, pinned, "a provider key is stable API");
     }
-    let root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let crates: BTreeSet<&str> = keys.iter().map(|(dir, _, _)| *dir).collect();
-    for dir in crates {
-        let pinned = keys.iter().filter(|(owner, _, _)| *owner == dir).count();
-        assert_eq!(
-            markers_in(&root.join(dir)),
-            pinned,
-            "every ProviderExtension in {dir} has its key pinned here"
-        );
-    }
+    // Every extension lives under the crate's `src`, and each compiled one is
+    // pinned above. An SDK provider's extension is behind its feature, so a
+    // build without it pins no key for a marker its source still carries.
+    let src = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let unpinned: Vec<&str> = ["bedrock", "candle", "gemini_grpc", "vertexai"]
+        .into_iter()
+        .filter(|dir| !keys.iter().any(|(owner, _, _)| owner.ends_with(dir)))
+        .collect();
+    let gated: usize = unpinned
+        .iter()
+        .map(|dir| markers_in(&src.join("providers").join(dir)))
+        .sum();
+    assert_eq!(
+        markers_in(&src),
+        keys.len() + gated,
+        "every ProviderExtension under src has its key pinned here, except the {} in a \
+         feature-gated provider: {unpinned:?}",
+        gated
+    );
 }
 
 #[test]

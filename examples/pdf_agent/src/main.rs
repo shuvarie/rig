@@ -9,11 +9,20 @@ use rig::{
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
-#[derive(Embed, Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Clone, Debug, Serialize, Deserialize, Eq, PartialEq)]
 struct Document {
     id: String,
-    #[embed]
     content: String,
+}
+
+impl Embed for Document {
+    fn embed(
+        &self,
+        embedder: &mut rig::embeddings::TextEmbedder,
+    ) -> Result<(), rig::embeddings::embed::EmbedError> {
+        Embed::embed(&self.content, embedder)?;
+        Ok(())
+    }
 }
 
 fn load_pdf(path: &Path) -> Result<Vec<String>> {

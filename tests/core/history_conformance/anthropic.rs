@@ -2,15 +2,15 @@
 //! dialects share: replies are built as the whole message a unary call
 //! answers and restated as the event stream a streamed call reads.
 
-use rig_core::completion::CompletionRequest;
-use rig_core::error::EncodeError;
-use rig_core::message::{AssistantContent, Message};
-use rig_core::providers::anthropic::completion::{CLAUDE_HAIKU_4_5, CLAUDE_SONNET_4_6};
-use rig_core::providers::anthropic::{ANTHROPIC, AnthropicConfig, Dialect, Messages};
-use rig_core::wire::{Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::completion::CompletionRequest;
+use rig::error::EncodeError;
+use rig::message::{AssistantContent, Message};
+use rig::providers::anthropic::completion::{CLAUDE_HAIKU_4_5, CLAUDE_SONNET_4_6};
+use rig::providers::anthropic::{ANTHROPIC, AnthropicConfig, Dialect, Messages};
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Rng, Shape, decode, http_body, replies,
 };
+use rig::wire::{Mode, Wire, WireFrame};
 use serde_json::{Value, json};
 
 /// A Messages-format dialect's side of the suite.
@@ -156,7 +156,7 @@ impl HistoryFixture for MessagesHistory {
             model: model.to_owned(),
             default_max_tokens: self
                 .dialect
-                .default_max_tokens(&rig_core::catalog::ModelFacts::default(), model),
+                .default_max_tokens(&rig::catalog::ModelFacts::default(), model),
             prompt_caching: false,
             static_prefix_cache_ttl: None,
             strict_tools: false,
@@ -165,7 +165,7 @@ impl HistoryFixture for MessagesHistory {
         }
     }
 
-    fn raw_tool(&self, tool: &rig_core::completion::ToolDefinition) -> Option<Value> {
+    fn raw_tool(&self, tool: &rig::completion::ToolDefinition) -> Option<Value> {
         Some(serde_json::json!({
             "name": tool.name.as_str(), "description": tool.description,
             "input_schema": tool.parameters,
@@ -351,7 +351,7 @@ impl HistoryFixture for MessagesHistory {
     }
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "anthropic",
     fixture: ANTHROPIC_HISTORY,
 }

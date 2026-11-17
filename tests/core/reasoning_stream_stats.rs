@@ -1,5 +1,5 @@
 use futures::{StreamExt, stream};
-use rig::agent::MultiTurnStreamItem;
+use rig::agent::agent::MultiTurnStreamItem;
 use rig::completion::{PromptError, Usage};
 use rig::message::{AssistantContent, ToolCall, ToolFunction, ToolResult, ToolResultContent};
 use rig::streaming::{Item, StreamEvent, StreamRecord};

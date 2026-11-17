@@ -2,7 +2,7 @@
 //! carry beside the message. It takes no tools, so calls and results reach
 //! it as text.
 
-use rig_core::providers::openai::wire::PERPLEXITY;
+use rig::providers::openai::wire::PERPLEXITY;
 use serde_json::{Value, json};
 
 use super::chat::ChatHistory;
@@ -29,7 +29,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: false,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "perplexity",
     fixture: FIXTURE,
 }

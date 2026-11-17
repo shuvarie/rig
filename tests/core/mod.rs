@@ -10,7 +10,6 @@
 mod agent_run_stepper;
 mod catalog_constants;
 mod dependency_graph;
-#[cfg(feature = "derive")]
 mod embed_macro;
 mod history_conformance;
 mod history_conformance_registry;
@@ -18,7 +17,6 @@ mod loaders;
 mod prompt_response_messages;
 mod provider_keys;
 mod reasoning_stream_stats;
-#[cfg(feature = "derive")]
 mod rig_tool_facade;
 mod streaming_conformance;
 mod streaming_conformance_registry;

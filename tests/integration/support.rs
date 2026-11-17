@@ -8,21 +8,21 @@
 
 use futures::StreamExt;
 
-use rig_agent::agent::MultiTurnStreamItem;
+use rig::agent::agent::MultiTurnStreamItem;
 
-use rig_agent::completion::PromptError;
+use rig::agent::completion::PromptError;
 
-use rig_agent::agent::StreamingResult;
+use rig::agent::agent::StreamingResult;
 
-use rig_agent::completion::AssistantContent;
+use rig::agent::completion::AssistantContent;
 
-use rig_core::embeddings::Embedding;
+use rig::embeddings::Embedding;
 
-use rig_core::streaming::{Item, StreamEvent};
+use rig::streaming::{Item, StreamEvent};
 
-use rig_core::streaming::CompletionStream;
+use rig::streaming::CompletionStream;
 
-use rig_core::tool::Tool;
+use rig::tool::Tool;
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -148,7 +148,7 @@ impl std::fmt::Display for MathError {
 impl std::error::Error for MathError {}
 
 /// Tool that adds its two integer arguments: rig-agent's mock, the same on the wire.
-pub use rig_agent::test_utils::MockAddTool as Adder;
+pub use rig::agent::test_utils::MockAddTool as Adder;
 
 #[derive(Deserialize, Serialize)]
 /// Tool that subtracts its second integer argument from the first.
@@ -173,7 +173,7 @@ impl Tool for Subtract {
 
     async fn call(
         &self,
-        _context: &mut rig_core::tool::ToolContext,
+        _context: &mut rig::tool::ToolContext,
         args: Self::Args,
     ) -> Result<Self::Output, Self::Error> {
         Ok(args.x - args.y)
@@ -205,7 +205,7 @@ impl Tool for AlphaSignal {
 
     async fn call(
         &self,
-        _context: &mut rig_core::tool::ToolContext,
+        _context: &mut rig::tool::ToolContext,
         _args: Self::Args,
     ) -> Result<Self::Output, Self::Error> {
         Ok(ALPHA_SIGNAL_OUTPUT.to_string())
@@ -214,10 +214,8 @@ impl Tool for AlphaSignal {
 
 /// Sends [`BASIC_PROMPT`] through an agent on `model` under [`BASIC_PREAMBLE`]
 /// and asserts a non-empty answer.
-pub async fn assert_completion_smoke(
-    model: impl Into<rig_core::DynModel<rig_core::operation::Completion>>,
-) {
-    let response = rig_agent::AgentBuilder::new(model)
+pub async fn assert_completion_smoke(model: impl Into<rig::DynModel<rig::operation::Completion>>) {
+    let response = rig::agent::agent::AgentBuilder::new(model)
         .preamble(BASIC_PREAMBLE)
         .build()
         .prompt(BASIC_PROMPT)
@@ -360,7 +358,7 @@ pub struct RawStreamObservation {
     /// Text accumulated from provider text deltas.
     pub text: String,
     /// Completed tool calls in stream order.
-    pub tool_calls: Vec<rig_core::message::ToolCall>,
+    pub tool_calls: Vec<rig::message::ToolCall>,
     /// Tool-call metadata in stream order.
     pub tool_call_records: Vec<ToolCallRecord>,
     /// Formatted stream errors in observation order.

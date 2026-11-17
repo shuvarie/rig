@@ -1,7 +1,7 @@
 //! Mira's gateway: text only, with every message's content one string.
 //! It takes no tools and its models read no images.
 
-use rig_core::providers::openai::wire::MIRA;
+use rig::providers::openai::wire::MIRA;
 use serde_json::{Value, json};
 
 use super::chat::ChatHistory;
@@ -28,7 +28,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: false,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "mira",
     fixture: FIXTURE,
 }

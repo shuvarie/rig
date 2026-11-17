@@ -10,14 +10,23 @@ use std::vec;
 // Data to be RAGged.
 // A vector search needs to be performed on the `definitions` field, so we derive the `Embed` trait for `WordDefinition`
 // and tag that field with `#[embed]`.
-#[derive(Embed, Serialize, Clone, Debug, Eq, PartialEq, Default)]
+#[derive(Serialize, Clone, Debug, Eq, PartialEq, Default)]
 struct Question {
-    #[embed]
     id: String,
-    #[embed]
     text: String,
-    #[embed]
     answer_options: String,
+}
+
+impl Embed for Question {
+    fn embed(
+        &self,
+        embedder: &mut rig::embeddings::TextEmbedder,
+    ) -> Result<(), rig::embeddings::embed::EmbedError> {
+        Embed::embed(&self.id, embedder)?;
+        Embed::embed(&self.text, embedder)?;
+        Embed::embed(&self.answer_options, embedder)?;
+        Ok(())
+    }
 }
 
 #[derive(Debug, Deserialize, JsonSchema, Serialize)]

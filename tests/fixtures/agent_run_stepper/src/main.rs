@@ -21,20 +21,20 @@ use std::{
     task::{Context, Poll, Waker},
 };
 
-use rig_agent::run::{AgentRun, AgentRunStep, ModelTurn, PendingToolCall, RunSpec, prepare_request};
-use rig_agent::tool::{ToolCatalog, ToolSet};
-use rig_agent::handlers::{Handlers, ModelHandle};
-use rig_core::completion::{
+use rig::agent::run::{AgentRun, AgentRunStep, ModelTurn, PendingToolCall, RunSpec, prepare_request};
+use rig::agent::tool::{ToolCatalog, ToolSet};
+use rig::agent::handlers::{Handlers, ModelHandle};
+use rig::completion::{
     AssistantContent, CompletionRequest, CompletionResponse, ModelRef, Usage,
 };
-use rig_core::driver::{Exchange, Model, Opened, Opening, Transport};
-use rig_core::effect::HandlerKey;
-use rig_core::message::{Message, ToolCall, ToolFunction, ToolName};
-use rig_core::serve::adapters::ModelAdapter;
-use rig_core::test_utils::{MockFrame, MockScript};
-use rig_core::tool::{DynamicTool, ToolContext, ToolOutput};
-use rig_core::error::ProviderError;
-use rig_core::wire::Mode;
+use rig::driver::{Exchange, Model, Opened, Opening, Transport};
+use rig::effect::HandlerKey;
+use rig::message::{Message, ToolCall, ToolFunction, ToolName};
+use rig::serve::adapters::ModelAdapter;
+use rig::test_utils::{MockFrame, MockScript};
+use rig::tool::{DynamicTool, ToolContext, ToolOutput};
+use rig::error::ProviderError;
+use rig::wire::Mode;
 
 /// Every future here is ready on first poll (a scripted model, in-process
 /// tools); a no-op waker is all the "runtime" this driver needs.
@@ -88,7 +88,7 @@ impl Transport<MockScript> for Scripted {
             vec![AssistantContent::text("done")]
         };
         let document = serde_json::json!({ "provider": "fixture" });
-        let response = CompletionResponse::new(choice, Usage::default(), rig_core::message::Origin::new("test.api", "fixture", ""), document.clone());
+        let response = CompletionResponse::new(choice, Usage::default(), rig::message::Origin::new("test.api", "fixture", ""), document.clone());
         Opening::ready(
             Opened::new(futures::stream::iter([Ok(MockFrame::Response(Box::new(response)))]))
                 .with_document(document),

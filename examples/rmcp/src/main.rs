@@ -9,14 +9,11 @@
 //!
 //! Needs `OPENAI_API_KEY`. Run with `cargo run -p rmcp_example`.
 
+use rig::providers::rmcp::{McpClientHandler, McpConnection};
 use rig::{
     prelude::*,
     providers::openai::{self, OpenAI},
-    tool::{
-        DynamicTool,
-        rmcp::{McpClientHandler, McpConnection},
-        server::ToolServer,
-    },
+    tool::{DynamicTool, server::ToolServer},
 };
 use rmcp::{
     RoleServer, ServerHandler, ServiceExt,

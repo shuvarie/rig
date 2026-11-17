@@ -1,6 +1,6 @@
 //! Hugging Face's inference router: text and a tool call.
 
-use rig_core::providers::openai::wire::HUGGINGFACE;
+use rig::providers::openai::wire::HUGGINGFACE;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -29,7 +29,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "huggingface",
     fixture: FIXTURE,
 }

@@ -11,6 +11,6 @@ workspace = true
 rig.workspace = true
 anyhow = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
-serde = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = [] }
 serde_json = { workspace = true }
 thiserror = { workspace = true }

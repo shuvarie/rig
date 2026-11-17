@@ -1,6 +1,6 @@
 //! Wire-sequence conformance suite over the provider streaming pipelines.
 //!
-//! Scenarios live in `rig_core::test_utils::streaming_conformance`; this file
+//! Scenarios live in `rig::test_utils::streaming_conformance`; this file
 //! instantiates each sequence family per provider fixture. Every family pins a
 //! shipped bug.
 //!
@@ -8,7 +8,7 @@
 //! `cargo test -p rig --test integration core::streaming_conformance`
 
 use rig::completion::CompletionRequest;
-use rig_core::test_utils::streaming_conformance::{
+use rig::test_utils::streaming_conformance::{
     self as conformance,
     fixtures::{anthropic, gemini_rest, interactions, openai_chat, openai_responses},
 };
@@ -18,12 +18,12 @@ use rig_core::test_utils::streaming_conformance::{
 /// in-crate fixtures apply; event frames are a fixture authoring error here).
 fn byte_chunks(
     chunks: conformance::WireChunks,
-) -> Result<Vec<rig_core::http_client::Result<bytes::Bytes>>, rig_core::error::ProviderError> {
+) -> Result<Vec<rig::http_client::Result<bytes::Bytes>>, rig::error::ProviderError> {
     chunks
         .into_iter()
         .map(|chunk| match chunk {
             Ok(frame) => frame.as_bytes().cloned().map(Ok).ok_or_else(|| {
-                rig_core::error::ProviderError::Provider(
+                rig::error::ProviderError::Provider(
                     "typed-event frame fed to a byte-transport driver".to_string(),
                 )
             }),
@@ -43,17 +43,17 @@ fn sse(frame: &serde_json::Value) -> conformance::WireInput {
 /// only the pipeline under test differs.
 mod xai {
     use super::*;
-    use rig_core::test_utils::SequencedStreamingHttpClient;
+    use rig::test_utils::SequencedStreamingHttpClient;
 
     fn driver() -> conformance::WireDriver {
         conformance::WireDriver::new("xai", |chunks| {
             Box::pin(async move {
-                let model = rig_core::providers::openai::OpenAIConfig::with_key(
-                    &rig_core::providers::xai::DIALECT,
+                let model = rig::providers::openai::OpenAIConfig::with_key(
+                    &rig::providers::xai::DIALECT,
                     "test-key",
                 )
                 .connect(SequencedStreamingHttpClient::new(byte_chunks(chunks)?))
-                .completion(rig_core::providers::xai::GROK_4);
+                .completion(rig::providers::xai::GROK_4);
                 let request = CompletionRequest::new("hello");
                 let stream = model.stream(request)?;
                 Ok(conformance::fixtures::drain(stream).await)
@@ -75,7 +75,7 @@ mod xai {
 /// fixture frames with a Copilot pipeline driver.
 mod copilot {
     use super::*;
-    use rig_core::test_utils::SequencedStreamingHttpClient;
+    use rig::test_utils::SequencedStreamingHttpClient;
 
     fn driver(provider: &'static str, model_name: &'static str) -> conformance::WireDriver {
         conformance::WireDriver::new(provider, move |chunks| {
@@ -84,8 +84,8 @@ mod copilot {
                 // (`copilot::wire::routes_through_responses`), so naming the
                 // same two model ids keeps each fixture on the route it was
                 // recorded against.
-                let model = rig_core::providers::openai::OpenAIConfig::with_key(
-                    &rig_core::providers::copilot::DIALECT,
+                let model = rig::providers::openai::OpenAIConfig::with_key(
+                    &rig::providers::copilot::DIALECT,
                     "copilot-token",
                 )
                 .connect(SequencedStreamingHttpClient::new(byte_chunks(chunks)?))
@@ -121,13 +121,13 @@ mod copilot {
 /// shared Responses fixture's; only the pipeline under test differs.
 mod chatgpt {
     use super::*;
-    use rig_core::test_utils::SequencedStreamingHttpClient;
+    use rig::test_utils::SequencedStreamingHttpClient;
 
     fn driver() -> conformance::WireDriver {
         conformance::WireDriver::new("chatgpt", |chunks| {
             Box::pin(async move {
-                let model = rig_core::providers::openai::OpenAIConfig::with_key(
-                    &rig_core::providers::chatgpt::DIALECT,
+                let model = rig::providers::openai::OpenAIConfig::with_key(
+                    &rig::providers::chatgpt::DIALECT,
                     "test-token",
                 )
                 .with_account_id("account-id")
@@ -157,7 +157,7 @@ mod chatgpt {
 pub mod xai_suite {
     use super::*;
 
-    rig_core::streaming_conformance_suite! {
+    rig::streaming_conformance_suite! {
         provider: "xai",
         fixture: xai::fixture(),
         manifest: [partial_tool_args, zero_usage_terminal, malformed_frame, unknown_event_frame, refusal],
@@ -167,7 +167,7 @@ pub mod xai_suite {
 pub mod copilot_responses_suite {
     use super::*;
 
-    rig_core::streaming_conformance_suite! {
+    rig::streaming_conformance_suite! {
         provider: "copilot",
         fixture: copilot::responses_fixture(),
         manifest: [partial_tool_args, zero_usage_terminal, malformed_frame, unknown_event_frame, refusal],
@@ -177,7 +177,7 @@ pub mod copilot_responses_suite {
 pub mod chatgpt_suite {
     use super::*;
 
-    rig_core::streaming_conformance_suite! {
+    rig::streaming_conformance_suite! {
         provider: "chatgpt",
         fixture: chatgpt::fixture(),
         manifest: [partial_tool_args, zero_usage_terminal, malformed_frame, unknown_event_frame, refusal],
@@ -187,7 +187,7 @@ pub mod chatgpt_suite {
 pub mod copilot_chat_suite {
     use super::*;
 
-    rig_core::streaming_conformance_suite! {
+    rig::streaming_conformance_suite! {
         provider: "copilot",
         fixture: copilot::chat_fixture(),
         manifest: [partial_tool_args, zero_usage_terminal, bare_terminal, malformed_frame, delta_less_prelude],
@@ -314,8 +314,8 @@ mod grammar_guards {
     /// arguments state, their text kept beside them.
     #[tokio::test]
     async fn incomplete_mid_tool_call_ends_with_length_and_keeps_the_call() {
-        use rig_core::completion::FinishReason;
-        use rig_core::message::AssistantContent;
+        use rig::completion::FinishReason;
+        use rig::message::AssistantContent;
 
         let driver = openai_responses::driver();
         let drained = driver
@@ -362,7 +362,7 @@ mod grammar_guards {
     /// interleave both calls' fragments into one garbled argument buffer.
     #[tokio::test]
     async fn id_less_parallel_tool_calls_assemble_distinct_on_the_chat_wire() {
-        use rig_core::message::AssistantContent;
+        use rig::message::AssistantContent;
         use serde_json::json;
 
         let chunk = |tool_calls: serde_json::Value| {
@@ -538,7 +538,7 @@ async fn terminal_body_content_merges_per_kind() {
 // holds the restated summary exactly once.
 #[tokio::test]
 async fn envelope_less_reasoning_deltas_are_superseded_without_duplication() {
-    use rig_core::message::AssistantContent;
+    use rig::message::AssistantContent;
 
     let driver = openai_responses::buffered_driver();
     let (body, summary) = openai_responses::envelope_less_reasoning_supersede_sse_body();
@@ -630,8 +630,8 @@ mod interleaved_constant_id_reasoning {
     /// collapse, no fabricated durable id.
     #[tokio::test]
     async fn interactions_two_id_less_calls_to_the_same_tool_stay_distinct() {
-        use rig_core::message::AssistantContent;
-        use rig_core::streaming::StreamEvent;
+        use rig::message::AssistantContent;
+        use rig::streaming::StreamEvent;
         use serde_json::json;
 
         let sse = |frame: &serde_json::Value| {

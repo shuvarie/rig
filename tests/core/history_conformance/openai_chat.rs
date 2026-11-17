@@ -1,7 +1,7 @@
 //! OpenAI's own Chat Completions: an answer's audio, whose transcript is
 //! the text, and a tool call.
 
-use rig_core::providers::openai::wire::OPENAI;
+use rig::providers::openai::wire::OPENAI;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -36,7 +36,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "openai_chat",
     fixture: FIXTURE,
 }

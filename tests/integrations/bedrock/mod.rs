@@ -1,13 +1,13 @@
 use rig::Model;
 
 use crate::support;
-use rig::agent::AgentBuilder;
-use rig::bedrock::{
+use rig::agent::agent::AgentBuilder;
+use rig::extractor::ExtractorBuilder;
+use rig::providers::bedrock::{
     client::BedrockRuntime,
     completion::{self, Converse},
     image::{self as bedrock_image, Images},
 };
-use rig::extractor::ExtractorBuilder;
 
 pub(crate) const BEDROCK_COMPLETION_MODEL: &str = completion::AMAZON_NOVA_LITE;
 pub(crate) const BEDROCK_IMAGE_MODEL: &str = bedrock_image::AMAZON_NOVA_CANVAS;

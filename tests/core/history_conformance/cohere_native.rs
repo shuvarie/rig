@@ -3,18 +3,18 @@
 //! plan and each call are blocks whose items hold the citations that point
 //! at them.
 
+use rig::completion::CompletionRequest;
+use rig::error::EncodeError;
 use rig::json_utils::remove_preserving_order;
-use rig_core::completion::CompletionRequest;
-use rig_core::error::EncodeError;
-use rig_core::message::{AssistantContent, AssistantMessage};
-use rig_core::providers::cohere::{
+use rig::message::{AssistantContent, AssistantMessage};
+use rig::providers::cohere::{
     COMMAND_A_03_2025, COMMAND_A_REASONING_08_2025, COMMAND_A_VISION_07_2025, CohereConfig,
     NativeChat,
 };
-use rig_core::wire::{Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Shape, decode, http_body,
 };
+use rig::wire::{Mode, Wire, WireFrame};
 use serde_json::{Map, Value, json};
 
 pub struct CohereNativeHistory;
@@ -141,7 +141,7 @@ impl HistoryFixture for CohereNativeHistory {
         NativeChat::new(CohereConfig::new("key"), model)
     }
 
-    fn raw_tool(&self, tool: &rig_core::completion::ToolDefinition) -> Option<Value> {
+    fn raw_tool(&self, tool: &rig::completion::ToolDefinition) -> Option<Value> {
         Some(json!({"type": "function", "function": {
             "name": tool.name.as_str(), "description": tool.description,
             "parameters": tool.parameters,
@@ -383,7 +383,7 @@ pub fn projection(turn: &AssistantMessage) -> Value {
     Value::Object(message)
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "cohere_native",
     fixture: CohereNativeHistory,
 }

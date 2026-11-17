@@ -11,6 +11,6 @@ workspace = true
 rig.workspace = true
 anyhow = { workspace = true }
 redis = { workspace = true, features = ["tokio-comp", "aio", "vector-sets"] }
-serde = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = [] }
 serde_json = { workspace = true }
 tokio = { workspace = true, features = ["full"] }

@@ -11,5 +11,5 @@ workspace = true
 rig.workspace = true
 anyhow = { workspace = true }
 schemars = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = [] }
 tokio = { workspace = true, features = ["full"] }

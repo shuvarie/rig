@@ -1,7 +1,7 @@
 //! Interactive Jev decisions, optionally followed by an ordinary Rig agent.
 
 use anyhow::{Result, bail};
-use rig::typesafeai::{
+use rig::providers::typesafeai::{
     Choice, ChoiceAnswer, Evaluate, Jev, Noul, NoulAnswer, Query, Score, ScoreAnswer,
 };
 use rig::{completion::Message, error::ProviderError, prelude::*, providers::openai::OpenAI};

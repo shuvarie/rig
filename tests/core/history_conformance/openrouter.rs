@@ -1,7 +1,7 @@
 //! OpenRouter: reasoning with its structured details, generated images,
 //! and a tool call. A generated image is a block, and never goes back.
 
-use rig_core::providers::openai::wire::OPENROUTER;
+use rig::providers::openai::wire::OPENROUTER;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -54,7 +54,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "openrouter",
     fixture: FIXTURE,
 }

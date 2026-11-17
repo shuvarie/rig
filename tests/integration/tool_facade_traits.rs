@@ -65,7 +65,7 @@ fn completion_client_single_import_surface() {
 /// prelude glob, including the typed extractor.
 #[test]
 fn completion_provider_explicit_facade_import_surface() {
-    use rig::agent::AgentBuilder;
+    use rig::agent::agent::AgentBuilder;
     use rig::extractor::ExtractorBuilder;
 
     #[derive(serde::Deserialize, serde::Serialize, schemars::JsonSchema)]

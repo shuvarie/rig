@@ -1,7 +1,7 @@
 //! A local `llama-server`: reasoning under `reasoning_content`, text, and
 //! a tool call. It reads images in tool results.
 
-use rig_core::providers::openai::wire::LLAMACPP;
+use rig::providers::openai::wire::LLAMACPP;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -36,7 +36,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "llamacpp",
     fixture: FIXTURE,
 }

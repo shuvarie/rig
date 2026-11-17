@@ -1,224 +1,163 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
-//! Public facade for Rig.
+#![cfg_attr(
+    test,
+    allow(
+        clippy::expect_used,
+        clippy::indexing_slicing,
+        clippy::panic,
+        clippy::unwrap_used,
+        clippy::unreachable
+    )
+)]
+//! Rig: provider-agnostic model, message, conversation, tool, and vector-store
+//! contracts; the agent runtime over them; and the bundled providers.
 //!
-//! Re-exports `rig_core` at `rig::...` paths and, under the default `agent`
-//! feature, the runtime from `rig_agent` at `rig::agent`. `rig::tool` then
-//! carries the agent's tool registry alongside the `rig-core` tool contracts,
-//! which are always available. `use rig::prelude::*;` brings in
-//! [`Model`], [`DynModel`] and, with `agent`, the common agent types.
+//! A provider configuration builds an endpoint [`wire`], and a [`Model`] binds
+//! a wire to a [`driver::Transport`]. An [`AgentBuilder`] runs a model against
+//! tools, hooks and a serializable [`run::AgentRun`]. Every integration a host
+//! could own is a trait: transports ([`http_client::HttpClientExt`],
+//! [`ws_client::WebSocketClientExt`]), vector stores
+//! ([`vector_store::VectorStoreIndex`]), and conversation stores
+//! ([`memory::Store`]).
 //!
-//! Companion provider and vector-store crates are feature-gated modules, named
-//! after their features wherever module naming allows:
+//! ```no_run
+//! use rig::prelude::*;
+//! use rig::providers::openai::{self, OpenAI};
 //!
-//! ```toml
-//! [dependencies]
-//! rig = { version = "*", features = ["lancedb", "fastembed"] }
-//! serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
+//! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
+//! let agent = AgentBuilder::new(OpenAI::from_env()?.completion(openai::GPT_4O)).build();
+//! println!("{}", agent.prompt("Who are you?").await?.output());
+//! # Ok(())
+//! # }
 //! ```
 //!
-//! Depend on `rig-core` directly to skip this facade's companion integrations.
-//! Core does not force serde_json's `preserve_order` or `float_roundtrip`; the
-//! application dependency above restores the previous configuration. Without
-//! those features, schema properties and JSON text in prompts, embeddings and
+//! The crate does not force serde_json's `preserve_order` or `float_roundtrip`.
+//! Without them, schema properties and JSON text in prompts, embeddings and
 //! tool results use sorted object keys, and parsed floats can differ in their
-//! low bits. Rig has no forwarding feature for either setting.
+//! low bits. Restore the previous configuration in your application's
+//! dependencies with
+//! `serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }`.
 
-pub use rig_core::*;
+extern crate self as rig;
 
-/// The bundled `reqwest` transport (`rig-reqwest`). A provider client built
-/// with no transport named (`OpenAI::from_env()`) sends through its shared
-/// client; a config's `connect` builds one on any other `HttpClientExt`.
-#[cfg(feature = "reqwest")]
-#[cfg_attr(docsrs, doc(cfg(feature = "reqwest")))]
-pub use rig_reqwest;
-
-/// The bundled `tokio-tungstenite` websocket backend (`rig-tungstenite`), on
-/// native targets. With the `websocket` feature,
-/// `model.responses_websocket().connect()` opens a session over it with no
-/// backend named; without it, rig has no websocket backend and a session is
-/// opened with `responses_websocket().connect_with(..)` and any
-/// [`rig_core::ws_client::WebSocketClientExt`] implementation.
-#[cfg(all(feature = "websocket", not(target_family = "wasm")))]
-#[cfg_attr(docsrs, doc(cfg(feature = "websocket")))]
-pub use rig_tungstenite;
-
-/// Transport-agnostic HTTP contracts, plus the bundled reqwest transport type.
-pub mod http_client {
-    pub use rig_core::http_client::*;
-    #[cfg(feature = "reqwest")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "reqwest")))]
-    pub use rig_reqwest::ReqwestClient;
-}
-
-#[cfg(feature = "agent")]
-#[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-pub use rig_agent::{Agent, AgentBuilder, AgentRun, AgentRunner, TypedPromptResponse};
-
+#[cfg(feature = "audio")]
+#[cfg_attr(docsrs, doc(cfg(feature = "audio")))]
+pub mod audio_generation;
+pub mod catalog;
+pub mod client;
+pub mod completion;
+pub mod conversation;
+pub mod driver;
+pub mod effect;
+pub mod embeddings;
+pub mod error;
+pub mod http_client;
+pub mod id;
+#[cfg(feature = "image")]
+#[cfg_attr(docsrs, doc(cfg(feature = "image")))]
+pub mod image_generation;
+/// Internal JSON helpers shared with sibling modules (e.g. `agent`).
 #[doc(hidden)]
-pub use rig_core as __core;
+pub mod json_utils;
+pub mod loaders;
+pub mod markers;
+pub mod model;
+pub mod observe;
+pub mod operation;
+pub mod prelude;
+pub(crate) mod provider_response;
+pub mod providers;
+pub mod redact;
+pub mod rerank;
+#[cfg(all(feature = "reqwest", not(target_family = "wasm")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "reqwest")))]
+pub mod runtime;
+pub mod serve;
 
-/// The classic runtime's handler table and typed views
-/// (`rig_agent::handlers`). What a handler implements is
-/// `rig::serve`; the vocabulary is `rig::effect`.
-#[cfg(feature = "agent")]
-#[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-pub use rig_agent::handlers;
-
-/// The sans-IO run layer of rig-agent (`rig_agent::run`): `AgentRun` and its
-/// step/turn types, the run's spec, request preparation, output policy and
-/// per-turn patch, its response and error types, the invalid-call decision
-/// data, the streamed-turn assembler and the loop-side transcript helpers.
-/// rig-core keeps only the message-model invariants (`rig::conversation::pairing`).
-#[cfg(feature = "agent")]
-#[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-pub mod run {
-    pub use rig_agent::run::*;
-}
-
-/// Classic agent orchestration and lifecycle APIs.
-#[cfg(feature = "agent")]
-#[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-pub mod agent {
-    pub use rig_agent::agent::*;
-}
-
-/// Low-level completion contracts plus the classic runtime's errors.
-pub mod completion {
-    #[cfg(feature = "agent")]
-    pub use rig_agent::completion::{PromptError, StructuredOutputError};
-    pub use rig_core::completion::*;
-}
-
-/// Classic typed extraction.
-#[cfg(feature = "agent")]
-#[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-pub mod extractor {
-    pub use rig_agent::extractor::*;
-}
-
-/// Classic runtime integrations.
-#[cfg(feature = "agent")]
-#[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-pub mod integrations {
-    pub use rig_agent::integrations::*;
-}
-
-/// Common portable imports plus additive classic-runtime conveniences.
-pub mod prelude {
-    // The contextual `Tool` and its mutable `ToolContext`.
-    #[cfg(feature = "agent")]
-    pub use crate::tool::{Tool, ToolContext};
-    #[cfg(feature = "agent")]
-    pub use rig_agent::prelude::{
-        Agent, AgentBuilder, MultiTurnStreamItem, PromptError, RunEvents, StreamingResult,
-        StructuredOutputError, ToolSet,
-    };
-    pub use rig_core::prelude::*;
-}
-
-/// Tools: contextual authoring, the erased tool set, and the live registry.
-///
-/// The tool contracts come from `rig-core` and need no
-/// feature. The registry, tool set, and catalog belong to the agent runtime and
-/// need the `agent` feature.
-pub mod tool {
-    /// Derive a stable serialized key for a tool-context value.
-    #[cfg(feature = "derive")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "derive")))]
-    pub use rig_derive::ContextValue;
-
-    #[cfg(feature = "agent")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-    pub use rig_agent::tool::{RegisteredTool, ToolCatalog, ToolSet};
-    pub use rig_core::tool::builtin;
-    pub use rig_core::tool::{
-        ContextValue, DynamicTool, Tool, ToolContext, ToolContextError, ToolEmbedding,
-        tool_definition, tool_name,
-    };
-    pub use rig_core::tool::{
-        IntoToolOutput, ToolErrorKind, ToolExecutionError, ToolOutput, ToolResult,
-    };
-
-    /// MCP tool support from `rig-rmcp`, which supports native targets only.
-    #[cfg(all(feature = "rmcp", not(target_family = "wasm")))]
-    #[cfg_attr(docsrs, doc(cfg(feature = "rmcp")))]
-    pub mod rmcp {
-        pub use rig_rmcp::*;
-    }
-    /// The live registry, layered over the contracts above.
-    #[cfg(feature = "agent")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "agent")))]
-    pub use rig_agent::tool::server;
-}
-
-/// rig-agent's helpers for tests of code built on it.
-#[cfg(all(feature = "agent", any(test, feature = "test-utils")))]
+pub mod streaming;
+pub mod structured_output;
+#[cfg(any(test, feature = "test-utils"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test-utils")))]
-pub mod test_utils {
-    pub use rig_agent::test_utils::*;
+pub mod test_utils;
+pub mod tool;
+pub mod transcription;
+pub mod vector_store;
+pub mod wasm_compat;
+pub mod wire;
+#[cfg(feature = "websocket")]
+#[cfg_attr(docsrs, doc(cfg(feature = "websocket")))]
+pub mod ws_client;
+
+/// The agent runtime: builders, hooks, tools, and the serializable run state.
+pub mod agent;
+/// Conversations over time: windows, compaction, and saving and resuming.
+pub mod memory;
+
+pub use agent::{Agent, AgentBuilder, AgentRunner, TypedPromptResponse};
+pub use completion::message;
+pub use driver::{DynModel, Model};
+pub use embeddings::Embed;
+pub use error::{ErrorKind, ErrorReport, ProviderError};
+pub use provider_response::ProviderResponseError;
+// `schemars`, `serde`, and `serde_json` are re-exported so downstream crates
+// can resolve them through Rig instead of requiring a direct dependency.
+pub use schemars;
+pub use serde;
+pub use serde_json;
+
+/// The sans-IO run layer: `AgentRun` and its step, spec, patch and response
+/// types, the streamed-turn assembler, and the loop-side transcript helpers.
+pub mod run {
+    pub use crate::agent::run::*;
 }
 
-#[cfg(feature = "derive")]
-#[cfg_attr(docsrs, doc(cfg(feature = "derive")))]
-pub use rig_derive::rig_tool;
-
-/// One conversation: its entries with stable ids and authors, its asides,
-/// its halt, and the changes made to it that nobody has saved yet.
-pub use rig_core::conversation;
-
-/// Conversations over time (`rig-memory`): windows, compaction, and saving
-/// and resuming them in the `rig-session` format.
-#[cfg(feature = "memory")]
-#[cfg_attr(docsrs, doc(cfg(feature = "memory")))]
-pub use rig_memory as memory;
-
-/// Declares one feature-gated facade module per companion crate, each row giving
-/// the module, its crate, and the features enabling it.
-///
-/// The single-feature arm is separate so rustdoc renders "Available on crate
-/// feature `x` only" rather than a one-element `any`.
-macro_rules! companion_modules {
-    () => {};
-    (
-        $(#[doc = $doc:literal])*
-        $module:ident = $krate:ident [$feature:literal];
-        $($rest:tt)*
-    ) => {
-        $(#[doc = $doc])*
-        #[cfg(feature = $feature)]
-        #[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
-        pub mod $module {
-            pub use $krate::*;
-        }
-        companion_modules! { $($rest)* }
-    };
-    (
-        $(#[doc = $doc:literal])*
-        $module:ident = $krate:ident [$($feature:literal),+ $(,)?];
-        $($rest:tt)*
-    ) => {
-        $(#[doc = $doc])*
-        #[cfg(any($(feature = $feature),+))]
-        #[cfg_attr(docsrs, doc(cfg(any($(feature = $feature),+))))]
-        pub mod $module {
-            pub use $krate::*;
-        }
-        companion_modules! { $($rest)* }
-    };
+/// Typed extraction.
+pub mod extractor {
+    pub use crate::agent::extractor::*;
 }
 
-companion_modules! {
-    /// Typed TypeSafe Jev judgments for routing and rubric evaluation.
-    typesafeai = rig_typesafeai ["typesafeai"];
-    bedrock = rig_bedrock ["bedrock"];
-    /// Local CPU inference with validated Llama/SmolLM2 and native tool-capable Qwen3 models,
-    /// and YOLOv8 pose estimation.
-    candle = rig_candle ["candle"];
-    fastembed = rig_fastembed [
-        "fastembed",
-        "fastembed-hf-hub",
-        "fastembed-ort-download-binaries",
-    ];
-    gemini_grpc = rig_gemini_grpc ["gemini-grpc"];
-    vertexai = rig_vertexai ["vertexai"];
+/// The handler table and its typed views.
+pub mod handlers {
+    pub use crate::agent::handlers::*;
 }
+
+/// Ready-made integrations: the CLI chatbot.
+pub mod integrations {
+    pub use crate::agent::integrations::*;
+}
+
+pub mod telemetry;
+
+/// Milliseconds since the Unix epoch at `at`, also on the web; 0 before it.
+pub fn millis(at: web_time::SystemTime) -> u64 {
+    at.duration_since(web_time::UNIX_EPOCH)
+        .map(|elapsed| u64::try_from(elapsed.as_millis()).unwrap_or(u64::MAX))
+        .unwrap_or_default()
+}
+
+/// Milliseconds since the Unix epoch, also on the web.
+pub fn now_ms() -> u64 {
+    millis(web_time::SystemTime::now())
+}
+
+// Native runtime values must retain their thread-safety bounds.
+#[cfg(not(target_family = "wasm"))]
+const _: fn() = || {
+    fn assert_send_sync_static<T: Send + Sync + 'static>() {}
+    fn assert_send_static<T: Send + 'static>() {}
+    assert_send_sync_static::<tool::ManagedToolToken>();
+    assert_send_sync_static::<streaming::StreamEvent>();
+    // The serializable identity a typed view is resolved from.
+    assert_send_sync_static::<completion::ModelRef>();
+    assert_send_sync_static::<tool::DynamicTool>();
+    // One erased transport, shared by every provider a host binds.
+    assert_send_sync_static::<http_client::DynHttpClient>();
+    // A live stream is owned by one poller: `Send` so it can move to a worker,
+    // not `Sync`.
+    assert_send_static::<streaming::CompletionStream>();
+    assert_send_sync_static::<Agent>();
+    assert_send_sync_static::<AgentRunner>();
+    assert_send_sync_static::<tool::server::ToolServerHandle>();
+    assert_send_sync_static::<tool::ToolSet>();
+    assert_send_sync_static::<tool::ToolCatalog>();
+};

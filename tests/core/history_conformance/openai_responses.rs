@@ -3,17 +3,17 @@
 //! own response objects and SSE events, and the body is the JSON the wire
 //! sends.
 
+use rig::completion::CompletionRequest;
+use rig::error::EncodeError;
 use rig::json_utils::remove_preserving_order;
-use rig_core::completion::CompletionRequest;
-use rig_core::error::EncodeError;
-use rig_core::message::AssistantContent;
-use rig_core::operation::Completion;
-use rig_core::providers::openai::OpenAIConfig;
-use rig_core::providers::openai::responses_api::wire::Responses;
-use rig_core::wire::{Encoded, Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::message::AssistantContent;
+use rig::operation::Completion;
+use rig::providers::openai::OpenAIConfig;
+use rig::providers::openai::responses_api::wire::Responses;
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Rng, Shape, http_body, replies,
 };
+use rig::wire::{Encoded, Mode, Wire, WireFrame};
 use serde_json::{Value, json};
 
 /// One Responses wire or dialect: how to build it for a model, and the
@@ -282,7 +282,7 @@ where
         self.model
     }
 
-    fn raw_tool(&self, tool: &rig_core::completion::ToolDefinition) -> Option<Value> {
+    fn raw_tool(&self, tool: &rig::completion::ToolDefinition) -> Option<Value> {
         Some(serde_json::json!({
             "type": "function", "name": tool.name.as_str(),
             "description": tool.description, "parameters": tool.parameters,
@@ -417,7 +417,7 @@ where
     /// The item alone, as the `output` of a whole reply.
     fn decode_item(&self, block: &AssistantContent) -> Option<AssistantContent> {
         let item = block.native_item()?.clone();
-        let response = rig_history_conformance::decode(
+        let response = rig::test_utils::history_suite::decode(
             &self.wire(self.model),
             &CompletionRequest::new("restate"),
             Mode::Unary,
@@ -496,7 +496,7 @@ pub fn openai(model: &str) -> Responses {
     Responses::new(OpenAIConfig::new("test-key"), model)
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "openai_responses",
     fixture: ResponsesHistory {
         wire: openai,

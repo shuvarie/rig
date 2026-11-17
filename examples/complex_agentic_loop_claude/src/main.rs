@@ -10,12 +10,21 @@ use serde::{Deserialize, Serialize};
 use std::env;
 
 // Define a knowledge base entry for our vector store
-#[derive(Embed, Clone, Deserialize, Debug, Serialize, Eq, PartialEq, Default)]
+#[derive(Clone, Deserialize, Debug, Serialize, Eq, PartialEq, Default)]
 struct KnowledgeEntry {
     id: String,
     title: String,
-    #[embed]
     content: String,
+}
+
+impl Embed for KnowledgeEntry {
+    fn embed(
+        &self,
+        embedder: &mut rig::embeddings::TextEmbedder,
+    ) -> Result<(), rig::embeddings::embed::EmbedError> {
+        Embed::embed(&self.content, embedder)?;
+        Ok(())
+    }
 }
 
 #[tokio::main]

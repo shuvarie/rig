@@ -2,15 +2,15 @@
 //! `generateContent` bodies and `streamGenerateContent` SSE chunks, each
 //! part a block whose provider item is the part as Gemini sent it.
 
-use rig_core::completion::CompletionRequest;
-use rig_core::error::EncodeError;
-use rig_core::message::AssistantContent;
-use rig_core::providers::gemini::GeminiConfig;
-use rig_core::providers::gemini::completion::GenerateContent;
-use rig_core::wire::{Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::completion::CompletionRequest;
+use rig::error::EncodeError;
+use rig::message::AssistantContent;
+use rig::providers::gemini::GeminiConfig;
+use rig::providers::gemini::completion::GenerateContent;
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Rng, Shape, http_body, replies,
 };
+use rig::wire::{Mode, Wire, WireFrame};
 use serde_json::{Value, json};
 
 /// Every `finishReason` Gemini and Vertex AI document that ends a turn as a
@@ -153,7 +153,7 @@ impl HistoryFixture for GeminiRestHistory {
         GenerateContent::new(GeminiConfig::new("test-key"), model)
     }
 
-    fn raw_tool(&self, tool: &rig_core::completion::ToolDefinition) -> Option<Value> {
+    fn raw_tool(&self, tool: &rig::completion::ToolDefinition) -> Option<Value> {
         Some(serde_json::json!({"functionDeclarations": [{
             "name": tool.name.as_str(), "description": tool.description,
             "parametersJsonSchema": tool.parameters,
@@ -234,7 +234,7 @@ impl HistoryFixture for GeminiRestHistory {
     fn decode_item(&self, block: &AssistantContent) -> Option<AssistantContent> {
         let part = block.native_item()?.clone();
         let wire = self.wire(MODEL);
-        let response = rig_core::test_utils::history::decode(
+        let response = rig::test_utils::history::decode(
             &wire,
             Mode::Unary,
             frames([chunk(json!([part]), Some("STOP"))]),
@@ -274,7 +274,7 @@ impl HistoryFixture for GeminiRestHistory {
     }
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "gemini_rest",
     fixture: GeminiRestHistory,
 }

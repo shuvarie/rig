@@ -11,12 +11,21 @@ use serde::{Deserialize, Serialize};
 
 // Shape of data that needs to be RAG'ed.
 // The definition field will be used to generate embeddings.
-#[derive(Embed, Deserialize, Debug, Serialize)]
+#[derive(Deserialize, Debug, Serialize)]
 struct WordDefinition {
     id: String,
     word: String,
-    #[embed]
     definitions: Vec<String>,
+}
+
+impl Embed for WordDefinition {
+    fn embed(
+        &self,
+        embedder: &mut rig::embeddings::TextEmbedder,
+    ) -> Result<(), rig::embeddings::embed::EmbedError> {
+        Embed::embed(&self.definitions, embedder)?;
+        Ok(())
+    }
 }
 
 fn sample_documents() -> Vec<WordDefinition> {

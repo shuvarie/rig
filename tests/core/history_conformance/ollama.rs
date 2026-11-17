@@ -1,7 +1,7 @@
 //! Ollama's OpenAI-compatible API: reasoning under `reasoning`, text, and
 //! tool calls it streams whole.
 
-use rig_core::providers::openai::wire::OLLAMA;
+use rig::providers::openai::wire::OLLAMA;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call};
@@ -37,7 +37,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "ollama",
     fixture: FIXTURE,
 }

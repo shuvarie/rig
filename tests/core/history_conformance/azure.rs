@@ -1,8 +1,8 @@
 //! Azure OpenAI's Chat Completions: text with its annotations and a tool
 //! call, by OpenAI's model rules.
 
-use rig_core::providers::azure;
-use rig_core::providers::openai::wire::AZURE;
+use rig::providers::azure;
+use rig::providers::openai::wire::AZURE;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call, call_deltas};
@@ -42,7 +42,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "azure",
     fixture: FIXTURE,
 }

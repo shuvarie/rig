@@ -2,14 +2,14 @@
 //! with `thinking`, `content` and whole `tool_calls`, and the message its
 //! rebuild sends for a turn.
 
-use rig_core::completion::CompletionRequest;
-use rig_core::error::EncodeError;
-use rig_core::message::{AssistantContent, AssistantMessage};
-use rig_core::providers::ollama::{Chat, OllamaConfig};
-use rig_core::wire::{Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::completion::CompletionRequest;
+use rig::error::EncodeError;
+use rig::message::{AssistantContent, AssistantMessage};
+use rig::providers::ollama::{Chat, OllamaConfig};
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Shape, decode, http_body,
 };
+use rig::wire::{Mode, Wire, WireFrame};
 use serde_json::{Map, Value, json};
 
 const MODEL: &str = "qwen3:4b";
@@ -81,7 +81,7 @@ impl HistoryFixture for OllamaNativeHistory {
         "llama3.2"
     }
 
-    fn raw_tool(&self, tool: &rig_core::completion::ToolDefinition) -> Option<Value> {
+    fn raw_tool(&self, tool: &rig::completion::ToolDefinition) -> Option<Value> {
         Some(json!({"type": "function", "function": {
             "name": tool.name.as_str(), "description": tool.description, "parameters": tool.parameters,
         }}))
@@ -263,7 +263,7 @@ pub fn projection(turn: &AssistantMessage) -> Value {
     message
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "ollama_native",
     fixture: OllamaNativeHistory,
 }

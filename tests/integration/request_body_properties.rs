@@ -18,8 +18,8 @@ use rig::completion::{
     CompletionRequest, Effort, GenerationOptions, Message, OnUnsupported, ToolDefinition,
 };
 use rig::message::{DocumentSourceKind, Image, ImageMediaType, ToolName, UserContent};
-use rig_core::operation::Completion;
-use rig_core::wire::{Body, Encoded, Mode, Operation, Wire};
+use rig::operation::Completion;
+use rig::wire::{Body, Encoded, Mode, Operation, Wire};
 use serde_json::{Value, json};
 
 /// The credential every wire is built with, so a header or URL carrying it
@@ -266,8 +266,8 @@ fn companions(out: &mut Vec<Encoder>) {
     out.push(encoder(
         "bedrock|converse",
         None,
-        |model: &str| rig::bedrock::completion::Converse::new(model),
-        |payload: &rig::bedrock::completion::ConverseRequest| {
+        |model: &str| rig::providers::bedrock::completion::Converse::new(model),
+        |payload: &rig::providers::bedrock::completion::ConverseRequest| {
             data(
                 serde_json::to_value(&payload.body)
                     .map(|body| json!({ "model": payload.model, "body": body })),
@@ -278,15 +278,15 @@ fn companions(out: &mut Vec<Encoder>) {
     out.push(encoder(
         "vertex|generate",
         None,
-        |model: &str| rig::vertexai::completion::GenerateContent::new(model),
+        |model: &str| rig::providers::vertexai::completion::GenerateContent::new(model),
         |payload| data(serde_json::to_value(payload)),
     ));
     #[cfg(feature = "gemini-grpc")]
     out.push(encoder(
         "grpc|generate",
         None,
-        |model: &str| rig::gemini_grpc::completion::GenerateContent::new(model),
-        |payload| data(rig::gemini_grpc::rest::to_rest(payload)),
+        |model: &str| rig::providers::gemini_grpc::completion::GenerateContent::new(model),
+        |payload| data(rig::providers::gemini_grpc::rest::to_rest(payload)),
     ));
 }
 

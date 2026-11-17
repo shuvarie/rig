@@ -8,15 +8,15 @@
 
 use futures::StreamExt;
 use rig::DynModel;
-#[cfg(feature = "bedrock")]
-use rig::bedrock::{client::BedrockRuntime, completion::AMAZON_NOVA_LITE};
 use rig::completion::{CompletionRequest, Message};
 use rig::operation::Completion;
 use rig::providers::anthropic::{self, wire::AnthropicConfig};
+#[cfg(feature = "bedrock")]
+use rig::providers::bedrock::{client::BedrockRuntime, completion::AMAZON_NOVA_LITE};
 use rig::providers::deepseek;
 use rig::providers::openai::{self, OpenAI};
 use rig::streaming::{Item, StreamEvent};
-use rig_core::test_utils::MockStreamingClient;
+use rig::test_utils::MockStreamingClient;
 
 /// OpenAI's reply to "Reply with exactly: identity probe", from
 /// `crates/rig-cassette/fixtures/cassettes/openai/response_identity/responses_nonstreaming_carries_identity.yaml`.

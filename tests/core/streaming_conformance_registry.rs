@@ -1,6 +1,6 @@
 //! Workspace registry for the wire-conformance corpus: every streaming wire
 //! family in
-//! [`WIRE_FAMILIES`](rig_core::test_utils::streaming_conformance::WIRE_FAMILIES)
+//! [`WIRE_FAMILIES`](rig::test_utils::streaming_conformance::WIRE_FAMILIES)
 //! must carry a `streaming_conformance_suite!` invocation, or CI fails (#2258,
 //! Part III (c) — permanently closes the fixtures-covered-a-subset gap).
 //!
@@ -21,7 +21,7 @@
 use std::collections::BTreeSet;
 use std::path::Path;
 
-use rig_core::test_utils::streaming_conformance::WIRE_FAMILIES;
+use rig::test_utils::streaming_conformance::WIRE_FAMILIES;
 
 use super::{streaming_conformance, streaming_conformance_suites};
 
@@ -39,19 +39,19 @@ struct OutOfBinaryFamily {
 const OUT_OF_BINARY_FAMILIES: &[OutOfBinaryFamily] = &[
     OutOfBinaryFamily {
         family: "openai_responses_websocket",
-        suite_file: "crates/rig-core/tests/integration/streaming_conformance_websocket.rs",
+        suite_file: "tests/engine/streaming_conformance_websocket.rs",
         reason: "drives a real `ResponsesWebSocketSession` over the bundled tungstenite backend \
                  against a local ws server; it is a rig-core integration target behind \
                  rig-core's `tungstenite` feature, which the facade enables only with `websocket`",
     },
     OutOfBinaryFamily {
         family: "candle",
-        suite_file: "crates/rig-candle/tests/integration/streaming_conformance.rs",
+        suite_file: "tests/candle/integration/streaming_conformance.rs",
         reason: "rig-candle is a separate package; the facade does not depend on it",
     },
     OutOfBinaryFamily {
         family: "gemini_grpc",
-        suite_file: "crates/rig-gemini-grpc/tests/integration/streaming_conformance.rs",
+        suite_file: "tests/gemini_grpc/integration/streaming_conformance.rs",
         reason: "rig-gemini-grpc is a separate package; the facade does not depend on it",
     },
 ];

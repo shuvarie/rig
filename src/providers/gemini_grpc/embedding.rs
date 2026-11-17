@@ -1,0 +1,169 @@
+//! The Gemini text-embedding wire over gRPC: one `EmbedContent` call per text.
+//!
+//! ```no_run
+//! use crate::Model;
+//! use crate::providers::gemini_grpc::{GeminiGrpc, embedding::{EMBEDDING_001, Embeddings}};
+//!
+//! # async fn example() -> Result<(), crate::providers::gemini_grpc::GeminiGrpcError> {
+//! let model = GeminiGrpc::new("API_KEY").await?.embedding(EMBEDDING_001, None);
+//! # let _ = model;
+//! # Ok(())
+//! # }
+//! ```
+
+pub use crate::providers::gemini::embedding::{EMBEDDING_001, EMBEDDING_004};
+
+use crate::driver::{Exchange, Opened, Opening, Transport};
+use crate::embeddings;
+use crate::error::{EncodeError, ProviderError};
+use crate::operation::Embedding;
+use crate::wire::{Capabilities, Decoder, Descriptor, Flow, Mode, Out, Wire, WireEvent};
+
+use super::GeminiGrpc;
+use super::proto::{self, EmbedContentRequest};
+
+/// The embedding endpoint for one model, at a chosen width.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Embeddings {
+    pub model: String,
+    pub ndims: usize,
+}
+
+impl Embeddings {
+    /// The endpoint for `model`, `dims` wide, or else as wide as the Gemini
+    /// API embeds it by default
+    /// ([`default_ndims`](crate::providers::gemini::embedding::default_ndims)).
+    ///
+    /// ```
+    /// use crate::providers::gemini_grpc::embedding::{EMBEDDING_001, Embeddings};
+    ///
+    /// assert_eq!(Embeddings::new(EMBEDDING_001, None).ndims, 3072);
+    /// assert_eq!(Embeddings::new(EMBEDDING_001, Some(256)).ndims, 256);
+    /// ```
+    pub fn new(model: impl Into<String>, dims: Option<usize>) -> Self {
+        let model = model.into();
+        let ndims =
+            dims.unwrap_or_else(|| crate::providers::gemini::embedding::default_ndims(&model));
+        Self { model, ndims }
+    }
+}
+
+impl Wire for Embeddings {
+    type Op = Embedding;
+    type Payload = Vec<(String, EmbedContentRequest)>;
+    type Frame = (String, proto::EmbedContentResponse);
+    type Event = (String, proto::EmbedContentResponse);
+    type Decoder<'id> = EmbeddingsDecoder;
+    type Reassembler = crate::wire::document::Unreassembled;
+
+    fn describe(&self) -> Descriptor<'_> {
+        Descriptor::new(super::completion::PROVIDER_NAME)
+            .model(self.model.as_str())
+            .capabilities(Capabilities::embedding(100, self.ndims))
+    }
+
+    fn encode(
+        &self,
+        texts: Vec<String>,
+        _mode: Mode,
+    ) -> Result<Vec<(String, EmbedContentRequest)>, EncodeError> {
+        Ok(texts
+            .into_iter()
+            .map(|text| {
+                let request = EmbedContentRequest {
+                    model: format!("models/{}", self.model),
+                    content: Some(proto::Content {
+                        parts: vec![proto::Part {
+                            data: Some(proto::part::Data::Text(text.clone())),
+                            ..proto::Part::default()
+                        }],
+                        role: String::new(),
+                    }),
+                    task_type: None,
+                    title: None,
+                    output_dimensionality: Some(self.ndims as i32),
+                };
+                (text, request)
+            })
+            .collect())
+    }
+
+    fn decoder<'id>(&self) -> Self::Decoder<'id> {
+        EmbeddingsDecoder::default()
+    }
+}
+
+impl Transport<Embeddings> for GeminiGrpc {
+    fn send(
+        &self,
+        requests: Vec<(String, EmbedContentRequest)>,
+        _exchange: Exchange,
+    ) -> Opening<(String, proto::EmbedContentResponse)> {
+        let mut client = self.grpc_client();
+        // Sequential calls, each completed inside the send so they run under
+        // the attempt's span; the first RPC error ends the batch.
+        Opening::new(async move {
+            let mut frames = Vec::with_capacity(requests.len());
+            for (text, request) in requests {
+                match client.embed_content(request).await {
+                    Ok(response) => frames.push(Ok((text, response.into_inner()))),
+                    Err(status) => {
+                        frames.push(Err(super::completion::rpc_error(&status)));
+                        break;
+                    }
+                }
+            }
+            Ok(Opened::new(futures::stream::iter(frames)))
+        })
+    }
+}
+
+/// Collects every text's vector into one response.
+#[derive(Default)]
+pub struct EmbeddingsDecoder {
+    embeddings: Vec<embeddings::Embedding>,
+    failure: Option<ProviderError>,
+}
+
+impl<'id> Decoder<'id, Embedding, (String, proto::EmbedContentResponse)> for EmbeddingsDecoder {
+    type Event = (String, proto::EmbedContentResponse);
+
+    fn classify(
+        &self,
+        frame: (String, proto::EmbedContentResponse),
+    ) -> WireEvent<(String, proto::EmbedContentResponse)> {
+        WireEvent::Known(frame)
+    }
+
+    fn decode(
+        &mut self,
+        (document, response): Self::Event,
+        _out: Out<'id, Embedding>,
+    ) -> Result<Flow, ProviderError> {
+        match response.embedding {
+            Some(embedding) => self.embeddings.push(embeddings::Embedding {
+                document,
+                vec: embedding.values.into_iter().map(f64::from).collect(),
+            }),
+            None => {
+                self.failure.get_or_insert(ProviderError::Response(
+                    "No embedding in response".to_string(),
+                ));
+            }
+        }
+        Ok(Flow::More)
+    }
+
+    /// The transport sends every text before its frames end, so the batch
+    /// ends there.
+    fn eof(&mut self, out: Out<'id, Embedding>) -> Result<Flow, ProviderError> {
+        if let Some(error) = self.failure.take() {
+            return Err(error);
+        }
+        // gRPC: the native answers are prost messages, not JSON, and
+        // `EmbedContent` reports no usage or response id; `raw` stays `Null`.
+        Ok(out.end(embeddings::EmbeddingResponse::new(std::mem::take(
+            &mut self.embeddings,
+        ))))
+    }
+}

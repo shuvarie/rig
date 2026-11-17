@@ -1,12 +1,12 @@
 //! The scripted mock wire's history suite: it proves the harness drives a
 //! wire end to end, with provider items carried in the scripted request.
 
-use rig_core::completion::{CompletionRequest, CompletionResponse, FinishReason, Usage};
-use rig_core::error::EncodeError;
-use rig_core::message::{AssistantContent, Message, Opaque, Origin, Reasoning, Text};
-use rig_core::test_utils::{MockFrame, MockScript, MockStreamEvent, mock_final};
-use rig_core::wire::{Mode, Wire};
-use rig_history_conformance::{Ending, HistoryFixture, Shape, decode};
+use rig::completion::{CompletionRequest, CompletionResponse, FinishReason, Usage};
+use rig::error::EncodeError;
+use rig::message::{AssistantContent, Message, Opaque, Origin, Reasoning, Text};
+use rig::test_utils::history_suite::{Ending, HistoryFixture, Shape, decode};
+use rig::test_utils::{MockFrame, MockScript, MockStreamEvent, mock_final};
+use rig::wire::{Mode, Wire};
 use serde_json::{Value, json};
 
 pub struct MockHistory;
@@ -178,7 +178,7 @@ impl HistoryFixture for MockHistory {
     }
 }
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "mock",
     fixture: MockHistory,
 }

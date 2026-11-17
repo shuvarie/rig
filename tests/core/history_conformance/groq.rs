@@ -1,7 +1,7 @@
 //! Groq: gpt-oss reasoning under `reasoning`, the `channel` its messages
 //! carry (which it refuses back), and calls it streams whole.
 
-use rig_core::providers::openai::wire::GROQ;
+use rig::providers::openai::wire::GROQ;
 use serde_json::{Value, json};
 
 use super::chat::{ChatHistory, call};
@@ -38,7 +38,7 @@ pub const FIXTURE: ChatHistory = ChatHistory {
     has_items: true,
 };
 
-rig_history_conformance::history_conformance_suite! {
+rig::history_conformance_suite! {
     wire: "groq",
     fixture: FIXTURE,
 }

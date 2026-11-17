@@ -1,3 +1,8 @@
+//! Implementing `Embed` by hand.
+//!
+//! The `#[derive(Embed)]` macro is gone; these are the impls it generated, so
+//! each case still pins what `to_texts` produces.
+
 use rig::{
     Embed,
     embeddings::{self, TextEmbedder, embed::EmbedError},
@@ -5,14 +10,12 @@ use rig::{
 use serde::Serialize;
 
 #[test]
-fn test_custom_embed() {
-    #[derive(Embed)]
+fn custom_field_embeds_through_a_function() {
     struct WordDefinition {
         #[allow(dead_code)]
         id: String,
         #[allow(dead_code)]
         word: String,
-        #[embed(embed_with = "custom_embedding_function")]
         definition: Definition,
     }
 
@@ -21,6 +24,12 @@ fn test_custom_embed() {
         word: String,
         link: String,
         speech: String,
+    }
+
+    impl Embed for WordDefinition {
+        fn embed(&self, embedder: &mut TextEmbedder) -> Result<(), EmbedError> {
+            custom_embedding_function(embedder, self.definition.clone())
+        }
     }
 
     fn custom_embedding_function(
@@ -44,19 +53,16 @@ fn test_custom_embed() {
 
     assert_eq!(
         embeddings::to_texts(definition).unwrap(),
-            vec!["{\"word\":\"a building in which people live; residence for human beings.\",\"link\":\"https://www.dictionary.com/browse/house\",\"speech\":\"noun\"}".to_string()]
-        );
+        vec!["{\"word\":\"a building in which people live; residence for human beings.\",\"link\":\"https://www.dictionary.com/browse/house\",\"speech\":\"noun\"}".to_string()]
+    );
 }
 
 #[test]
-fn test_custom_and_basic_embed() {
-    #[derive(Embed)]
+fn custom_and_basic_fields_keep_their_order() {
     struct WordDefinition {
         #[allow(dead_code)]
         id: String,
-        #[embed]
         word: String,
-        #[embed(embed_with = "custom_embedding_function")]
         definition: Definition,
     }
 
@@ -65,6 +71,13 @@ fn test_custom_and_basic_embed() {
         word: String,
         link: String,
         speech: String,
+    }
+
+    impl Embed for WordDefinition {
+        fn embed(&self, embedder: &mut TextEmbedder) -> Result<(), EmbedError> {
+            Embed::embed(&self.word, embedder)?;
+            custom_embedding_function(embedder, self.definition.clone())
+        }
     }
 
     fn custom_embedding_function(
@@ -98,15 +111,19 @@ fn test_custom_and_basic_embed() {
 }
 
 #[test]
-fn test_embed_vec_non_string() {
-    #[derive(Embed)]
+fn a_numeric_vector_embeds_one_text_per_element() {
     struct Company {
         #[allow(dead_code)]
         id: String,
         #[allow(dead_code)]
         company: String,
-        #[embed]
         employee_ages: Vec<i32>,
+    }
+
+    impl Embed for Company {
+        fn embed(&self, embedder: &mut TextEmbedder) -> Result<(), EmbedError> {
+            Embed::embed(&self.employee_ages, embedder)
+        }
     }
 
     let company = Company {
@@ -127,15 +144,19 @@ fn test_embed_vec_non_string() {
 }
 
 #[test]
-fn test_embed_vec_string() {
-    #[derive(Embed)]
+fn a_string_vector_embeds_its_elements() {
     struct Company {
         #[allow(dead_code)]
         id: String,
         #[allow(dead_code)]
         company: String,
-        #[embed]
         employee_names: Vec<String>,
+    }
+
+    impl Embed for Company {
+        fn embed(&self, embedder: &mut TextEmbedder) -> Result<(), EmbedError> {
+            Embed::embed(&self.employee_names, embedder)
+        }
     }
 
     let company = Company {
@@ -161,15 +182,19 @@ fn test_embed_vec_string() {
 }
 
 #[test]
-fn test_multiple_embed_tags() {
-    #[derive(Embed)]
+fn several_fields_embed_in_declaration_order() {
     struct Company {
         #[allow(dead_code)]
         id: String,
-        #[embed]
         company: String,
-        #[embed]
         employee_ages: Vec<i32>,
+    }
+
+    impl Embed for Company {
+        fn embed(&self, embedder: &mut TextEmbedder) -> Result<(), EmbedError> {
+            Embed::embed(&self.company, embedder)?;
+            Embed::embed(&self.employee_ages, embedder)
+        }
     }
 
     let company = Company {

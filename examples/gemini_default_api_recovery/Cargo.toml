@@ -8,11 +8,11 @@ publish = false
 workspace = true
 
 [dependencies]
-rig = { workspace = true, features = ["derive"] }
+rig = { workspace = true, features = [] }
 anyhow = { workspace = true }
 futures = { workspace = true }
 schemars = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
+serde = { workspace = true, features = [] }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true, features = ["full"] }

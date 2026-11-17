@@ -3,16 +3,14 @@
 //! invented shapes, every documented finish, and the projection pi's
 //! `openai-completions` rebuild sends for a turn.
 
-use rig_core::completion::{CompletionRequest, FinishReason};
-use rig_core::error::EncodeError;
-use rig_core::message::{AssistantContent, AssistantMessage};
-use rig_core::providers::openai::wire::{
-    Chat, DEEPSEEK, Dialect, MISTRAL, OPENROUTER, OpenAIConfig,
-};
-use rig_core::wire::{Mode, Wire, WireFrame};
-use rig_history_conformance::{
+use rig::completion::{CompletionRequest, FinishReason};
+use rig::error::EncodeError;
+use rig::message::{AssistantContent, AssistantMessage};
+use rig::providers::openai::wire::{Chat, DEEPSEEK, Dialect, MISTRAL, OPENROUTER, OpenAIConfig};
+use rig::test_utils::history_suite::{
     Ablation, CallShape, Ending, HistoryFixture, Rng, Shape, decode, http_body, replies,
 };
+use rig::wire::{Mode, Wire, WireFrame};
 use serde_json::{Map, Value, json};
 
 /// One Chat dialect's side of the suite.
@@ -132,7 +130,7 @@ impl HistoryFixture for ChatHistory {
         OpenAIConfig::with_key(self.dialect, "key").chat(model)
     }
 
-    fn raw_tool(&self, tool: &rig_core::completion::ToolDefinition) -> Option<Value> {
+    fn raw_tool(&self, tool: &rig::completion::ToolDefinition) -> Option<Value> {
         Some(serde_json::json!({"type": "function", "function": {
             "name": tool.name.as_str(), "description": tool.description, "parameters": tool.parameters,
         }}))
