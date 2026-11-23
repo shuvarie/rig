@@ -1,16 +1,16 @@
 //! Provider-agnostic embedding abstractions.
 //!
 //! Embeddings are numerical representations of text or other inputs. Rig uses
-//! an embedding [`Model`](crate::Model) to generate vectors, [`Embed`] to
+//! an embedding [`Model`](rig::Model) to generate vectors, [`Embed`] to
 //! select which text from a Rust value should be embedded, and
 //! [`EmbeddingsBuilder`] to batch embedding requests for vector stores or
 //! retrieval workflows.
 //!
 //! ```
-//! use crate::embeddings::to_texts;
+//! use rig::embeddings::to_texts;
 //!
 //! assert_eq!(to_texts(vec!["first", "second"])?, vec!["first", "second"]);
-//! # Ok::<(), crate::embeddings::EmbedError>(())
+//! # Ok::<(), rig::embeddings::EmbedError>(())
 //! ```
 
 pub mod builder;

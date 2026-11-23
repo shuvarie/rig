@@ -1,7 +1,7 @@
 //! Mistral's embedding model identifiers and its batching cap.
 //!
 //! ```no_run
-//! use crate::providers::mistral;
+//! use rig::providers::mistral;
 //! let model = mistral::from_env()?.embedding(mistral::MISTRAL_EMBED, None);
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```

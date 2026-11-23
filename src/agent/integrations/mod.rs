@@ -1,7 +1,7 @@
 //! User-facing integrations for classic agents.
 //!
 //! ```
-//! use crate::agent::integrations::cli_chatbot::ChatBotBuilder;
+//! use rig::agent::integrations::cli_chatbot::ChatBotBuilder;
 //! let builder = ChatBotBuilder::new();
 //! ```
 /// A terminal chat loop over an agent.

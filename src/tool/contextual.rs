@@ -3,12 +3,12 @@
 //! model-visible outputs retain their text, JSON, or multimodal representation.
 //!
 //! ```
-//! use crate::{message::ToolName, tool::{DynamicTool, ToolOutput}};
+//! use rig::{message::ToolName, tool::{DynamicTool, ToolOutput}};
 //!
 //! let tool = DynamicTool::new_with_context(ToolName::new("echo")?, "Echo JSON", serde_json::json!({}),
 //!     |_context, args| Box::pin(async move { Ok(ToolOutput::json(args)) }));
 //! assert_eq!(tool.name(), "echo");
-//! # Ok::<(), crate::message::EmptyToolName>(())
+//! # Ok::<(), rig::message::EmptyToolName>(())
 //! ```
 
 use std::{future::Future, sync::Arc};
@@ -37,7 +37,7 @@ pub trait Tool: Sized + WasmCompatSend + WasmCompatSync {
     /// Output convertible into Rig's canonical model presentation.
     ///
     /// Every owned serializable value implements [`IntoToolOutput`]
-    /// automatically. [`ToolResultContent`](crate::message::ToolResultContent)
+    /// automatically. [`ToolResultContent`](rig::message::ToolResultContent)
     /// and `Vec<ToolResultContent>` preserve rich content when returned
     /// directly; use [`ToolOutput`] when constructing the presentation
     /// explicitly.
@@ -144,7 +144,7 @@ pub type LivenessFn = Arc<dyn Fn() -> bool + Send + Sync>;
 pub type LivenessFn = Arc<dyn Fn() -> bool>;
 
 /// A tool defined at runtime: its definition and a callback over JSON
-/// arguments. It is its own handler ([`Serve`](crate::serve::Serve)), keyed
+/// arguments. It is its own handler ([`Serve`](rig::serve::Serve)), keyed
 /// by its name. The optional liveness probe supports registry retirement;
 /// serving does not consult it.
 #[derive(Clone)]
@@ -240,7 +240,7 @@ impl DynamicTool {
     /// [`Self::run_with`] does.
     ///
     /// ```
-    /// use crate::{message::ToolName, tool::{DynamicTool, ToolExecutionError, ToolOutput}};
+    /// use rig::{message::ToolName, tool::{DynamicTool, ToolExecutionError, ToolOutput}};
     /// use serde_json::json;
     ///
     /// let add = DynamicTool::new(ToolName::new("add")?, "Adds a and b", json!({}), |args| {
@@ -266,7 +266,7 @@ impl DynamicTool {
     /// `insert_result` lands in `context`. No registry or agent is involved.
     ///
     /// ```
-    /// use crate::{message::ToolName, tool::{ContextValue, DynamicTool, ToolContext, ToolOutput}};
+    /// use rig::{message::ToolName, tool::{ContextValue, DynamicTool, ToolContext, ToolOutput}};
     /// use serde_json::json;
     ///
     /// #[derive(serde::Serialize, serde::Deserialize)]
@@ -348,7 +348,7 @@ impl std::fmt::Debug for DynamicTool {
 /// An empty `NAME` fails the build where this is instantiated.
 ///
 /// ```
-/// use crate::{message::ToolChoice, tool::{Tool, ToolContext, tool_name}};
+/// use rig::{message::ToolChoice, tool::{Tool, ToolContext, tool_name}};
 ///
 /// struct Ping;
 ///

@@ -3,8 +3,8 @@
 //! Anthropic-format Messages API, which takes no Moonshot field of its own.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::moonshot::extension::MoonshotOptions;
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::moonshot::extension::MoonshotOptions;
 //!
 //! let options = MoonshotOptions::new().prompt_cache_key("session-7");
 //! let request = CompletionRequest::new("hi").provider_option(options);

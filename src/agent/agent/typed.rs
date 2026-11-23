@@ -2,7 +2,7 @@
 //! Native prompting parses final text; extractors require an output-tool call.
 //!
 //! ```no_run
-//! # async fn example(agent: crate::agent::agent::Agent) -> Result<(), crate::agent::completion::StructuredOutputError> {
+//! # async fn example(agent: rig::agent::agent::Agent) -> Result<(), rig::agent::completion::StructuredOutputError> {
 //! let response = agent.prompt_typed::<Vec<String>>("List three colors.").retries(1).await?;
 //! assert_eq!(response.output.len(), 3);
 //! # Ok(())
@@ -43,7 +43,7 @@ pub struct TypedPromptResponse<T> {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub completion_calls: Vec<CompletionCall>,
     /// The accepted attempt's transcript; see
-    /// [`PromptResponse::messages`](crate::agent::agent::PromptResponse::messages).
+    /// [`PromptResponse::messages`](rig::agent::agent::PromptResponse::messages).
     /// Append it to caller-owned history to continue the conversation.
     #[serde(default)]
     pub messages: Vec<Message>,

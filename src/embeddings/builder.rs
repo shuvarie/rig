@@ -1,9 +1,9 @@
 //! Batched embedding generation for documents implementing [`Embed`].
 //!
 //! ```no_run
-//! use crate::DynModel;
-//! use crate::embeddings::EmbeddingsBuilder;
-//! use crate::operation::Embedding;
+//! use rig::DynModel;
+//! use rig::embeddings::EmbeddingsBuilder;
+//! use rig::operation::Embedding;
 //!
 //! # async fn example(model: DynModel<Embedding>) -> Result<(), Box<dyn std::error::Error>> {
 //! let documents = EmbeddingsBuilder::new(model)

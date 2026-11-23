@@ -1,7 +1,7 @@
 //! Execution-local correlation and facts from provider request boundaries.
 //!
 //! ```
-//! use crate::observe::scrub_diagnostic;
+//! use rig::observe::scrub_diagnostic;
 //!
 //! assert_eq!(scrub_diagnostic("Bearer secret", &[]), "[redacted]");
 //! ```
@@ -139,7 +139,7 @@ pub struct ObservedError {
 
 impl ObservedError {
     /// The error envelope a provider document carries, located as its
-    /// [`crate::provider_response::ProviderResponseError`] reads it: an
+    /// [`rig::provider_response::ProviderResponseError`] reads it: an
     /// error event's own `type` is its tag, not a kind, and an `error`
     /// string is the message alone.
     pub fn of(doc: &serde_json::Value) -> Option<Self> {
@@ -171,7 +171,7 @@ impl ObservedError {
     }
 }
 
-/// The counters of the [`Usage`](crate::completion::Usage) the decoder
+/// The counters of the [`Usage`](rig::completion::Usage) the decoder
 /// normalized into the reply's end, observed once when the reply ends; an
 /// attempt that fails before its end observes none. Unreported is `None`.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -181,7 +181,7 @@ pub struct AdapterUsage {
     /// Every output token, reasoning included.
     pub output_tokens: Option<u64>,
     /// Always `None`; kept for serde compatibility. Read the response's
-    /// [`Usage::total_tokens`](crate::completion::Usage::total_tokens).
+    /// [`Usage::total_tokens`](rig::completion::Usage::total_tokens).
     pub total_tokens: Option<u64>,
     /// The part of the input read from a provider-managed cache.
     pub cached_input_tokens: Option<u64>,
@@ -514,7 +514,7 @@ impl Drop for AdapterAttempt {
 /// the usage the decoder normalized into the reply's end.
 ///
 /// ```compile_fail
-/// use crate::wire::{AdapterEvent, AdapterUsage, ObservationSink};
+/// use rig::wire::{AdapterEvent, AdapterUsage, ObservationSink};
 ///
 /// // A projector cannot parse usage a second time off the raw payload.
 /// fn project(sink: &mut ObservationSink<'_>) {

@@ -2,8 +2,8 @@
 //! ends.
 //!
 //! ```
-//! use crate::message::Origin;
-//! use crate::serve::Reply;
+//! use rig::message::Origin;
+//! use rig::serve::Reply;
 //!
 //! let origin = Origin::new("example.api", "example", "example-1");
 //! let reply = Reply::written(origin, |mut writer| async move {

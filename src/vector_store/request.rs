@@ -1,7 +1,7 @@
 //! Vector-search requests and composable metadata filters.
 //!
 //! ```
-//! use crate::vector_store::request::{VectorSearchRequest, Filter, SearchFilter};
+//! use rig::vector_store::request::{VectorSearchRequest, Filter, SearchFilter};
 //!
 //! let request: VectorSearchRequest = VectorSearchRequest::builder()
 //!     .query("guide").samples(5)

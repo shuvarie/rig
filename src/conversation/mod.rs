@@ -3,8 +3,8 @@
 //! calls with their results.
 //!
 //! ```
-//! use crate::conversation::{Author, Conversation, Entry, pairing};
-//! use crate::message::Message;
+//! use rig::conversation::{Author, Conversation, Entry, pairing};
+//! use rig::message::Message;
 //!
 //! let mut conversation = Conversation::new();
 //! let hello = conversation.push(Message::user("Hello"));
@@ -794,8 +794,8 @@ impl Conversation {
     /// that carries an id would take one that meant another message here.
     ///
     /// ```
-    /// use crate::completion::Message;
-    /// use crate::conversation::{Author, Conversation, Entry};
+    /// use rig::completion::Message;
+    /// use rig::conversation::{Author, Conversation, Entry};
     ///
     /// let mut conversation = Conversation::from_messages([
     ///     Message::user("one"),
@@ -949,8 +949,8 @@ impl Conversation {
     /// rewrote.
     ///
     /// ```
-    /// use crate::completion::Message;
-    /// use crate::conversation::{Author, Conversation};
+    /// use rig::completion::Message;
+    /// use rig::conversation::{Author, Conversation};
     ///
     /// let mut conversation = Conversation::from_messages([
     ///     Message::user("one"),
@@ -1194,8 +1194,8 @@ impl Conversation {
     /// nested call, keeps its own time.
     ///
     /// ```
-    /// use crate::conversation::Conversation;
-    /// use crate::message::Message;
+    /// use rig::conversation::Conversation;
+    /// use rig::message::Message;
     ///
     /// let mut conversation = Conversation::new();
     /// conversation.dated(1_790_848_800_000, |conversation| {

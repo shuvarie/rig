@@ -1,10 +1,10 @@
 //! Mistral's model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`MISTRAL`](crate::providers::openai::wire::MISTRAL) dialect.
+//! [`from_env`] and [`new`] build a client on the [`MISTRAL`](rig::providers::openai::wire::MISTRAL) dialect.
 //! Provider fields of a reply stay in the response's `raw` value.
 //!
 //! ```no_run
-//! use crate::providers::mistral;
+//! use rig::providers::mistral;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let mistral = mistral::from_env()?;

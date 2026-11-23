@@ -7,7 +7,7 @@
 //! every field the proto declares.
 //!
 //! ```
-//! use crate::providers::gemini_grpc::proto::{Content, Part, part::Data};
+//! use rig::providers::gemini_grpc::proto::{Content, Part, part::Data};
 //!
 //! let content = Content {
 //!     parts: vec![Part {
@@ -16,10 +16,10 @@
 //!     }],
 //!     role: "user".to_owned(),
 //! };
-//! let json = crate::providers::gemini_grpc::rest::to_rest(&content)?;
+//! let json = rig::providers::gemini_grpc::rest::to_rest(&content)?;
 //! assert_eq!(json, serde_json::json!({"parts": [{"text": "hi"}], "role": "user"}));
-//! assert_eq!(crate::providers::gemini_grpc::rest::from_rest::<Content>(json)?, content);
-//! # Ok::<(), crate::providers::gemini_grpc::rest::TranscodeError>(())
+//! assert_eq!(rig::providers::gemini_grpc::rest::from_rest::<Content>(json)?, content);
+//! # Ok::<(), rig::providers::gemini_grpc::rest::TranscodeError>(())
 //! ```
 
 use std::sync::LazyLock;

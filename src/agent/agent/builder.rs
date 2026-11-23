@@ -3,8 +3,8 @@
 //! the shared server at build).
 //!
 //! ```
-//! use crate::{DynModel, operation::Completion};
-//! use crate::agent::{Agent, AgentBuilder};
+//! use rig::{DynModel, operation::Completion};
+//! use rig::agent::{Agent, AgentBuilder};
 //! fn assistant(model: impl Into<DynModel<Completion>>) -> Agent {
 //!     AgentBuilder::new(model).preamble("Be concise.").build()
 //! }
@@ -27,7 +27,7 @@ use crate::agent::{
     agent::{AgentHook, CompletionCallAction, CompletionCallEvent, HookContext, RequestPatch},
     completion::message::ToolChoice,
     tool::{
-        DynamicTool, Tool, ToolSet,
+        DynamicTool, Tool, ToolSet, ToolSource,
         server::{ToolServer, ToolServerHandle},
     },
 };
@@ -257,7 +257,7 @@ impl AgentBuilder {
     }
 
     /// Set the portable generation options every request of this agent
-    /// carries. A run's [`AgentRunner::options`](crate::agent::agent::AgentRunner::options)
+    /// carries. A run's [`AgentRunner::options`](rig::agent::agent::AgentRunner::options)
     /// overlays them field by field. Calls apply in order: this replaces
     /// every field, so a shortcut such as [`Self::seed`] called before it is
     /// lost, and one called after it sets its one field on top.
@@ -269,7 +269,7 @@ impl AgentBuilder {
     generation_option_setters!("the agent's");
 
     /// Set the stop sequences in the agent's generation options, as
-    /// [`GenerationOptions::stop`](crate::completion::GenerationOptions::stop) does,
+    /// [`GenerationOptions::stop`](rig::completion::GenerationOptions::stop) does,
     /// keeping its other fields. See
     /// [`Self::options`] for the order of calls.
     pub fn stop<S: Into<String>>(mut self, stop: impl IntoIterator<Item = S>) -> Self {
@@ -280,7 +280,7 @@ impl AgentBuilder {
 
     /// Set the typed per-provider options every request of this agent
     /// carries. A run's
-    /// [`AgentRunner::provider_options`](crate::agent::agent::AgentRunner::provider_options)
+    /// [`AgentRunner::provider_options`](rig::agent::agent::AgentRunner::provider_options)
     /// replaces the entry of each provider it names.
     ///
     /// Calls apply in order: this replaces every entry, so an entry set by
@@ -292,13 +292,13 @@ impl AgentBuilder {
     }
 
     /// Store `options` as the entry of their provider
-    /// ([`ExtensionOptions::Ext`](crate::completion::ExtensionOptions::Ext))
+    /// ([`ExtensionOptions::Ext`](rig::completion::ExtensionOptions::Ext))
     /// in the provider options every request of this agent carries,
     /// replacing that provider's entry and keeping every other
-    /// ([`ProviderOptions::set`](crate::completion::ProviderOptions::set)).
+    /// ([`ProviderOptions::set`](rig::completion::ProviderOptions::set)).
     /// Options that do not serialize fail each request's encode. A
     /// third-party provider reusing a built-in options type needs
-    /// [`ProviderOptions::with::<P>`](crate::completion::ProviderOptions::with)
+    /// [`ProviderOptions::with::<P>`](rig::completion::ProviderOptions::with)
     /// and [`Self::provider_options`]: this stores under the built-in key.
     pub fn provider_option<O: crate::completion::ExtensionOptions>(mut self, options: O) -> Self {
         self.config.spec_mut().provider_options =
@@ -315,7 +315,7 @@ impl AgentBuilder {
     }
 
     /// Accept finish reasons outside the normalized vocabulary
-    /// ([`FinishReason::Other`](crate::completion::FinishReason::Other))
+    /// ([`FinishReason::Other`](rig::completion::FinishReason::Other))
     /// as a normal stop. Off by default: such a turn fails the run,
     /// and history replay leaves it out. When on, the turn succeeds, its
     /// tool calls run, and it replays.
@@ -391,17 +391,17 @@ impl AgentBuilder {
     /// first model call and saves its messages there once it finished, so
     /// the next run goes on from them. A run that fails or is cancelled
     /// saves nothing; a failed load or save fails the run with
-    /// [`PromptError::Memory`](crate::agent::completion::PromptError::Memory). Of
+    /// [`PromptError::Memory`](rig::agent::completion::PromptError::Memory). Of
     /// two runs that loaded the same log, even at once, the second to save
-    /// fails with [`SessionError::Changed`](crate::memory::SessionError::Changed)
+    /// fails with [`SessionError::Changed`](rig::memory::SessionError::Changed)
     /// and adds nothing to it. Any rig-memory store will do, a host's
     /// `Arc<dyn Store>` among them. See the
     /// [`conversation`](Self::conversation) it keeps.
     ///
     /// ```
-    /// use crate::agent::agent::AgentBuilder;
-    /// use crate::test_utils::{MockCompletionModel, MockTurn};
-    /// use crate::memory::{MemoryStore, load};
+    /// use rig::agent::agent::AgentBuilder;
+    /// use rig::test_utils::{MockCompletionModel, MockTurn};
+    /// use rig::memory::{MemoryStore, load};
     ///
     /// # tokio_test::block_on(async {
     /// let store = MemoryStore::default();
@@ -428,7 +428,7 @@ impl AgentBuilder {
     /// [`name`](Self::name), or `agent`, so agents sharing a store keep
     /// apart; renaming the agent then starts a new conversation, so name
     /// the log for one that must outlive a rename. A log name is one part
-    /// of a [`check_name`](crate::memory::check_name) name; a run on one that
+    /// of a [`check_name`](rig::memory::check_name) name; a run on one that
     /// is not fails before its first model call.
     pub fn conversation(mut self, log: impl Into<String>) -> Self {
         self.config.conversation = Some(log.into());
@@ -595,6 +595,11 @@ impl AgentBuilder {
     /// Add runtime-defined tools.
     pub fn dynamic_tools(self, tools: Vec<DynamicTool>) -> Self {
         self.map_tools(|server| server.dynamic_tools(tools))
+    }
+
+    /// Add every tool `source` offers now, in its own order.
+    pub fn tool_source(self, source: impl ToolSource + 'static) -> Self {
+        self.map_tools(|tools| tools.tool_source(source))
     }
 
     /// Add retrievable tools chosen per request by `index`.

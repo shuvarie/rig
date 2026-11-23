@@ -3,7 +3,7 @@
 //! handler under it serves; it holds no reference to a dispatcher.
 //!
 //! ```
-//! use crate::effect::{Key, family};
+//! use rig::effect::{Key, family};
 //!
 //! let key = Key::<family::Completion>::new_unchecked("model".into());
 //! assert_eq!(key.as_str(), "model");

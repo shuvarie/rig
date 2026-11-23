@@ -784,9 +784,9 @@ mod terminal_emission {
     }
 }
 
-/// The Messages projection, driven through [`crate::driver`].
+/// The Messages projection, driven through [`rig::driver`].
 ///
-/// The projector rides on the wire's [`crate::wire::Encoded`], and the HTTP
+/// The projector rides on the wire's [`rig::wire::Encoded`], and the HTTP
 /// transport calls it on every raw payload — the rejection body included — so
 /// these cells exercise the wire and the driver together rather than the
 /// projector in isolation. That is the only way the *closure* facts

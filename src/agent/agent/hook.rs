@@ -5,7 +5,7 @@
 //! streamed deltas remain provisional until the model turn is accepted.
 //!
 //! ```
-//! use crate::agent::agent::{AgentHook, HookContext, OutcomeAction, OutcomeEvent};
+//! use rig::agent::agent::{AgentHook, HookContext, OutcomeAction, OutcomeEvent};
 //!
 //! struct ResponseLogger;
 //!
@@ -156,7 +156,7 @@ pub struct HookContext {
     output_tool: std::sync::Mutex<Option<String>>,
     /// Seeded and newly appended entries, in append order.
     entries: std::sync::Mutex<Vec<Aside>>,
-    /// Appends not yet flushed into the [`AgentRun`](crate::agent::agent::AgentRun)
+    /// Appends not yet flushed into the [`AgentRun`](rig::agent::agent::AgentRun)
     /// by the driver.
     pending_entries: std::sync::Mutex<Vec<Aside>>,
 }
@@ -316,7 +316,7 @@ pub use crate::agent::run::policy::{
 /// when every completion-call hook proceeds does [`ModelSelection`] run
 /// (receiving the merged patch), after which request preparation inspects the
 /// selected model's captured
-/// [`ProviderCapabilities`](crate::agent::completion::ProviderCapabilities) and the
+/// [`ProviderCapabilities`](rig::agent::completion::ProviderCapabilities) and the
 /// attempt is issued. A completion-call stop therefore suppresses model
 /// selection entirely and does not advance
 /// [`ModelSelection::previous_model`].
@@ -477,7 +477,7 @@ pub struct ToolCallDelta<'a> {
     /// The newly received fragment of argument JSON.
     pub delta: &'a str,
     /// The call's argument JSON accumulated through this delta. Read it with
-    /// [`parse_partial_arguments`](crate::streaming::parse_partial_arguments).
+    /// [`parse_partial_arguments`](rig::streaming::parse_partial_arguments).
     pub aggregated: &'a str,
 }
 
@@ -1044,7 +1044,7 @@ pub trait AgentHook: WasmCompatSend + WasmCompatSync {
     /// The call may be failed, retried, repaired, skipped, or used to stop the
     /// run. Return `None` to leave the decision to a later hook. If every hook
     /// in a [`HookStack`] returns `None`, the run's
-    /// [`UnhandledInvalidToolCall`](crate::agent::run::UnhandledInvalidToolCall)
+    /// [`UnhandledInvalidToolCall`](rig::agent::run::UnhandledInvalidToolCall)
     /// policy applies.
     ///
     /// A call whose arguments are not a JSON object

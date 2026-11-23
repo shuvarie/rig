@@ -16,8 +16,8 @@
 //! model.
 //!
 //! ```no_run
-//! use crate::providers::bedrock::{client::BedrockRuntime, completion::{AMAZON_NOVA_LITE, Converse}};
-//! use crate::Model;
+//! use rig::providers::bedrock::{client::BedrockRuntime, completion::{AMAZON_NOVA_LITE, Converse}};
+//! use rig::Model;
 //!
 //! let model = BedrockRuntime::from_env().completion(AMAZON_NOVA_LITE);
 //! # let _ = model;

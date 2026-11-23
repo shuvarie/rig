@@ -3,10 +3,10 @@
 //! outcomes or streaming events.
 //!
 //! ```
-//! use crate::message::ToolName;
-//! use crate::serve::Serve;
-//! use crate::tool::{DynamicTool, ToolContext, ToolOutput};
-//! use crate::wasm_compat::WasmBoxedFuture;
+//! use rig::message::ToolName;
+//! use rig::serve::Serve;
+//! use rig::tool::{DynamicTool, ToolContext, ToolOutput};
+//! use rig::wasm_compat::WasmBoxedFuture;
 //!
 //! let handler = DynamicTool::new_with_context(
 //!     ToolName::new("echo")?,
@@ -17,8 +17,8 @@
 //!             as WasmBoxedFuture<'_, _>
 //!     },
 //! );
-//! assert_eq!(handler.descriptor().key, crate::effect::tool_key("echo"));
-//! # Ok::<(), crate::message::EmptyToolName>(())
+//! assert_eq!(handler.descriptor().key, rig::effect::tool_key("echo"));
+//! # Ok::<(), rig::message::EmptyToolName>(())
 //! ```
 
 use std::sync::{Arc, Mutex};
@@ -98,14 +98,14 @@ impl<Op: Operation> ModelAdapter<Op> {
 /// What an outgoing HTTP request to a model serves, in its
 /// [extensions](http::Request::extensions): the effect it answers and the
 /// handler it was dispatched to. A model adapter sets it on every request
-/// it sends, so a [transport wrapper](crate::catalog::Connector::wrap_http)
+/// it sends, so a [transport wrapper](rig::catalog::Connector::wrap_http)
 /// can tell one model call's requests from another's and from those of no
 /// call, such as a model listing. The request's headers and body are the
-/// wrapper's to read, such as rig-cassette's traffic log, which records them.
+/// wrapper's to read, so a host can log or replay what was actually sent.
 ///
 /// ```
-/// use crate::http_client::Request;
-/// use crate::serve::Serving;
+/// use rig::http_client::Request;
+/// use rig::serve::Serving;
 ///
 /// fn served(request: &Request<Vec<u8>>) -> Option<u64> {
 ///     request
@@ -317,7 +317,7 @@ impl Serve for ModelAdapter<Rerank> {
 /// `for_dispatch`), else an empty context, and every scope of the dispatch
 /// attached, so the tool reaches its runtime by type for the length of the
 /// call. What the tool published goes back beside the dispatch when the
-/// driver asked for it ([`PublishedContext`](crate::tool::PublishedContext)
+/// driver asked for it ([`PublishedContext`](rig::tool::PublishedContext)
 /// in the dispatch's scope); the result carries data only. A call to
 /// another tool than `bound`, when given, is refused, so key routing never
 /// runs a different tool than the bound target.
@@ -455,7 +455,7 @@ impl<T: Tool> ToolAdapter<T> {
     /// Runs the tool on JSON `args` with an empty [`ToolContext`], as
     /// [`Self::run_with`] does.
     ///
-    /// [`ToolContext`]: crate::tool::ToolContext
+    /// [`ToolContext`]: rig::tool::ToolContext
     pub async fn run(
         &self,
         args: serde_json::Value,
@@ -471,7 +471,7 @@ impl<T: Tool> ToolAdapter<T> {
     /// agent is involved.
     ///
     /// ```
-    /// use crate::{serve::adapters::ToolAdapter, tool::{ContextValue, Tool, ToolContext}};
+    /// use rig::{serve::adapters::ToolAdapter, tool::{ContextValue, Tool, ToolContext}};
     /// use serde_json::json;
     ///
     /// #[derive(serde::Serialize, serde::Deserialize)]
@@ -484,7 +484,7 @@ impl<T: Tool> ToolAdapter<T> {
     ///     const NAME: &'static str = "double";
     ///     type Args = i64;
     ///     type Output = i64;
-    ///     type Error = crate::tool::ToolContextError;
+    ///     type Error = rig::tool::ToolContextError;
     ///
     ///     fn description(&self) -> String {
     ///         "Doubles a number.".to_string()
@@ -615,7 +615,7 @@ impl<I> RetrieveAdapter<I> {
 
     /// Wrap `index` under `retrieve:<label>`, so a host can serve several
     /// indexes in one table and dispatch to each by
-    /// [`retrieve_key`](crate::effect::retrieve_key).
+    /// [`retrieve_key`](rig::effect::retrieve_key).
     pub fn labelled(label: impl Into<String>, index: I) -> Self {
         Self {
             index,

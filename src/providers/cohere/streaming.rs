@@ -5,7 +5,7 @@
 //! citations and the tool plan round-trip through history.
 //!
 //! ```
-//! use crate::providers::cohere::streaming::ChatDecoder;
+//! use rig::providers::cohere::streaming::ChatDecoder;
 //!
 //! let decoder = ChatDecoder::default();
 //! # let _ = decoder;

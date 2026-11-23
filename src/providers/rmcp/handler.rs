@@ -1,8 +1,8 @@
 //! Synchronizes managed tool registrations with an MCP server's tool list.
 //!
 //! ```
-//! use crate::tool::ManagedToolSink;
-//! use crate::providers::rmcp::{McpClientHandler, rmcp};
+//! use rig::tool::ManagedToolSink;
+//! use rig::providers::rmcp::{McpClientHandler, rmcp};
 //!
 //! fn handler<S: ManagedToolSink + Send + Sync + 'static>(sink: S) -> McpClientHandler<S> {
 //!     McpClientHandler::new(rmcp::model::ClientConfig::default(), sink)

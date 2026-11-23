@@ -3,7 +3,7 @@
 //! only approximate candidates ([`IndexStrategy::LSH`]) on large stores.
 //!
 //! ```
-//! use crate::vector_store::in_memory_store::InMemoryVectorStore;
+//! use rig::vector_store::in_memory_store::InMemoryVectorStore;
 //!
 //! let namespace = String::from("prices");
 //! let store = InMemoryVectorStore::from_documents_with_id_f(
@@ -259,7 +259,7 @@ impl<D: Serialize> InMemoryVectorStore<D> {
 /// ([`IndexStrategy::BruteForce`] unless set).
 ///
 /// ```
-/// use crate::vector_store::{IndexStrategy, in_memory_store::InMemoryVectorStore};
+/// use rig::vector_store::{IndexStrategy, in_memory_store::InMemoryVectorStore};
 ///
 /// let store = InMemoryVectorStore::<String>::builder()
 ///     .index_strategy(IndexStrategy::LSH { num_tables: 8, num_hyperplanes: 12 })

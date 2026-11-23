@@ -2,8 +2,8 @@
 //! (<https://docs.together.ai/reference/chat-completions-1>).
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::together::extension::{TogetherOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::together::extension::{TogetherOptions};
 //!
 //! let options = TogetherOptions::new().top_k(40).repetition_penalty(1.1);
 //! let request = CompletionRequest::new("hi").provider_option(options);

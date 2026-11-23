@@ -1,8 +1,8 @@
 //! Common imports for Rig's classic runtime.
 //!
 //! ```
-//! use crate::agent::prelude::*;
-//! use crate::operation::Completion;
+//! use rig::agent::prelude::*;
+//! use rig::operation::Completion;
 //!
 //! fn assistant(model: impl Into<DynModel<Completion>>) -> Agent {
 //!     AgentBuilder::new(model).build()

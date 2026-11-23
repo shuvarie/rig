@@ -9,7 +9,7 @@ use super::{CacheRetention, Reasoning, ServiceTier, Verbosity};
 use crate::completion::CompletionRequest;
 
 /// Every option but the policy, borrowed, as a wire's
-/// [`map_options`](crate::completion::ReplayTarget::map_options) reads it.
+/// [`map_options`](rig::completion::ReplayTarget::map_options) reads it.
 /// Not `#[non_exhaustive]`, so wires in companion crates destructure it
 /// whole, which `#[non_exhaustive]` forbids for
 /// [`GenerationOptions`](super::GenerationOptions).

@@ -5,8 +5,8 @@
 //! the Responses route.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::openai::extension::{OpenAiOptions, ReasoningSummary};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::openai::extension::{OpenAiOptions, ReasoningSummary};
 //!
 //! let options = OpenAiOptions::default()
 //!     .store(false)
@@ -39,7 +39,7 @@ pub use responses::{
 };
 
 /// OpenAI's provider extension, keyed by
-/// [`PROVIDER_NAME`](crate::providers::openai::PROVIDER_NAME).
+/// [`PROVIDER_NAME`](rig::providers::openai::PROVIDER_NAME).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct OpenAiExt;
 

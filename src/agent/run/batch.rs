@@ -71,7 +71,7 @@ impl ToolBatch {
     }
 
     /// The results so far in call order, every unanswered call closed by
-    /// [`close_pending`](crate::conversation::pairing::close_pending).
+    /// [`close_pending`](rig::conversation::pairing::close_pending).
     pub(super) fn interrupt(&self) -> Message {
         let open = self.slots.iter().filter_map(|slot| match slot {
             ToolSlot::Execute(tool_call) | ToolSlot::Malformed(tool_call) => Some(tool_call),

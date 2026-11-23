@@ -362,7 +362,7 @@ impl Book {
         now(self.flush_async(store))
     }
 
-    /// [`Self::flush`] to an [`AsyncStore`](crate::memory::AsyncStore).
+    /// [`Self::flush`] to an [`AsyncStore`](rig::memory::AsyncStore).
     pub async fn flush_async<S: crate::memory::AsyncStore + ?Sized>(
         &mut self,
         store: &S,
@@ -530,8 +530,8 @@ impl Writer {
     /// the last record after which no turn runs, no tool call waits for its
     /// result, the model owes no answer and nothing after `through` is in the
     /// conversation. What is queued is written first. The copy keeps the
-    /// records' stamps, so [`as_of`](crate::memory::as_of) and
-    /// [`undo_summary`](crate::memory::undo_summary) read it as they read `from`,
+    /// records' stamps, so [`as_of`](rig::memory::as_of) and
+    /// [`undo_summary`](rig::memory::undo_summary) read it as they read `from`,
     /// and has its own header and lineage. Returns the agent of the copy:
     /// its conversation continues the new log, and its saved values are
     /// those `from` had at the cut.
@@ -607,7 +607,7 @@ pub(crate) fn set_aside_tail(
     now(set_aside_tail_async(store, log, kept, cut))
 }
 
-/// [`set_aside_tail`] in an [`AsyncStore`](crate::memory::AsyncStore).
+/// [`set_aside_tail`] in an [`AsyncStore`](rig::memory::AsyncStore).
 async fn set_aside_tail_async<S: crate::memory::AsyncStore + ?Sized>(
     store: &S,
     log: &str,

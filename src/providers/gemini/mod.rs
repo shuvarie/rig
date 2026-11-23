@@ -1,7 +1,7 @@
 //! Gemini provider configuration and endpoint wires.
 //!
 //! ```no_run
-//! use crate::providers::gemini;
+//! use rig::providers::gemini;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = gemini::Gemini::from_env()?;
@@ -11,7 +11,7 @@
 //! # }
 //! ```
 //!
-//! Pair a wire with a transport in a [`Model`](crate::driver::Model) to call it.
+//! Pair a wire with a transport in a [`Model`](rig::driver::Model) to call it.
 
 #[cfg(feature = "audio")]
 #[cfg_attr(docsrs, doc(cfg(feature = "audio")))]

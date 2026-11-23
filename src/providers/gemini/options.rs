@@ -1,5 +1,5 @@
 //! How the Gemini wires answer
-//! [`GenerationOptions`](crate::completion::GenerationOptions): one mapping
+//! [`GenerationOptions`](rig::completion::GenerationOptions): one mapping
 //! for every GenerateContent route (the Gemini API, Vertex AI, gRPC), and
 //! one for Interactions. Which thinking a model takes is its catalog
 //! entry's.

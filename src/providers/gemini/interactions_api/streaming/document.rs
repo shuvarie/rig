@@ -3,10 +3,10 @@
 //! included, which `interaction.completed` leaves out.
 //!
 //! ```
-//! use crate::providers::gemini::interactions_api::streaming::InteractionsDecoder;
-//! use crate::providers::gemini::interactions_api::streaming::document::Interaction;
-//! use crate::wire::document::Reassemble;
-//! use crate::wire::{Decoder, WireEvent, WireFrame};
+//! use rig::providers::gemini::interactions_api::streaming::InteractionsDecoder;
+//! use rig::providers::gemini::interactions_api::streaming::document::Interaction;
+//! use rig::wire::document::Reassemble;
+//! use rig::wire::{Decoder, WireEvent, WireFrame};
 //!
 //! let decoder = InteractionsDecoder::default();
 //! let mut document = Interaction::default();

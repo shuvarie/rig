@@ -7,8 +7,8 @@
 //! route taken does not return reads `None`.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::gemini::extension::GeminiOptions;
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::gemini::extension::GeminiOptions;
 //!
 //! let options = GeminiOptions::new().top_k(40);
 //! let request = CompletionRequest::new("hi").provider_option(options);

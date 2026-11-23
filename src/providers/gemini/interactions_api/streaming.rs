@@ -2,7 +2,7 @@
 //! stream of `event_type`-tagged step events, read as JSON.
 //!
 //! ```
-//! use crate::providers::gemini::interactions_api::streaming::InteractionsDecoder;
+//! use rig::providers::gemini::interactions_api::streaming::InteractionsDecoder;
 //!
 //! let decoder = InteractionsDecoder::default();
 //! # let _ = decoder;
@@ -46,9 +46,9 @@ const CURSOR_TYPE: &str = "gemini.stream_cursor";
 /// Where a resumable stream picks up: the interaction, and the last
 /// `event_id` the API marked as a resume point. A stream carries one after
 /// `interaction.created`, with no event yet, and one after each event with
-/// an `event_id`, as an [`Item::Unknown`](crate::streaming::Item::Unknown)
+/// an `event_id`, as an [`Item::Unknown`](rig::streaming::Item::Unknown)
 /// that [`Self::of`] reads. A stream resumed with
-/// [`Gemini::interaction_resumed`](crate::providers::gemini::Gemini::interaction_resumed)
+/// [`Gemini::interaction_resumed`](rig::providers::gemini::Gemini::interaction_resumed)
 /// continues after the event, or from the start without one, so a step
 /// that was open arrives without its start.
 #[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]

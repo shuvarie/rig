@@ -1,8 +1,8 @@
 //! Conversion of agents into dynamically named tools.
 //!
 //! ```
-//! use crate::agent::{Agent, tool::DynamicTool};
-//! use crate::message::EmptyToolName;
+//! use rig::agent::{Agent, tool::DynamicTool};
+//! use rig::message::EmptyToolName;
 //! fn delegate(agent: Agent) -> Result<DynamicTool, EmptyToolName> {
 //!     agent.into_tool()
 //! }

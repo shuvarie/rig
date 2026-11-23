@@ -6,8 +6,8 @@
 //! and response shapes play no part.
 //!
 //! ```no_run
-//! use crate::providers::bedrock::{client::BedrockRuntime, completion::{AMAZON_NOVA_LITE, Converse}};
-//! use crate::Model;
+//! use rig::providers::bedrock::{client::BedrockRuntime, completion::{AMAZON_NOVA_LITE, Converse}};
+//! use rig::Model;
 //!
 //! let model = BedrockRuntime::from_env().completion(AMAZON_NOVA_LITE);
 //! # let _ = model;
@@ -116,7 +116,7 @@ impl Family {
     /// family with [`Converse::with_family`].
     ///
     /// ```
-    /// use crate::providers::bedrock::completion::{AMAZON_NOVA_PRO, ANTHROPIC_CLAUDE_SONNET_4_5, Family};
+    /// use rig::providers::bedrock::completion::{AMAZON_NOVA_PRO, ANTHROPIC_CLAUDE_SONNET_4_5, Family};
     ///
     /// assert_eq!(Family::of(ANTHROPIC_CLAUDE_SONNET_4_5), Family::Claude);
     /// assert_eq!(Family::of(AMAZON_NOVA_PRO), Family::Nova);
@@ -170,7 +170,7 @@ impl Converse {
     /// provider, such as an application inference profile ARN.
     ///
     /// ```
-    /// use crate::providers::bedrock::completion::{Converse, Family};
+    /// use rig::providers::bedrock::completion::{Converse, Family};
     ///
     /// let profile = "arn:aws:bedrock:us-east-1:123456789012:application-inference-profile/a1b2c3";
     /// let wire = Converse::new(profile).with_family(Family::Claude);

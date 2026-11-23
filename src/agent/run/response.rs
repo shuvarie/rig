@@ -1,7 +1,7 @@
 //! Per-call accounting, final run responses, and prompting errors.
 //!
 //! ```
-//! use crate::agent::run::response::PromptResponse;
+//! use rig::agent::run::response::PromptResponse;
 //! let response = PromptResponse::empty();
 //! assert!(response.output().is_empty());
 //! ```
@@ -33,7 +33,7 @@ pub struct CompletionCall {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub finish_reason: Option<FinishReason>,
     /// This attempt's provider response payload, as defined by
-    /// [`crate::completion::CompletionResponse::raw`]. A stream without a
+    /// [`rig::completion::CompletionResponse::raw`]. A stream without a
     /// terminal response produces no completion-call entry.
     pub raw: serde_json::Value,
 }
@@ -245,7 +245,7 @@ pub enum PromptError {
 
     /// The run's conversation could not be loaded from its memory store,
     /// before any model call, or the finished run could not be saved there
-    /// ([`AgentBuilder::memory`](crate::agent::agent::AgentBuilder::memory)). The run did
+    /// ([`AgentBuilder::memory`](rig::agent::agent::AgentBuilder::memory)). The run did
     /// not succeed. A failed save may already have set aside a torn last
     /// line the log ended in (to `recovered/` in the store) and stored the
     /// blobs of the run's images; its own append stored nothing or, cut
@@ -255,7 +255,7 @@ pub enum PromptError {
     #[error("the conversation memory failed: {error}")]
     Memory {
         /// Why the store refused or failed, such as
-        /// [`SessionError::Changed`](crate::memory::SessionError::Changed) when
+        /// [`SessionError::Changed`](rig::memory::SessionError::Changed) when
         /// another run saved to the log after this one loaded it.
         #[source]
         error: crate::memory::SessionError,
@@ -278,14 +278,14 @@ pub enum PromptError {
     #[error("the run was cancelled: {reason}")]
     Cancelled {
         /// The run's history at cancellation, every tool call answered
-        /// (closed by [`repair`](crate::conversation::pairing::repair)).
+        /// (closed by [`repair`](rig::conversation::pairing::repair)).
         chat_history: Vec<Message>,
         /// Human-readable cancellation reason.
         reason: String,
     },
 
     /// The final answer missed the run's output schema, as
-    /// [`crate::tool::validate::validate`] checks it, once the
+    /// [`rig::tool::validate::validate`] checks it, once the
     /// output-retry budget was spent. The message names the problems and the
     /// answer's first 200 characters; the fields keep all of them.
     #[error("{}", schema_mismatch_message(.output, .output_tool.as_deref(), .problems))]
@@ -421,7 +421,7 @@ forward_provider_response_helpers!(PromptError, Provider, "completion error", re
 impl PromptError {
     /// Build a [`PromptError::Cancelled`]. A driver gets the history from
     /// [`AgentRun::cancel_error`](super::AgentRun::cancel_error), or closes
-    /// its own with [`repair`](crate::conversation::pairing::repair).
+    /// its own with [`repair`](rig::conversation::pairing::repair).
     pub fn cancelled(chat_history: Vec<Message>, reason: impl Into<String>) -> Self {
         Self::Cancelled {
             chat_history,

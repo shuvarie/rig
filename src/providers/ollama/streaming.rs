@@ -7,7 +7,7 @@
 //! out as reasoning (see [`ChatDecoder`]).
 //!
 //! ```
-//! use crate::providers::ollama::streaming::ChatDecoder;
+//! use rig::providers::ollama::streaming::ChatDecoder;
 //!
 //! let decoder = ChatDecoder::default();
 //! # let _ = decoder;

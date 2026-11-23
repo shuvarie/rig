@@ -7,7 +7,7 @@
 //! replies go through the same decoder and fold.
 //!
 //! ```
-//! use crate::wire::WireFrame;
+//! use rig::wire::WireFrame;
 //!
 //! let frame = WireFrame::Bytes(b"response".to_vec());
 //! assert_eq!(frame.as_str(), "response");
@@ -162,9 +162,9 @@ impl std::fmt::Debug for Encoded {
 /// Reply mode used by the wire to select request encoding and framing.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mode {
-    /// One whole reply ([`Model::call`](crate::driver::Model::call)).
+    /// One whole reply ([`Model::call`](rig::driver::Model::call)).
     Unary,
-    /// A streamed reply ([`Model::stream`](crate::driver::Model::stream)).
+    /// A streamed reply ([`Model::stream`](rig::driver::Model::stream)).
     Streaming,
 }
 
@@ -172,7 +172,7 @@ pub enum Mode {
 /// reply, and how those fold into one response.
 ///
 /// Implemented once per operation, never per provider, so every provider of
-/// an operation is interchangeable behind a [`DynModel`](crate::DynModel).
+/// an operation is interchangeable behind a [`DynModel`](rig::DynModel).
 pub trait Operation: Sized + 'static {
     /// The normalized request this operation accepts.
     type Request: WasmCompatSend + 'static;
@@ -605,8 +605,8 @@ impl<T> WireEvent<T> {
 /// reply: a writer cannot be kept past the decode step that received it.
 ///
 /// ```compile_fail
-/// use crate::operation::Completion;
-/// use crate::wire::Out;
+/// use rig::operation::Completion;
+/// use rig::wire::Out;
 ///
 /// // A writer cannot be stashed to write into the reply later.
 /// struct Stash(Option<Out<'static, Completion>>);
@@ -645,14 +645,14 @@ impl<'id, Op: Operation> Out<'id, Op> {
 
     /// What the provider reported the reply used so far, before its end,
     /// such as the input counted as it starts. A relay forwards it as
-    /// [`Relayed::Usage`](crate::streaming::Relayed::Usage); a later report
+    /// [`Relayed::Usage`](rig::streaming::Relayed::Usage); a later report
     /// replaces it, and the end's usage is the whole.
     pub fn usage(&mut self, usage: crate::completion::Usage) {
         self.lock().usage = Some(usage);
     }
 
     /// A payload the provider sent that this decoder does not model. It
-    /// reaches the consumer as [`Item::Unknown`](crate::streaming::Item).
+    /// reaches the consumer as [`Item::Unknown`](rig::streaming::Item).
     pub fn unknown(&mut self, payload: crate::streaming::UnknownPayload) {
         self.lock()
             .items
@@ -671,8 +671,8 @@ impl<Op: Operation<Emit = Free>> Out<'_, Op> {
     /// writes:
     ///
     /// ```compile_fail,E0599
-    /// use crate::operation::Completion;
-    /// use crate::wire::Out;
+    /// use rig::operation::Completion;
+    /// use rig::wire::Out;
     ///
     /// fn record(out: &mut Out<'_, Completion>) {
     ///     out.raw(serde_json::json!({ "response_id": "x" }));
@@ -688,9 +688,9 @@ impl<Op: Operation<Emit = Free>> Out<'_, Op> {
     /// completion's events come from its part handles:
     ///
     /// ```compile_fail,E0599
-    /// use crate::operation::Completion;
-    /// use crate::streaming::StreamEvent;
-    /// use crate::wire::Out;
+    /// use rig::operation::Completion;
+    /// use rig::streaming::StreamEvent;
+    /// use rig::wire::Out;
     ///
     /// fn reinject(out: &mut Out<'_, Completion>, seen: &StreamEvent) {
     ///     out.event(seen.clone());
@@ -700,9 +700,9 @@ impl<Op: Operation<Emit = Free>> Out<'_, Op> {
     /// An event rebuilt from its serialized form is no different:
     ///
     /// ```compile_fail,E0599
-    /// use crate::operation::Completion;
-    /// use crate::streaming::StreamRecord;
-    /// use crate::wire::Out;
+    /// use rig::operation::Completion;
+    /// use rig::streaming::StreamRecord;
+    /// use rig::wire::Out;
     ///
     /// fn rebuild(out: &mut Out<'_, Completion>, recorded: serde_json::Value) {
     ///     let Ok(transcript) = StreamRecord::parse(recorded) else { return };
@@ -727,7 +727,7 @@ pub trait Decoder<'id, Op: Operation, Frame = WireFrame> {
     type Event;
 
     /// Decode and classify one frame. A JSON wire MUST delegate to a
-    /// classifier in [`crate::providers::internal::wire`], so the
+    /// classifier in [`rig::providers::internal::wire`], so the
     /// decode-then-validate policy is not re-derived per provider.
     fn classify(&self, frame: Frame) -> WireEvent<Self::Event>;
 
@@ -799,10 +799,10 @@ pub trait Wire: Clone + WasmCompatSend + WasmCompatSync + 'static {
 /// as [`Wire::encode`] took it.
 ///
 /// ```
-/// use crate::completion::{CompletionRequest, CompletionResponse};
-/// use crate::error::ProviderError;
-/// use crate::providers::anthropic::wire::Messages;
-/// use crate::wire::{Mode, WireFrame, decode_reply};
+/// use rig::completion::{CompletionRequest, CompletionResponse};
+/// use rig::error::ProviderError;
+/// use rig::providers::anthropic::wire::Messages;
+/// use rig::wire::{Mode, WireFrame, decode_reply};
 ///
 /// /// A batch result's body, as the reply to the `request` it answers.
 /// fn batch_reply(

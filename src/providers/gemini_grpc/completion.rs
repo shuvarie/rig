@@ -2,10 +2,10 @@
 //! for a unary call, `StreamGenerateContent` for a streamed one.
 //!
 //! ```no_run
-//! use crate::Model;
-//! use crate::providers::gemini_grpc::{GeminiGrpc, completion::{GEMINI_2_5_FLASH, GenerateContent}};
+//! use rig::Model;
+//! use rig::providers::gemini_grpc::{GeminiGrpc, completion::{GEMINI_2_5_FLASH, GenerateContent}};
 //!
-//! # async fn example() -> Result<(), crate::providers::gemini_grpc::GeminiGrpcError> {
+//! # async fn example() -> Result<(), rig::providers::gemini_grpc::GeminiGrpcError> {
 //! let model = GeminiGrpc::new("API_KEY").await?.completion(GEMINI_2_5_FLASH);
 //! # let _ = model;
 //! # Ok(())

@@ -2,7 +2,7 @@
 //! identity a gateway requires.
 //!
 //! ```
-//! use crate::providers::openai::{OpenAIConfig, wire::Auth};
+//! use rig::providers::openai::{OpenAIConfig, wire::Auth};
 //! let config = OpenAIConfig::new("key").with_auth(Auth::OptionalBearer);
 //! assert_eq!(config.auth, Auth::OptionalBearer);
 //! ```

@@ -1,12 +1,12 @@
 //! The model slugs a signed-in ChatGPT account may use, in backend order.
 //!
 //! ```no_run
-//! use crate::http_client::DynHttpClient;
-//! use crate::client::chatgpt_models::account_models;
-//! use crate::providers::chatgpt::auth::AuthContext;
+//! use rig::http_client::DynHttpClient;
+//! use rig::client::chatgpt_models::account_models;
+//! use rig::providers::chatgpt::auth::AuthContext;
 //!
 //! # async fn example(context: &AuthContext, http: &DynHttpClient)
-//! # -> Result<(), crate::error::ProviderError> {
+//! # -> Result<(), rig::error::ProviderError> {
 //! let slugs = account_models(context, http).await?;
 //! # let _ = slugs;
 //! # Ok(())

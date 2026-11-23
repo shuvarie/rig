@@ -3,7 +3,7 @@
 //! bytes; lazy response bodies convert through `U::from`.
 //!
 //! ```
-//! use crate::http_client::{DynHttpClient, HttpClientExt};
+//! use rig::http_client::{DynHttpClient, HttpClientExt};
 //!
 //! fn erase(client: impl HttpClientExt + 'static) -> DynHttpClient {
 //!     DynHttpClient::new(client)
@@ -78,7 +78,7 @@ where
 ///
 /// ```compile_fail
 /// fn assert_serialize<T: serde::Serialize>() {}
-/// assert_serialize::<crate::http_client::DynHttpClient>();
+/// assert_serialize::<rig::http_client::DynHttpClient>();
 /// ```
 #[derive(Clone)]
 pub struct DynHttpClient {

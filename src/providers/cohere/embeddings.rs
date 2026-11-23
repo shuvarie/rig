@@ -2,7 +2,7 @@
 //! their reply types, and image-input validation.
 //!
 //! ```
-//! use crate::providers::cohere::embeddings::FloatEmbeddings;
+//! use rig::providers::cohere::embeddings::FloatEmbeddings;
 //! let vectors: FloatEmbeddings = serde_json::from_str(r#"{"float": [[0.5]]}"#)?;
 //! assert_eq!(vectors.values.len(), 1);
 //! # Ok::<(), serde_json::Error>(())

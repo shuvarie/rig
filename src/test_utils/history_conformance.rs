@@ -1,6 +1,6 @@
 //! Decoding a wire's frames the way the driver does, for tests: the
 //! partial response a reply cut off leaves (a whole reply is
-//! [`decode_reply`](crate::wire::decode_reply)'s). The history conformance
+//! [`decode_reply`](rig::wire::decode_reply)'s). The history conformance
 //! suite (the unpublished `rig-history-conformance` crate) and provider
 //! tests build on these.
 
@@ -26,7 +26,7 @@ pub fn partial<W: Wire<Op = Completion>>(
 }
 
 /// [`partial`], with the items the consumer took, as a runtime that folds
-/// them with [`delivered`](crate::streaming::delivered) holds them.
+/// them with [`delivered`](rig::streaming::delivered) holds them.
 pub fn cut<W: Wire<Op = Completion>>(
     wire: &W,
     mode: Mode,

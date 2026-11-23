@@ -3,10 +3,10 @@
 //! A client, such as [`openai::OpenAI`], holds a provider's configuration on a
 //! transport and builds the models it serves. A vendor that speaks another
 //! provider's format has its own constructors, such as [`deepseek::from_env`].
-//! For a model chosen from data, use [`Catalog::connect`](crate::catalog::Catalog::connect).
+//! For a model chosen from data, use [`Catalog::connect`](rig::catalog::Catalog::connect).
 //!
 //! ```no_run
-//! use crate::providers::openai::{self, OpenAI};
+//! use rig::providers::openai::{self, OpenAI};
 //! let model = OpenAI::from_env()?.chat(openai::GPT_5_2);
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```

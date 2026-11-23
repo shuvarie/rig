@@ -611,7 +611,7 @@ fn a_string_source_is_the_same_inline_data_on_both_gemini_wires() -> anyhow::Res
 }
 
 /// The facts the Interactions wire is given are the facts it answers with: its
-/// [`ReplayTarget::facts`](crate::completion::ReplayTarget::facts), which
+/// [`ReplayTarget::facts`](rig::completion::ReplayTarget::facts), which
 /// the shared option rules and the cost read, and its descriptor's spec,
 /// which `DynModel::spec` returns.
 #[test]

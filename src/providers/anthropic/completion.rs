@@ -8,7 +8,7 @@
 //! signatures, or raw responses.
 //!
 //! ```
-//! use crate::providers::anthropic::completion::{CLAUDE_SONNET_4_6, CacheTtl};
+//! use rig::providers::anthropic::completion::{CLAUDE_SONNET_4_6, CacheTtl};
 //!
 //! let ttl = CacheTtl::OneHour;
 //! # let _ = (ttl, CLAUDE_SONNET_4_6);

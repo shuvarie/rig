@@ -2,7 +2,7 @@
 //! Each operation consumes a whole reply, using its dialect's JSON or binary format.
 //!
 //! ```
-//! use crate::providers::openai::{OpenAI, TEXT_EMBEDDING_3_SMALL};
+//! use rig::providers::openai::{OpenAI, TEXT_EMBEDDING_3_SMALL};
 //! let wire = OpenAI::new("key").embedding(TEXT_EMBEDDING_3_SMALL, None);
 //! ```
 

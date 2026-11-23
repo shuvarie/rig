@@ -6,11 +6,11 @@
 //! records under.
 //!
 //! ```no_run
-//! use crate::completion::CompletionRequest;
-//! use crate::driver::Model;
-//! use crate::providers::openai::{self, OpenAIConfig};
+//! use rig::completion::CompletionRequest;
+//! use rig::driver::Model;
+//! use rig::providers::openai::{self, OpenAIConfig};
 //!
-//! # async fn example(http: crate::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
+//! # async fn example(http: rig::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
 //! let model = OpenAIConfig::from_env()?.connect(http).responses(openai::GPT_5_2);
 //! let response = model.call(CompletionRequest::new("Hello")).await?;
 //! # let _ = response;
@@ -108,11 +108,11 @@ where
     /// Every option of `request` this model would refuse, found by preparing
     /// and encoding it as [`Self::call`] does, with nothing sent. It lists
     /// the refusals of the model's catalog entry
-    /// ([`ModelSpec::refusals`](crate::catalog::ModelSpec::refusals)) and
+    /// ([`ModelSpec::refusals`](rig::catalog::ModelSpec::refusals)) and
     /// those of the wire and its route, all of them rather than the first.
-    /// The request's [`OnUnsupported`](crate::completion::OnUnsupported)
+    /// The request's [`OnUnsupported`](rig::completion::OnUnsupported)
     /// policy does not change what is listed, but a request whose
-    /// [`GenerationOptions`](crate::completion::GenerationOptions) are
+    /// [`GenerationOptions`](rig::completion::GenerationOptions) are
     /// default is not checked against the catalog, as when it is sent.
     ///
     /// The request's messages are not read: its system prompt and a
@@ -123,9 +123,9 @@ where
     ///
     /// # Errors
     ///
-    /// [`CheckError::Unsupported`](crate::completion::CheckError::Unsupported)
+    /// [`CheckError::Unsupported`](rig::completion::CheckError::Unsupported)
     /// with every refusal, or
-    /// [`CheckError::Invalid`](crate::completion::CheckError::Invalid) when the request cannot be built for another
+    /// [`CheckError::Invalid`](rig::completion::CheckError::Invalid) when the request cannot be built for another
     /// reason.
     pub fn check(
         &self,
@@ -137,7 +137,7 @@ where
 
 /// The answer of `run`, a dry run of `request` without its messages, for
 /// [`Model::check`]. The run goes on past each refusal as under
-/// [`OnUnsupported::Ignore`](crate::completion::OnUnsupported::Ignore), so
+/// [`OnUnsupported::Ignore`](rig::completion::OnUnsupported::Ignore), so
 /// it meets every one; a request whose options are default stays default,
 /// so it is not checked against the catalog, as when it is sent.
 pub(crate) fn check_with(
@@ -207,9 +207,9 @@ pub(crate) fn without_messages(
 
 /// Sends a wire's payloads and delivers its replies' frames.
 ///
-/// HTTP clients ([`HttpClientExt`](crate::http_client::HttpClientExt)) are
-/// transports for every wire that encodes [`Encoded`](crate::wire::Encoded)
-/// requests and reads [`WireFrame`](crate::wire::WireFrame)s. A local
+/// HTTP clients ([`HttpClientExt`](rig::http_client::HttpClientExt)) are
+/// transports for every wire that encodes [`Encoded`](rig::wire::Encoded)
+/// requests and reads [`WireFrame`](rig::wire::WireFrame)s. A local
 /// runtime, a proxy or a mock is a transport for the wires it serves.
 pub trait Transport<W: Wire>: Clone + WasmCompatSend + WasmCompatSync + 'static {
     /// Open the reply to one payload. Nothing is sent until the opening is
@@ -227,7 +227,7 @@ pub struct Exchange {
     /// The observation an observing transport records the send under.
     pub(crate) observation: Option<AdapterContext>,
     /// What the HTTP transport puts in the request's extensions, such as
-    /// the [`Serving`](crate::serve::Serving) of a dispatched effect.
+    /// the [`Serving`](rig::serve::Serving) of a dispatched effect.
     pub(crate) extensions: http::Extensions,
 }
 
@@ -393,7 +393,7 @@ where
     /// Send `request` and fold the whole reply into the operation's
     /// response: [`Self::stream`] of a unary reply, finished. A completion
     /// takes a prompt, a conversation or a
-    /// [`CompletionRequest`](crate::completion::CompletionRequest).
+    /// [`CompletionRequest`](rig::completion::CompletionRequest).
     pub fn call(
         &self,
         request: impl Into<Request<W>>,
@@ -852,7 +852,7 @@ pub(crate) fn settle<Op: Operation>(
     }
 }
 
-/// [`decode_reply`](crate::wire::decode_reply), with `raw` the reply's
+/// [`decode_reply`](rig::wire::decode_reply), with `raw` the reply's
 /// whole document as a transport reports it (`Null` for none, so the
 /// reassembler's stands), for tests that state what the transport read.
 pub(crate) fn decode_reply<W: Wire>(

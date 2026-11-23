@@ -1,7 +1,7 @@
 //! Terminal chat loops for agents and custom chat implementations.
 //!
 //! ```no_run
-//! use crate::agent::{Agent, completion::PromptError, integrations::cli_chatbot::ChatBotBuilder};
+//! use rig::agent::{Agent, completion::PromptError, integrations::cli_chatbot::ChatBotBuilder};
 //! async fn chat(agent: Agent) -> Result<(), PromptError> {
 //!     ChatBotBuilder::new().agent(agent).max_turns(3).build().run().await
 //! }

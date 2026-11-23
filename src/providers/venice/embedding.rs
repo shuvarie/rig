@@ -1,7 +1,7 @@
 //! Venice's embedding model identifiers.
 //!
 //! ```
-//! use crate::providers::venice::embedding::TEXT_EMBEDDING_BGE_M3;
+//! use rig::providers::venice::embedding::TEXT_EMBEDDING_BGE_M3;
 //! assert_eq!(TEXT_EMBEDDING_BGE_M3, "text-embedding-bge-m3");
 //! ```
 

@@ -1,7 +1,7 @@
 //! Streamed agent events, bounded event feeds, and terminal response shaping.
 //!
 //! ```no_run
-//! # fn example(agent: &crate::agent::agent::Agent) {
+//! # fn example(agent: &rig::agent::agent::Agent) {
 //! let stream = agent.prompt("Explain ownership.").stream();
 //! # }
 //! ```
@@ -34,7 +34,7 @@ pub type StreamingResult = WasmBoxedStream<'static, Result<MultiTurnStreamItem, 
 /// One item of a streamed run: a provider stream event, a committed tool
 /// call, a lifecycle marker, or the run's final response. An item reads back
 /// from its serialized form on its own, without checking its order against
-/// the items around it; [`StreamRecord::parse`](crate::streaming::StreamRecord::parse)
+/// the items around it; [`StreamRecord::parse`](rig::streaming::StreamRecord::parse)
 /// checks a run's provider stream items.
 #[non_exhaustive]
 pub enum MultiTurnStreamItem {
@@ -48,11 +48,11 @@ pub enum MultiTurnStreamItem {
     /// A tool call **committed to the run's history**, in commit order.
     ///
     /// The stream's tool items are a projection of committed history
-    /// ([`project`](crate::agent::run::project)): every call history holds is
+    /// ([`project`](rig::agent::run::project)): every call history holds is
     /// reported, and later answered by a [`ToolResult`](Self::ToolResult),
     /// whether it ran, a hook skipped it, or invalid-call recovery or an
     /// output reprompt answered it; a run resumed mid-batch reports the batch's
-    /// calls again ([`projection_start`](crate::agent::run::AgentRun::projection_start)).
+    /// calls again ([`projection_start`](rig::agent::run::AgentRun::projection_start)).
     /// It is **not** an execution-lifecycle event
     /// (see [`ToolExecutionCommitted`](Self::ToolExecutionCommitted)). A
     /// structured-output Tool-mode output-tool call that finalizes the run is
@@ -74,7 +74,7 @@ pub enum MultiTurnStreamItem {
     /// Correlate it with the model call and result through the call's id.
     ToolExecutionCommitted {
         /// The tool call as **executed**: the model's call with any
-        /// [`DispatchAction::Patch`](crate::agent::agent::DispatchAction::Patch) hook rewrite
+        /// [`DispatchAction::Patch`](rig::agent::agent::DispatchAction::Patch) hook rewrite
         /// applied (so a redaction rewrite is reflected here, not leaked). The
         /// model's *original* call is reported via
         /// [`StreamAssistantItem`](Self::StreamAssistantItem).
@@ -97,7 +97,7 @@ pub enum MultiTurnStreamItem {
     /// incremental per streamed token.
     ///
     /// ```
-    /// use crate::agent::agent::MultiTurnStreamItem;
+    /// use rig::agent::agent::MultiTurnStreamItem;
     /// fn input_tokens(item: &MultiTurnStreamItem) -> Option<u64> {
     ///     match item {
     ///         MultiTurnStreamItem::CompletionCall(call) => call.usage.input_tokens,
@@ -166,7 +166,7 @@ impl AgentRunner {
     /// not under whichever span first polls it.
     ///
     /// ```rust,no_run
-    /// # use crate::agent::{Agent, agent::StreamingResult};
+    /// # use rig::agent::{Agent, agent::StreamingResult};
     /// fn start(agent: &Agent, prompt: &str) -> StreamingResult {
     ///     // Nothing runs until whoever holds this polls it.
     ///     agent.prompt(prompt).stream()

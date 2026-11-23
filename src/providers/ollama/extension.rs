@@ -5,8 +5,8 @@
 //! native route only and is skipped on the others.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::ollama::extension::{KeepAlive, OllamaOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::ollama::extension::{KeepAlive, OllamaOptions};
 //!
 //! let options = OllamaOptions::default()
 //!     .keep_alive(KeepAlive::duration("5m"))

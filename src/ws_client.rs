@@ -2,11 +2,11 @@
 //! Backends preserve rejected upgrades as HTTP errors with status, headers, and body.
 //!
 //! ```
-//! use crate::ws_client::websocket_url;
+//! use rig::ws_client::websocket_url;
 //!
 //! assert_eq!(websocket_url("https://example.com/v1", "responses")?,
 //!            "wss://example.com/v1/responses");
-//! # Ok::<(), crate::http_client::Error>(())
+//! # Ok::<(), rig::http_client::Error>(())
 //! ```
 
 use crate::http_client::{Error, NoBody, Request, Result};

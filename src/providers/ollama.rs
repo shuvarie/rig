@@ -3,16 +3,16 @@
 //!
 //! Chat goes through the daemon's OpenAI-compatible `/v1/chat/completions`
 //! on the shared Chat Completions wire, as the
-//! [`OLLAMA`](crate::providers::openai::wire::OLLAMA) dialect.
+//! [`OLLAMA`](rig::providers::openai::wire::OLLAMA) dialect.
 //! [`Ollama::native_completion`] reaches its native `/api/chat` instead
 //! ([`Chat`]), the only route that sends model `options` such as `num_ctx`,
 //! and [`Ollama::anthropic_completion`] its Anthropic-compatible
 //! `/v1/messages`, as the
-//! [`OLLAMA`](crate::providers::anthropic::wire::OLLAMA) Messages dialect.
+//! [`OLLAMA`](rig::providers::anthropic::wire::OLLAMA) Messages dialect.
 //! Embeddings use `/api/embed`, and the model listing `/api/tags`.
 //!
 //! ```no_run
-//! use crate::providers::ollama;
+//! use rig::providers::ollama;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = ollama::Ollama::new();

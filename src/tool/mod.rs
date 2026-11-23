@@ -2,7 +2,7 @@
 //! [`Tool`] is the tool trait; each call gets a [`ToolContext`].
 //!
 //! ```
-//! use crate::tool::ToolOutput;
+//! use rig::tool::ToolOutput;
 //!
 //! let output = ToolOutput::json(serde_json::json!({"count": 3}));
 //! assert!(output.as_json().is_some());
@@ -19,6 +19,7 @@ pub mod managed;
 mod output;
 mod result;
 pub mod schema;
+mod source;
 pub mod validate;
 pub use context::{
     ContextValue, MAX_KEPT_FACTS_BYTES, PublishedContext, ToolContext, ToolContextError,
@@ -35,6 +36,7 @@ pub use managed::{ManagedToolSink, ManagedToolToken};
 pub use output::{IntoToolOutput, ToolOutput};
 pub use result::{ToolErrorKind, ToolExecutionError, ToolResult};
 pub use schema::args_schema;
+pub use source::ToolSource;
 
 /// The runtime's live registry, tool set and catalog.
 pub mod server {

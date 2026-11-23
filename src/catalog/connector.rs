@@ -119,8 +119,8 @@ type Wrapper = Arc<dyn Fn(DynHttpClient) -> DynHttpClient>;
 /// network. Cloning is cheap.
 ///
 /// ```
-/// use crate::catalog::Transport;
-/// use crate::http_client::DynHttpClient;
+/// use rig::catalog::Transport;
+/// use rig::http_client::DynHttpClient;
 ///
 /// fn reach(transport: &Transport, own: DynHttpClient) -> DynHttpClient {
 ///     // A provider with a client of its own wraps it; one without takes
@@ -223,8 +223,8 @@ impl Connector {
     /// the call are not rebuilt.
     ///
     /// ```
-    /// use crate::catalog::Connector;
-    /// use crate::http_client::DynHttpClient;
+    /// use rig::catalog::Connector;
+    /// use rig::http_client::DynHttpClient;
     ///
     /// let mut connector = Connector::default();
     /// // A wrapper sees every request and response, such as to log them.
@@ -257,8 +257,8 @@ impl Connector {
     /// take it first with [`Self::provider`].
     ///
     /// ```
-    /// use crate::catalog::{Catalog, Connector, ModelSpec};
-    /// use crate::providers::registry::{ConnectOptions, ProviderId};
+    /// use rig::catalog::{Catalog, Connector, ModelSpec};
+    /// use rig::providers::registry::{ConnectOptions, ProviderId};
     ///
     /// let corp = ProviderId::declare("corp")?;
     /// let mut connector = Connector::default();
@@ -362,8 +362,8 @@ impl Connector {
     /// needs no key, be configured ([`ModelStatus::Unconfigured`]).
     ///
     /// ```
-    /// use crate::catalog::{Connector, ModelSpec, ModelStatus};
-    /// use crate::providers::registry::ProviderId;
+    /// use rig::catalog::{Connector, ModelSpec, ModelStatus};
+    /// use rig::providers::registry::ProviderId;
     ///
     /// let corp = ProviderId::declare("status-doc-corp")?;
     /// let connector = Connector::default();

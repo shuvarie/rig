@@ -1,7 +1,7 @@
-//! Forking an agent's log: [`Writer::fork_log`](crate::memory::Writer::fork_log)
+//! Forking an agent's log: [`Writer::fork_log`](rig::memory::Writer::fork_log)
 //! starts a log as a copy of another, up to a turn boundary ([`turn_cut`]).
-//! The copied records keep their stamps, so [`as_of`](crate::memory::as_of) and
-//! [`history`](crate::memory::history) read the copy as they read its source, and a
+//! The copied records keep their stamps, so [`as_of`](rig::memory::as_of) and
+//! [`history`](rig::memory::history) read the copy as they read its source, and a
 //! compaction made before the cut can be undone in the copy.
 
 use std::io;

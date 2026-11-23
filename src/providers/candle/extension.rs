@@ -1,13 +1,13 @@
 //! Candle's typed request options and reply extras: the sampler settings
 //! with no portable [`GenerationOptions`] form, over the model's
-//! [`GenerationConfig`](crate::providers::candle::GenerationConfig) defaults, and the local
+//! [`GenerationConfig`](rig::providers::candle::GenerationConfig) defaults, and the local
 //! generation record each reply carries.
 //!
-//! [`GenerationOptions`]: crate::completion::GenerationOptions
+//! [`GenerationOptions`]: rig::completion::GenerationOptions
 //!
 //! ```
-//! use crate::providers::candle::extension::{CandleOptions};
-//! use crate::completion::CompletionRequest;
+//! use rig::providers::candle::extension::{CandleOptions};
+//! use rig::completion::CompletionRequest;
 //!
 //! let options = CandleOptions::default().top_k(40).repeat_penalty(1.2);
 //! let request = CompletionRequest::new("hi").provider_option(options);
@@ -80,7 +80,7 @@ pub struct CandleShared {
 }
 
 /// The local generation record of a reply, the fields of
-/// [`CandleCompletionResponse`](crate::providers::candle::CandleCompletionResponse). A field
+/// [`CandleCompletionResponse`](rig::providers::candle::CandleCompletionResponse). A field
 /// the record does not carry is `None`.
 #[non_exhaustive]
 #[derive(Clone, Debug, Default, PartialEq, Deserialize)]

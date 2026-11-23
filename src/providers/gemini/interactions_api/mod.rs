@@ -3,7 +3,7 @@
 //! stream of step events, is read by [`InteractionsDecoder`](streaming::InteractionsDecoder).
 //!
 //! ```no_run
-//! use crate::providers::gemini::{Gemini, completion::GEMINI_2_5_FLASH};
+//! use rig::providers::gemini::{Gemini, completion::GEMINI_2_5_FLASH};
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let wire = Gemini::from_env()?.interactions(GEMINI_2_5_FLASH);
@@ -482,7 +482,7 @@ impl ReplayTarget for InteractionResume {
 
 /// The create-interaction body `request` sends on `wire`: the wire's own
 /// encoding, then the mapped options, then `additional_params`, merged by
-/// [`request_params`](crate::completion::options::request_params). Its
+/// [`request_params`](rig::completion::options::request_params). Its
 /// `generation_config` merges over the typed fields key by key, its `tools`
 /// add to the request's, and an `agent` takes the place of the model.
 /// System messages become the system instruction. `stream`, when set,

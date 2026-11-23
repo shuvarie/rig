@@ -3,8 +3,8 @@
 //! declared in `additional_params.tools`.
 //!
 //! ```
-//! use crate::completion::CompletionResponse;
-//! use crate::providers::xiaomimimo::extension::XiaomiMimoExt;
+//! use rig::completion::CompletionResponse;
+//! use rig::providers::xiaomimimo::extension::XiaomiMimoExt;
 //!
 //! fn annotations(reply: &CompletionResponse) -> usize {
 //!     reply

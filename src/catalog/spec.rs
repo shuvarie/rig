@@ -24,8 +24,8 @@ use super::details::ModelDetails;
 /// file's row shape, use [`Self::to_row_json`].
 ///
 /// ```
-/// use crate::catalog::{Catalog, ModelSpec, Pricing};
-/// use crate::providers::registry::ProviderId;
+/// use rig::catalog::{Catalog, ModelSpec, Pricing};
+/// use rig::providers::registry::ProviderId;
 ///
 /// let ollama = ProviderId::catalog("ollama").ok_or("a known vendor")?;
 /// let mut catalog = Catalog::builtin().clone();
@@ -112,8 +112,8 @@ pub struct Modalities {
 /// control) is [`Self::Listed`] with nothing listed.
 ///
 /// ```
-/// use crate::catalog::ReasoningSupport;
-/// use crate::completion::{Effort, Reasoning};
+/// use rig::catalog::ReasoningSupport;
+/// use rig::completion::{Effort, Reasoning};
 ///
 /// let unknown = ReasoningSupport::Unknown { default: None };
 /// assert!(unknown.supported() && unknown.levels().is_none());
@@ -371,7 +371,7 @@ impl ModelSpec {
     /// otherwise, or `None` for a provider the registry cannot configure.
     /// To reach the model in another family its vendor is registered for,
     /// build the spec with that [`ProviderId`] or pass the family to
-    /// [`ConnectOptions::format`](crate::providers::registry::ConnectOptions::format).
+    /// [`ConnectOptions::format`](rig::providers::registry::ConnectOptions::format).
     pub fn format(&self) -> Option<Format> {
         self.provider.format()
     }
@@ -532,9 +532,9 @@ impl ModelSpec {
     /// [`Self::refusals`] of the request is empty.
     ///
     /// ```
-    /// use crate::catalog::{ModelSpec, ReasoningSupport};
-    /// use crate::completion::{CompletionRequest, Effort, GenerationOptions, Reasoning};
-    /// use crate::providers::registry::ProviderId;
+    /// use rig::catalog::{ModelSpec, ReasoningSupport};
+    /// use rig::completion::{CompletionRequest, Effort, GenerationOptions, Reasoning};
+    /// use rig::providers::registry::ProviderId;
     ///
     /// let vendor = ProviderId::catalog("ollama").ok_or("a known vendor")?;
     /// let plain = ModelSpec::new(vendor, "plain").with_reasoning(ReasoningSupport::None);

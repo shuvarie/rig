@@ -1,10 +1,10 @@
 //! Together AI's model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`TOGETHER`](crate::providers::openai::wire::TOGETHER) dialect,
+//! [`from_env`] and [`new`] build a client on the [`TOGETHER`](rig::providers::openai::wire::TOGETHER) dialect,
 //! using `TOGETHER_API_KEY`.
 //!
 //! ```no_run
-//! use crate::providers::together;
+//! use rig::providers::together;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let together = together::from_env()?;

@@ -84,8 +84,6 @@ pub mod transcription;
 pub mod vector_store;
 pub mod wasm_compat;
 pub mod wire;
-#[cfg(feature = "websocket")]
-#[cfg_attr(docsrs, doc(cfg(feature = "websocket")))]
 pub mod ws_client;
 
 /// The agent runtime: builders, hooks, tools, and the serializable run state.

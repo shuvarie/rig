@@ -56,12 +56,12 @@ impl CredentialSource for copilot::auth::Authenticator {
 /// [`reference`](ModelSpec::reference).
 ///
 /// ```no_run
-/// use crate::catalog::Catalog;
-/// use crate::providers::chatgpt::auth::{AuthSource, Authenticator, DeviceCodeHandler, FileTokenStore};
-/// use crate::client::signed_in::SignedInModel;
-/// use crate::serve::ErasedHandler;
+/// use rig::catalog::Catalog;
+/// use rig::providers::chatgpt::auth::{AuthSource, Authenticator, DeviceCodeHandler, FileTokenStore};
+/// use rig::client::signed_in::SignedInModel;
+/// use rig::serve::ErasedHandler;
 ///
-/// # fn run(http: crate::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
+/// # fn run(http: rig::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
 /// let spec = Catalog::builtin().resolve("chatgpt/gpt-6.1-sol")?.spec.clone();
 /// let auth = Authenticator::new(AuthSource::OAuth, FileTokenStore::new("/path/to/credentials"), DeviceCodeHandler::default(), false);
 /// let handler = ErasedHandler::new(SignedInModel::new(spec, auth, http)?);

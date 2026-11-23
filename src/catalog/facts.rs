@@ -8,7 +8,7 @@ use super::{Catalog, ModelSpec};
 /// The facts a completion wire encodes with: the spec of the model it was
 /// connected to, and the catalog that spec came from, which answers for any
 /// other model a request names. Every completion wire holds one, and its
-/// [`Descriptor`](crate::wire::Descriptor) hands it to the completion fold,
+/// [`Descriptor`](rig::wire::Descriptor) hands it to the completion fold,
 /// which prices usage from it.
 ///
 /// The default binds no spec and answers from [`Catalog::builtin`]. Facts
@@ -17,8 +17,8 @@ use super::{Catalog, ModelSpec};
 /// facts again. Clones are cheap.
 ///
 /// ```
-/// use crate::catalog::{Catalog, ModelFacts, Pricing};
-/// use crate::providers::registry::ProviderId;
+/// use rig::catalog::{Catalog, ModelFacts, Pricing};
+/// use rig::providers::registry::ProviderId;
 ///
 /// let anthropic = ProviderId::catalog("anthropic").ok_or("a known vendor")?;
 /// let mut catalog = Catalog::builtin().clone();
@@ -93,7 +93,7 @@ impl ModelFacts {
     ///
     /// A spec under a catalog vendor answers only under that vendor, since
     /// a wire also asks about other vendors' rows for its model. A spec
-    /// under a [declared](crate::providers::registry::ProviderId::declare)
+    /// under a [declared](rig::providers::registry::ProviderId::declare)
     /// vendor answers under any: no wire carries a declared vendor's name,
     /// so the wire it was bound to asks under its own.
     pub fn for_model(&self, vendor: &str, model: &str) -> Option<&ModelSpec> {

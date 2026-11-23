@@ -3,11 +3,11 @@
 //! fields Rig does not normalize. Every route of Bedrock is Converse, so the
 //! options have the shared section only.
 //!
-//! [`GenerationOptions`]: crate::completion::GenerationOptions
+//! [`GenerationOptions`]: rig::completion::GenerationOptions
 //!
 //! ```
-//! use crate::providers::bedrock::extension::{BedrockOptions, Guardrail, GuardrailTrace};
-//! use crate::completion::CompletionRequest;
+//! use rig::providers::bedrock::extension::{BedrockOptions, Guardrail, GuardrailTrace};
+//! use rig::completion::CompletionRequest;
 //!
 //! let options = BedrockOptions::default()
 //!     .guardrail(Guardrail::new("gr-1", "DRAFT").trace(GuardrailTrace::Enabled));
@@ -161,7 +161,7 @@ impl Serialize for BedrockShared {
 
 /// A [Bedrock guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
 /// to apply. An intervention ends the reply with
-/// [`FinishReason::ContentFilter`](crate::completion::FinishReason::ContentFilter),
+/// [`FinishReason::ContentFilter`](rig::completion::FinishReason::ContentFilter),
 /// and [`BedrockExtras::trace`] holds the guardrail's trace when one was
 /// asked for.
 #[non_exhaustive]

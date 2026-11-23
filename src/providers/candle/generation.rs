@@ -1,7 +1,7 @@
 //! Generation configuration, sampling, incremental decoding, and inference sessions.
 //!
 //! ```
-//! use crate::providers::candle::GenerationConfig;
+//! use rig::providers::candle::GenerationConfig;
 //!
 //! let config = GenerationConfig { temperature: 0.0, ..Default::default() };
 //! ```

@@ -2,7 +2,7 @@
 //! Live models, tools, and hooks remain owned by the driver.
 //!
 //! ```
-//! use crate::agent::run::spec::RunSpec;
+//! use rig::agent::run::spec::RunSpec;
 //! let spec = RunSpec::new();
 //! assert_eq!(spec.effective_max_turns(), 1);
 //! ```
@@ -80,7 +80,7 @@ pub struct RunSpec {
 /// a call to an unknown or disallowed tool. Defaults to failure; ignoring drops
 /// the call and continues.
 ///
-/// [`on_invalid_tool_call`]: crate::agent::agent::AgentHook::on_invalid_tool_call
+/// [`on_invalid_tool_call`]: rig::agent::agent::AgentHook::on_invalid_tool_call
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum UnhandledInvalidToolCall {

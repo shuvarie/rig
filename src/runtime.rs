@@ -7,9 +7,9 @@
 //! started on first use (one worker thread, I/O and timers enabled).
 //!
 //! ```no_run
-//! let handle = crate::runtime::handle()?;
+//! let handle = rig::runtime::handle()?;
 //! assert_eq!(handle.block_on(async { 6 * 7 }), 42);
-//! # Ok::<(), crate::http_client::Error>(())
+//! # Ok::<(), rig::http_client::Error>(())
 //! ```
 
 use crate::http_client::Error;

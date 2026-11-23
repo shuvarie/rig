@@ -3,8 +3,8 @@
 //! deletes a cloned voice that goes unused for 7 days.
 //!
 //! ```no_run
-//! use crate::audio_generation::AudioGenerationRequestBuilder;
-//! use crate::providers::minimax::{self, voice_clone::{CloneAudio, VoiceClone}};
+//! use rig::audio_generation::AudioGenerationRequestBuilder;
+//! use rig::providers::minimax::{self, voice_clone::{CloneAudio, VoiceClone}};
 //!
 //! # async fn run(sample: Vec<u8>) -> Result<(), Box<dyn std::error::Error>> {
 //! let client = minimax::from_env()?;

@@ -1,7 +1,7 @@
 //! Voyage AI embedding and reranking configuration, model identifiers, and responses.
 //!
 //! ```no_run
-//! use crate::providers::voyageai;
+//! use rig::providers::voyageai;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = voyageai::VoyageAi::from_env()?;
@@ -12,7 +12,7 @@
 //! # }
 //! ```
 //!
-//! Pair a configured wire with a transport in a [`crate::Model`] to send it.
+//! Pair a configured wire with a transport in a [`rig::Model`] to send it.
 
 use serde::{Deserialize, Serialize};
 

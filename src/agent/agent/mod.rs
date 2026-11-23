@@ -4,8 +4,8 @@
 //! be static or retrieved per turn; hooks can inject context through [`RequestPatch`].
 //!
 //! ```no_run
-//! use crate::agent::prelude::*;
-//! use crate::{Model, providers::openai::{self, OpenAI}};
+//! use rig::agent::prelude::*;
+//! use rig::{Model, providers::openai::{self, OpenAI}};
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = OpenAI::from_env()?.completion(openai::GPT_5_2);
 //! let agent = AgentBuilder::new(model).preamble("Be concise.").build();
@@ -33,7 +33,7 @@ macro_rules! generation_option_setters {
             /// sent, and is dropped with a warning under `Ignore`. A model a run
             /// switches to checks its own calls the same way. To see every
             /// refusal before a run starts, call
-            /// [`DynModel::check`](crate::DynModel::check) on the model.
+            /// [`DynModel::check`](rig::DynModel::check) on the model.
             on_unsupported(policy: crate::completion::OnUnsupported) "what happens to an option the wire or model cannot honour";
         }
     };

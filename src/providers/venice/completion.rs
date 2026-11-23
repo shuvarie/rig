@@ -1,7 +1,7 @@
 //! Venice chat model identifiers.
 //!
 //! ```
-//! use crate::providers::venice::QWEN3_5_9B;
+//! use rig::providers::venice::QWEN3_5_9B;
 //! assert_eq!(QWEN3_5_9B, "qwen3-5-9b");
 //! ```
 

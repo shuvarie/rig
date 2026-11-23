@@ -1,7 +1,7 @@
 //! Canonical text, JSON, and multimodal tool output.
 //!
 //! ```
-//! use crate::tool::ToolOutput;
+//! use rig::tool::ToolOutput;
 //!
 //! let output = ToolOutput::text("done");
 //! assert_eq!(output.as_text(), Some("done"));
@@ -184,7 +184,7 @@ impl TryFrom<Vec<ToolResultContent>> for ToolOutput {
 /// A blanket implementation keeps ordinary [`Serialize`] outputs ergonomic.
 /// Because that blanket implementation already covers every serializable type,
 /// it cannot be overridden with another implementation for a serializable
-/// custom type. Return [`ToolOutput`] from [`Tool::call`](crate::tool::Tool::call)
+/// custom type. Return [`ToolOutput`] from [`Tool::call`](rig::tool::Tool::call)
 /// when that type needs a custom presentation. Implement this trait directly
 /// only for output types that do not implement [`Serialize`].
 pub trait IntoToolOutput {

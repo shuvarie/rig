@@ -2,7 +2,7 @@
 //! by default, or the native chat API when the wire's route opts in.
 //!
 //! ```
-//! use crate::providers::cohere::{ChatRoute, CohereConfig};
+//! use rig::providers::cohere::{ChatRoute, CohereConfig};
 //! let config = CohereConfig::new("key").with_base_url("https://api.cohere.ai/");
 //! assert_eq!(config.base_url, "https://api.cohere.ai");
 //! let chat = config.completion("command-a-03-2025");

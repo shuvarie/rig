@@ -3,7 +3,7 @@
 //! REST, Vertex AI and gRPC wires share it, each over its chunks' REST JSON.
 //!
 //! ```
-//! use crate::providers::gemini::streaming::document::GenerateContentResponse;
+//! use rig::providers::gemini::streaming::document::GenerateContentResponse;
 //! use serde_json::json;
 //!
 //! let mut document = GenerateContentResponse::default();

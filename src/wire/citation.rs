@@ -1,6 +1,6 @@
 //! Citations as a provider states them, before the completion fold resolves
 //! their spans. A decoder hands each one to
-//! [`Out::cite`](crate::wire::Out::cite) with the unit its provider counts
+//! [`Out::cite`](rig::wire::Out::cite) with the unit its provider counts
 //! offsets in, so no decoder converts a unit or builds a byte span itself.
 
 use crate::message::Source;

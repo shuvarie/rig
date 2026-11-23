@@ -1,9 +1,9 @@
 //! Text-to-speech requests and normalized audio responses.
 //!
 //! ```no_run
-//! use crate::DynModel;
-//! use crate::audio_generation::AudioGenerationRequestBuilder;
-//! use crate::operation::AudioGeneration;
+//! use rig::DynModel;
+//! use rig::audio_generation::AudioGenerationRequestBuilder;
+//! use rig::operation::AudioGeneration;
 //!
 //! # async fn example(model: DynModel<AudioGeneration>, voice: &str) -> Result<(), Box<dyn std::error::Error>> {
 //! let request = AudioGenerationRequestBuilder::new("Hello", voice).build();

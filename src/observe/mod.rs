@@ -2,7 +2,7 @@
 //! [`Witness`] receives facts and [`ObservationLog`] retains a bounded trace.
 //!
 //! ```
-//! use crate::observe::ObservationLog;
+//! use rig::observe::ObservationLog;
 //!
 //! let log = ObservationLog::with_capacity(128);
 //! log.finalize();

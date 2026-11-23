@@ -6,7 +6,7 @@
 //! cache and when a new cache is worth creating:
 //!
 //! ```no_run
-//! use crate::providers::gemini::{AutoCache, CacheBook, Gemini};
+//! use rig::providers::gemini::{AutoCache, CacheBook, Gemini};
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {
 //! let gemini = Gemini::from_env()?;
@@ -110,7 +110,7 @@ impl AutoCache {
     /// such as the spec a model carries ([`DynModel::spec`]). A spec with no
     /// usable price keeps the default ratio.
     ///
-    /// [`DynModel::spec`]: crate::DynModel::spec
+    /// [`DynModel::spec`]: rig::DynModel::spec
     pub fn for_spec(spec: &crate::catalog::ModelSpec) -> Self {
         Self::priced(spec.pricing.as_ref())
     }

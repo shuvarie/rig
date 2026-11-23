@@ -2,8 +2,8 @@
 //! Completions: OpenAI's Chat fields and Azure's own data sources.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::azure::extension::{AzureOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::azure::extension::{AzureOptions};
 //!
 //! let options = AzureOptions::new().logprobs(true);
 //! let request = CompletionRequest::new("hi").provider_option(options);

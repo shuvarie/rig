@@ -1,7 +1,7 @@
 //! A `tracing` layer that records spans and events for test assertions.
 //!
 //! ```
-//! use crate::test_utils::TraceCapture;
+//! use rig::test_utils::TraceCapture;
 //!
 //! let capture = TraceCapture::default();
 //! tracing::subscriber::with_default(capture.subscriber(), || {

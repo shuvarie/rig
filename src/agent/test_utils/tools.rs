@@ -71,7 +71,7 @@ impl Tool for MockAddTool {
 }
 
 /// A caller-injected context value, like a session id or auth token carried in
-/// a [`ToolContext`](crate::agent::tool::ToolContext).
+/// a [`ToolContext`](rig::agent::tool::ToolContext).
 #[derive(Clone, serde::Serialize, serde::Deserialize)]
 pub struct SessionId(pub String);
 

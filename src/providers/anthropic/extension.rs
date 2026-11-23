@@ -8,8 +8,8 @@
 //! without it the API rejects the request.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::anthropic::extension::{AnthropicOptions, InferenceGeo};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::anthropic::extension::{AnthropicOptions, InferenceGeo};
 //!
 //! let options = AnthropicOptions::default()
 //!     .metadata_user_id("user-7")

@@ -1,7 +1,7 @@
 //! Image model identifiers for OpenAI's `/images/generations` endpoint.
 //!
 //! ```
-//! use crate::providers::openai::{OpenAI, image_generation::GPT_IMAGE_2};
+//! use rig::providers::openai::{OpenAI, image_generation::GPT_IMAGE_2};
 //! let wire = OpenAI::new("key").image_generation(GPT_IMAGE_2);
 //! ```
 

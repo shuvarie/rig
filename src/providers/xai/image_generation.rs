@@ -1,7 +1,7 @@
 //! xAI's image-generation model identifiers.
 //!
 //! ```
-//! use crate::providers::xai::image_generation::GROK_IMAGINE_IMAGE;
+//! use rig::providers::xai::image_generation::GROK_IMAGINE_IMAGE;
 //! assert_eq!(GROK_IMAGINE_IMAGE, "grok-imagine-image");
 //! ```
 

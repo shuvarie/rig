@@ -1,9 +1,9 @@
 //! Whether a value fits a JSON schema, and where it does not: the check a
 //! tool call's arguments pass before the tool runs
-//! ([`arguments_refusal`](crate::tool::feedback::arguments_refusal)).
+//! ([`arguments_refusal`](rig::tool::feedback::arguments_refusal)).
 //!
 //! ```
-//! use crate::tool::validate::{Problem, validate};
+//! use rig::tool::validate::{Problem, validate};
 //! use serde_json::json;
 //!
 //! let schema = json!({
@@ -21,7 +21,7 @@
 //!
 //! It checks a subset of JSON Schema, in plain `serde_json`:
 //! - `type` (a name or a list; `integer` is a whole number a 64-bit
-//!   integer holds, `30.0` too, as [`decode_args`](crate::tool::decode_args)
+//!   integer holds, `30.0` too, as [`decode_args`](rig::tool::decode_args)
 //!   decodes it),
 //!   `enum` and `const`;
 //! - `properties`, `required` and `additionalProperties` (`false` or a
@@ -38,7 +38,7 @@
 //!
 //! A `null` for a declared property the object does not require counts as
 //! absent, as serde reads an `Option` field:
-//! [`args_schema`](crate::tool::args_schema) declares an `Option` optional,
+//! [`args_schema`](rig::tool::args_schema) declares an `Option` optional,
 //! not nullable, and a model may still send `null` for it.
 //!
 //! Every other keyword is ignored, so it accepts: `pattern`, `format`,

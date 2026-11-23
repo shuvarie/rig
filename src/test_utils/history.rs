@@ -3,7 +3,7 @@
 //! turn, and a wire enum's every variant is sampled.
 //!
 //! ```
-//! use crate::test_utils::history::assert_every_variant;
+//! use rig::test_utils::history::assert_every_variant;
 //!
 //! enum Item {
 //!     Text,
@@ -28,7 +28,7 @@ use crate::wire::{Mode, Wire};
 ///
 /// # Errors
 ///
-/// What the reply fails with ([`decode_reply`](crate::wire::decode_reply)).
+/// What the reply fails with ([`decode_reply`](rig::wire::decode_reply)).
 pub fn decode<W: Wire<Op = Completion>>(
     wire: &W,
     mode: Mode,

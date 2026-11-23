@@ -6,7 +6,7 @@
 //! [`StreamedTurnEvent`].
 //!
 //! ```
-//! use crate::agent::run::streamed::StreamedTurnAssembler;
+//! use rig::agent::run::streamed::StreamedTurnAssembler;
 //! let assembler = StreamedTurnAssembler::new(Default::default());
 //! assert_eq!(assembler.excluded_assistant_content(), 0);
 //! ```
@@ -153,7 +153,7 @@ pub enum StreamedResolution {
     },
     /// The turn was rolled back (retry) or the call skipped; corrective
     /// messages, the skip's tool results among them, are already in the
-    /// history, where [`project`](crate::agent::run::project) reads them. Finish the
+    /// history, where [`project`](rig::agent::run::project) reads them. Finish the
     /// provider stream for usage, record the completion call, then call
     /// `AgentRun::next_step`.
     TurnAbandoned,
@@ -389,7 +389,7 @@ impl StreamedTurnAssembler {
 
     /// Snapshot of the turn so far, for diagnostics and rollback messages:
     /// `partial` is what the stream folded so far
-    /// ([`Streamed::partial`](crate::streaming::Streamed::partial)).
+    /// ([`Streamed::partial`](rig::streaming::Streamed::partial)).
     pub fn partial_turn(
         &self,
         partial: &crate::completion::CompletionResponse,

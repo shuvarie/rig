@@ -5,7 +5,7 @@
 //! an edited block stops replaying its stale item.
 //!
 //! ```
-//! use crate::message::{AssistantContent, Text};
+//! use rig::message::{AssistantContent, Text};
 //!
 //! let block = AssistantContent::Text(Text::new("hi"))
 //!     .with_native(serde_json::json!({"type": "text", "text": "hi", "citations": []}));
@@ -75,7 +75,7 @@ pub struct Origin {
     /// that binds its items to them ([`ReplayTarget::binds_context`])
     /// replays a turn made under another context as if from another model.
     ///
-    /// [`ReplayTarget::binds_context`]: crate::completion::ReplayTarget::binds_context
+    /// [`ReplayTarget::binds_context`]: rig::completion::ReplayTarget::binds_context
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub context: Option<Fingerprint>,
 }
@@ -256,7 +256,7 @@ pub struct Native {
     /// `/signature`, when it holds one. The reply fold sets it from the
     /// wire's [`ReplayTarget::blob_slots`].
     ///
-    /// [`ReplayTarget::blob_slots`]: crate::completion::ReplayTarget::blob_slots
+    /// [`ReplayTarget::blob_slots`]: rig::completion::ReplayTarget::blob_slots
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub blob_slot: Option<Cow<'static, str>>,
 }
@@ -276,7 +276,7 @@ impl Native {
     /// it can read and which it may refuse once anything around it changed.
     ///
     /// ```
-    /// use crate::message::{Fingerprint, Native};
+    /// use rig::message::{Fingerprint, Native};
     ///
     /// let native = Native {
     ///     item: serde_json::json!({"type": "thinking", "thinking": "plan", "signature": "c2ln"}),

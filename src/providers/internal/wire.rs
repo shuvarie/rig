@@ -3,8 +3,8 @@
 //! become ignorable unknown events.
 //!
 //! ```
-//! use crate::providers::internal::wire::classify_untyped_line;
-//! use crate::wire::WireEvent;
+//! use rig::providers::internal::wire::classify_untyped_line;
+//! use rig::wire::WireEvent;
 //! let event = classify_untyped_line::<serde_json::Value>(b"{}");
 //! assert!(matches!(event, WireEvent::Known(_)));
 //! ```

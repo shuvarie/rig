@@ -414,7 +414,7 @@ fn unprepared_content_is_refused() {
 }
 
 /// The facts the Ollama wire is given are the facts it answers with: its
-/// [`ReplayTarget::facts`](crate::completion::ReplayTarget::facts), which
+/// [`ReplayTarget::facts`](rig::completion::ReplayTarget::facts), which
 /// the shared option rules and the cost read, and its descriptor's spec,
 /// which `DynModel::spec` returns.
 #[test]

@@ -24,7 +24,7 @@ use crate::now_ms;
 #[derive(Clone, Copy, Debug)]
 pub enum Place<'a> {
     /// In a record of the log `log` (an agent's id or
-    /// [`SESSION`](crate::memory::SESSION)), stamped `stamp`, made by `by`.
+    /// [`SESSION`](rig::memory::SESSION)), stamped `stamp`, made by `by`.
     Record {
         /// The log.
         log: &'a str,
@@ -95,9 +95,9 @@ pub trait Rewrite: Send + Sync {
 /// left as it is where changing it would make the value unreadable.
 ///
 /// ```
-/// use crate::conversation::Author;
-/// use crate::message::Message;
-/// use crate::memory::{MemoryStore, Session, Strings, load, rewrite, save};
+/// use rig::conversation::Author;
+/// use rig::message::Message;
+/// use rig::memory::{MemoryStore, Session, Strings, load, rewrite, save};
 ///
 /// let store = MemoryStore::default();
 /// let mut conversation = load(&store, "main")?;
@@ -114,7 +114,7 @@ pub trait Rewrite: Send + Sync {
 /// assert_eq!(rewritten.logs.len(), 1);
 /// let main = Session::read(&store)?.agents.remove(0);
 /// assert_eq!(main.conversation.messages(), [Message::user("my key is [REDACTED]").into()]);
-/// # Ok::<(), crate::memory::SessionError>(())
+/// # Ok::<(), rig::memory::SessionError>(())
 /// ```
 pub struct Strings<F: Fn(&mut String) -> bool + Send + Sync>(pub F);
 
@@ -425,7 +425,7 @@ pub struct Rewritten {
 /// A log [`rewrite`] changed.
 #[derive(Clone, Debug)]
 pub struct RewrittenLog {
-    /// Its name: an agent's id, or [`SESSION`](crate::memory::SESSION).
+    /// Its name: an agent's id, or [`SESSION`](rig::memory::SESSION).
     pub log: String,
     /// How many of its records changed.
     pub records: usize,
@@ -601,7 +601,7 @@ fn map_state(state: &mut Conversation, at: &Place<'_>, with: &dyn Rewrite) -> Re
 /// Every log is read strictly, and every
 /// changed log is encoded and folded strictly in memory, before anything
 /// is written. Then torn tails
-/// are set aside (as [`Writer::open`](crate::memory::Writer::open) does), new
+/// are set aside (as [`Writer::open`](rig::memory::Writer::open) does), new
 /// blobs are stored, each changed log is replaced
 /// ([`Store::replace_log`]), every file of the store goes through
 /// [`Rewrite::file`] (each written atomically), and blobs no record names
@@ -614,7 +614,7 @@ fn map_state(state: &mut Conversation, at: &Place<'_>, with: &dyn Rewrite) -> Re
 /// read before the rewrite no longer continues a changed log: [`save`] of
 /// it gives [`SessionError::Changed`], and the caller reads it again.
 ///
-/// Not for a session a running [`Writer`](crate::memory::Writer) logs to: no
+/// Not for a session a running [`Writer`](rig::memory::Writer) logs to: no
 /// process may rewrite a running session; rig-memory cannot tell, so a
 /// program rewriting a rig session first checks that no rig runs it.
 /// Files kept outside the store are the program's to map with the same
@@ -622,11 +622,11 @@ fn map_state(state: &mut Conversation, at: &Place<'_>, with: &dyn Rewrite) -> Re
 ///
 /// # Errors
 ///
-/// As [`Session::read`](crate::memory::Session::read) (a session of another format, or broken, is
+/// As [`Session::read`](rig::memory::Session::read) (a session of another format, or broken, is
 /// refused, nothing written), or when a rewritten log would not read
 /// (nothing written), or a write fails.
 ///
-/// [`save`]: crate::memory::save
+/// [`save`]: rig::memory::save
 pub fn rewrite(
     store: &dyn Store,
     by: Author,

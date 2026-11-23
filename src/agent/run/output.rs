@@ -1,7 +1,7 @@
 //! Structured-output enforcement modes for agent requests.
 //!
 //! ```
-//! use crate::agent::run::output::OutputMode;
+//! use rig::agent::run::output::OutputMode;
 //! let mode = OutputMode::default();
 //! assert_eq!(mode, OutputMode::Auto);
 //! ```
@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// Whatever the mode, and whether or not the provider enforces the schema, a
 /// run ends only on an answer that is JSON fitting the schema, as
-/// [`crate::tool::validate::validate`] checks it: it asks the model again
+/// [`rig::tool::validate::validate`] checks it: it asks the model again
 /// while its output-retry budget lasts, then fails.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OutputMode {

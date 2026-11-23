@@ -1,10 +1,10 @@
 //! Shared frame classification and tool-call id spelling. Companion providers
-//! use these helpers from their [`Decoder`](crate::wire::Decoder)s and
+//! use these helpers from their [`Decoder`](rig::wire::Decoder)s and
 //! encoders.
 //!
 //! ```
-//! use crate::providers::internal::wire::classify_untyped_line;
-//! use crate::wire::WireEvent;
+//! use rig::providers::internal::wire::classify_untyped_line;
+//! use rig::wire::WireEvent;
 //!
 //! let event: WireEvent<serde_json::Value> = classify_untyped_line(br#"{"done":true}"#);
 //! assert!(matches!(event, WireEvent::Known(_)));

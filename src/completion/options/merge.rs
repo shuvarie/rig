@@ -411,7 +411,7 @@ pub fn check(
 }
 
 /// Report each option of `request` the catalog entry of its model on
-/// `target` refuses by [`ModelSpec::refusals`](crate::catalog::ModelSpec::refusals),
+/// `target` refuses by [`ModelSpec::refusals`](rig::catalog::ModelSpec::refusals),
 /// under the request's policy, and clear it under
 /// [`OnUnsupported::Ignore`]. The wire's own answers come first, so an
 /// option it already refused is not reported twice.
@@ -659,7 +659,7 @@ impl ProviderLayer {
 /// The error of provider options [`ProviderOptions::set`] stored without
 /// sections, as an encode error.
 ///
-/// [`ProviderOptions::set`]: crate::completion::ProviderOptions::set
+/// [`ProviderOptions::set`]: rig::completion::ProviderOptions::set
 fn unserialized(request: &CompletionRequest) -> Result<(), EncodeError> {
     match request.provider_options.failure() {
         Some(error) => Err(EncodeError::request(error.clone())),

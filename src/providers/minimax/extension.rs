@@ -4,8 +4,8 @@
 //! Anthropic-format Messages API; each section goes only to its route.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::minimax::extension::MiniMaxOptions;
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::minimax::extension::MiniMaxOptions;
 //!
 //! let options = MiniMaxOptions::new().reasoning_split(true);
 //! let request = CompletionRequest::new("hi").provider_option(options);

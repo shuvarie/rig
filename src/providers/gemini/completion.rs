@@ -4,7 +4,7 @@
 //! [`GenerateContentDecoder`](super::streaming::GenerateContentDecoder).
 //!
 //! ```no_run
-//! use crate::providers::gemini::{Gemini, completion::GEMINI_2_5_FLASH};
+//! use rig::providers::gemini::{Gemini, completion::GEMINI_2_5_FLASH};
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let wire = Gemini::from_env()?.completion(GEMINI_2_5_FLASH);
@@ -121,7 +121,7 @@ impl GenerateContent {
 
     /// Use an explicit `cachedContents/<id>` handle as every request's prefix.
     /// Encoding rejects requests with their own system instruction, tools, or
-    /// tool choice. See [`crate::providers::gemini::cached_content`] for cache ownership.
+    /// tool choice. See [`rig::providers::gemini::cached_content`] for cache ownership.
     pub fn with_cached_content(mut self, name: impl Into<String>) -> Self {
         self.cached_content = Some(name.into());
         self
@@ -859,8 +859,8 @@ pub(crate) fn blocked_prompt_error(feedback: &Value) -> Option<ProviderError> {
 /// `STOP` is a stop (a tool use when the turn holds calls) and `MAX_TOKENS`
 /// a length stop. Every other reason, documented or not, is a failure: the
 /// content filters as
-/// [`ContentFilter`](crate::completion::FinishReason::ContentFilter), the
-/// rest as [`Other`](crate::completion::FinishReason::Other) with the
+/// [`ContentFilter`](rig::completion::FinishReason::ContentFilter), the
+/// rest as [`Other`](rig::completion::FinishReason::Other) with the
 /// reason's name.
 pub fn map_google_finish_reason(wire_name: &str) -> crate::completion::FinishReason {
     use crate::completion::FinishReason;

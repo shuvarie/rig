@@ -24,7 +24,7 @@ impl<'h> WireIds<'h> {
     /// request sends is one the wire accepts. No alias takes an id a hosted
     /// item holds ([`ReplayTarget::hosted_pair`]).
     ///
-    /// [`ReplayTarget::hosted_pair`]: crate::completion::ReplayTarget::hosted_pair
+    /// [`ReplayTarget::hosted_pair`]: rig::completion::ReplayTarget::hosted_pair
     pub fn for_target(
         history: &'h [impl Borrow<Message>],
         target: &dyn crate::completion::ReplayTarget,

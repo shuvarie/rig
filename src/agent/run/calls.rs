@@ -65,8 +65,8 @@ impl ExecCall {
 /// It cannot be answered as executed:
 ///
 /// ```compile_fail,E0308
-/// # use crate::agent::run::MalformedCall;
-/// # use crate::tool::{ToolOutput, ToolResult};
+/// # use rig::agent::run::MalformedCall;
+/// # use rig::tool::{ToolOutput, ToolResult};
 /// fn answer(call: MalformedCall) {
 ///     let _ = call.answer(ToolResult::success(ToolOutput::text("wrote 5 bytes")));
 /// }
@@ -75,7 +75,7 @@ impl ExecCall {
 /// Nor read as a call to execute:
 ///
 /// ```compile_fail,E0624
-/// # use crate::agent::run::MalformedCall;
+/// # use rig::agent::run::MalformedCall;
 /// fn arguments(call: &MalformedCall) {
 ///     let _ = call.tool_call();
 /// }
@@ -131,8 +131,8 @@ impl MalformedCall {
 /// A driver cannot build one itself:
 ///
 /// ```compile_fail,E0451
-/// # use crate::agent::run::ToolAnswer;
-/// # use crate::message::CallId;
+/// # use rig::agent::run::ToolAnswer;
+/// # use rig::message::CallId;
 /// fn forge(call: CallId, other: ToolAnswer) -> ToolAnswer {
 ///     ToolAnswer { index: 0, call, ..other }
 /// }
@@ -141,8 +141,8 @@ impl MalformedCall {
 /// Nor hand the run result content it built:
 ///
 /// ```compile_fail,E0599
-/// # use crate::agent::run::AgentRun;
-/// # use crate::message::UserContent;
+/// # use rig::agent::run::AgentRun;
+/// # use rig::message::UserContent;
 /// fn answer(run: &mut AgentRun, results: Vec<UserContent>) {
 ///     let _ = run.tool_results(results);
 /// }

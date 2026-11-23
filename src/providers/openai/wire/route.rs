@@ -4,7 +4,7 @@
 //! override the dialect default.
 //!
 //! ```
-//! use crate::providers::openai::{OpenAI, OpenAIConfig, Route};
+//! use rig::providers::openai::{OpenAI, OpenAIConfig, Route};
 //! let provider: OpenAI = OpenAIConfig::new("key").with_route(Route::Chat).client();
 //! let model = provider.completion("gpt-5.2");
 //! ```

@@ -44,8 +44,8 @@ pub trait Evaluate {
     /// The input question type determines the successful response type:
     ///
     /// ```compile_fail
-    /// use crate::providers::typesafeai::{Evaluate, EvaluationResult, DynamicScoreAnswer, Noul, Query};
-    /// async fn wrong(client: impl Evaluate) -> Result<(), crate::error::ProviderError> {
+    /// use rig::providers::typesafeai::{Evaluate, EvaluationResult, DynamicScoreAnswer, Noul, Query};
+    /// async fn wrong(client: impl Evaluate) -> Result<(), rig::error::ProviderError> {
     ///     let question = Noul::new("Ready?")?.named("ready")?;
     ///     let result: EvaluationResult<DynamicScoreAnswer> = client.evaluate(&"state", question).await?;
     ///     Ok(())

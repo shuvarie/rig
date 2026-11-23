@@ -1,7 +1,7 @@
 //! Mistral chat model identifiers.
 //!
 //! ```no_run
-//! use crate::providers::mistral;
+//! use rig::providers::mistral;
 //! let model = mistral::from_env()?.chat(mistral::MISTRAL_SMALL);
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```

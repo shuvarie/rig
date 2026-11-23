@@ -5,10 +5,10 @@
 //! provide those services and lifecycle policy.
 //!
 //! ```
-//! use crate::agent::run::{AgentRun, AgentRunStep};
+//! use rig::agent::run::{AgentRun, AgentRunStep};
 //! let mut run = AgentRun::new("What is 2+2?").max_turns(3);
 //! assert!(matches!(run.next_step()?, AgentRunStep::CallModel { turn: 1, .. }));
-//! # Ok::<(), crate::agent::run::PromptError>(())
+//! # Ok::<(), rig::agent::run::PromptError>(())
 //! ```
 
 mod calls;
@@ -505,7 +505,7 @@ impl AgentRun {
     /// that does not satisfy it, an output-tool call whose arguments are not
     /// a JSON object or do not satisfy it. The answer must be JSON (the whole
     /// text, else one value past leading prose or a fence) that fits the
-    /// schema as [`crate::tool::validate::validate`] checks it, which
+    /// schema as [`rig::tool::validate::validate`] checks it, which
     /// covers types, required fields and the other keywords it lists.
     /// Exhausting either the output or model-call budget on such an answer
     /// fails the run with [`PromptError::OutputSchemaMismatch`].
@@ -749,7 +749,7 @@ impl AgentRun {
     /// The full conversation: input history followed by [`Self::messages`],
     /// with a tool batch the host has not finished answering closed: its
     /// results so far, then the other calls closed by
-    /// [`close_pending`](crate::conversation::pairing::close_pending) (a pre-resolved
+    /// [`close_pending`](rig::conversation::pairing::close_pending) (a pre-resolved
     /// result stands), so it resumes as a canonical transcript.
     pub fn full_history(&self) -> Vec<Message> {
         self.owned_history(self.closure())
@@ -792,7 +792,7 @@ impl AgentRun {
     }
 
     /// [`Self::full_history`] closed for cancellation by
-    /// [`repair`](crate::conversation::pairing::repair): mid tool batch,
+    /// [`repair`](rig::conversation::pairing::repair): mid tool batch,
     /// the results so far follow it with the rest closed, and every call
     /// still unanswered in the unchecked input history is closed as well.
     pub fn canonical_history(&self) -> Vec<Message> {

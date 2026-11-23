@@ -1,14 +1,14 @@
 //! Moonshot AI (Kimi) endpoints and model identifiers.
 //!
 //! [`from_env`] and [`new`] build a client on the
-//! [`MOONSHOT`](crate::providers::openai::wire::MOONSHOT) dialect, the module's
+//! [`MOONSHOT`](rig::providers::openai::wire::MOONSHOT) dialect, the module's
 //! primary one; [`anthropic_from_env`] and [`anthropic_new`] build a
 //! Messages-format client. Environment configuration reads `MOONSHOT_API_KEY`.
 //! `.responses(model)` speaks Moonshot's Responses endpoint, which serves the
 //! Kimi K3 family.
 //!
 //! ```no_run
-//! use crate::providers::moonshot;
+//! use rig::providers::moonshot;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let kimi = moonshot::from_env()?.chat(moonshot::KIMI_K3);

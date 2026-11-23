@@ -1,7 +1,7 @@
 //! Completion requests, normalized responses, and provider model contracts.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
+//! use rig::completion::CompletionRequest;
 //!
 //! let request = CompletionRequest::new("Who are you?")
 //!     .preamble("You are a concise assistant.")
@@ -114,7 +114,7 @@ impl ToolDefinition {
 /// idempotent, open world.
 ///
 /// ```
-/// use crate::completion::ToolAnnotations;
+/// use rig::completion::ToolAnnotations;
 ///
 /// let read = ToolAnnotations::default().with_read_only(true).with_open_world(false);
 /// assert!(read.read_only() && !read.destructive() && !read.open_world());
@@ -669,7 +669,7 @@ impl From<CompletionResponseRepr> for CompletionResponse {
 /// `Some(0)`. Serialized as the same keys, absent when `None`.
 ///
 /// ```
-/// use crate::completion::Usage;
+/// use rig::completion::Usage;
 ///
 /// let usage = Usage::new().input_tokens(12).output_tokens(3).total_tokens(15);
 /// assert_eq!(usage.input_tokens, Some(12));
@@ -704,7 +704,7 @@ pub struct Usage {
     /// What the turn cost in USD, when known. Never derived from the token
     /// counters here, and none of them is derived from it. A cost the
     /// provider reports is its figure. One priced from the model's catalog
-    /// spec ([`Pricing::cost`](crate::catalog::Pricing::cost), from the
+    /// spec ([`Pricing::cost`](rig::catalog::Pricing::cost), from the
     /// facts the wire was connected with) is the
     /// standard-tier list price of the counted tokens: it leaves out the
     /// service tier, long-context price tiers and hosted-tool fees (web
@@ -820,7 +820,7 @@ impl Usage {
 /// A part is `None` when its source does not give it: a provider that
 /// reports only a total leaves every part `None`, and one that reports
 /// input and output leaves the cache parts `None`. A cost computed from
-/// the catalog ([`Pricing::cost`](crate::catalog::Pricing::cost)) leaves a
+/// the catalog ([`Pricing::cost`](rig::catalog::Pricing::cost)) leaves a
 /// cache part `None` when the catalog lists no rate for it and the usage
 /// has such tokens; its `total` then sums the known parts only, and it is
 /// not complete. A part is never filled with a placeholder `0.0`. Summing
@@ -1041,7 +1041,7 @@ impl Usage {
 /// were not fully priced.
 ///
 /// ```
-/// use crate::completion::{Usage, UsageTotals};
+/// use rig::completion::{Usage, UsageTotals};
 ///
 /// let mut totals = UsageTotals::default();
 /// totals.record(&Usage::new().input_tokens(100).output_tokens(20).total_tokens(120));
@@ -1303,7 +1303,7 @@ pub struct CompletionRequest {
     /// target reads it ([`Accepts::foreign_reasoning`]), instead of as plain
     /// text. Defaults to `false`.
     ///
-    /// [`Accepts::foreign_reasoning`]: crate::completion::Accepts::foreign_reasoning
+    /// [`Accepts::foreign_reasoning`]: rig::completion::Accepts::foreign_reasoning
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub foreign_reasoning: bool,
     /// Portable generation options. Precedence, lowest first: the mapped
@@ -1375,10 +1375,10 @@ impl CompletionRequest {
     /// `String` and is not checked. A tool result holding one empty text
     /// block is not empty.
     ///
-    /// [`Model::call`](crate::driver::Model::call),
-    /// [`Model::stream`](crate::driver::Model::stream) and their `_observed`
+    /// [`Model::call`](rig::driver::Model::call),
+    /// [`Model::stream`](rig::driver::Model::stream) and their `_observed`
     /// twins run it before encoding, so it covers
-    /// [`DynModel`](crate::DynModel), every model a handler serves and the
+    /// [`DynModel`](rig::DynModel), every model a handler serves and the
     /// agent runtimes built on them. The OpenAI Responses websocket session
     /// sends without the driver and runs it on each send. Code that encodes
     /// a request some other way should call it first.
@@ -1524,7 +1524,7 @@ impl CompletionRequest {
     /// provider tools added before it. Set `additional_params` first.
     ///
     /// ```
-    /// use crate::completion::CompletionRequest;
+    /// use rig::completion::CompletionRequest;
     ///
     /// let request = CompletionRequest::new("Who are you?")
     ///     .preamble("You are a concise assistant.")
@@ -1712,7 +1712,7 @@ impl CompletionRequest {
     /// called after it sets its one field on top.
     ///
     /// ```
-    /// use crate::completion::{CompletionRequest, Effort, GenerationOptions};
+    /// use rig::completion::{CompletionRequest, Effort, GenerationOptions};
     ///
     /// let shared = GenerationOptions::new().reasoning(Effort::High).seed(1);
     /// let request = CompletionRequest::new("hi").seed(7).options(shared.clone()).seed(2);
@@ -1828,8 +1828,8 @@ impl CompletionRequest {
     /// wire never reads them.
     ///
     /// ```
-    /// use crate::completion::{CompletionRequest, ProviderOptions};
-    /// use crate::providers::openrouter::extension::{
+    /// use rig::completion::{CompletionRequest, ProviderOptions};
+    /// use rig::providers::openrouter::extension::{
     ///     OpenRouterExt, OpenRouterOptions, ProviderPreferences,
     /// };
     ///

@@ -3,8 +3,8 @@
 //! route alike.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::openrouter::extension::{
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::openrouter::extension::{
 //!     ModelFallbacks, OpenRouterOptions, ProviderPreferences,
 //! };
 //!

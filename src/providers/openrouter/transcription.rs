@@ -3,7 +3,7 @@
 //! OpenRouter's speech-to-text route takes a JSON body carrying the audio as
 //! a base64 `input_audio` block rather than a multipart upload. The gateway's
 //! own usage fields (audio seconds, cost) stay readable on
-//! [`TranscriptionResponse::raw`](crate::transcription::TranscriptionResponse::raw).
+//! [`TranscriptionResponse::raw`](rig::transcription::TranscriptionResponse::raw).
 //!
 //! Timed segments and words come back with `response_format: "verbose_json"`;
 //! words also need `"word"` in `timestamp_granularities`. Models that cannot
@@ -12,8 +12,8 @@
 //! by its slug, and arrive as indices such as `"0"`.
 //!
 //! ```no_run
-//! use crate::providers::openrouter;
-//! use crate::transcription::TranscriptionRequestBuilder;
+//! use rig::providers::openrouter;
+//! use rig::transcription::TranscriptionRequestBuilder;
 //! use serde_json::json;
 //!
 //! # async fn example() -> Result<(), Box<dyn std::error::Error>> {

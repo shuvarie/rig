@@ -1,11 +1,11 @@
 //! Transport-independent HTTP requests, lazy response bodies, and errors.
 //!
 //! ```
-//! use crate::http_client::{NoBody, Request};
+//! use rig::http_client::{NoBody, Request};
 //!
 //! let request = Request::get("https://example.com/v1/models").body(NoBody)?;
 //! assert_eq!(request.uri().path(), "/v1/models");
-//! # Ok::<(), crate::http_client::Error>(())
+//! # Ok::<(), rig::http_client::Error>(())
 //! ```
 
 pub use bytes::Bytes;
@@ -107,7 +107,7 @@ impl Error {
     /// The following example reads the seconds form of `Retry-After`:
     ///
     /// ```
-    /// # use crate::http_client::Error;
+    /// # use rig::http_client::Error;
     /// # use std::time::Duration;
     /// fn retry_after(error: &Error) -> Option<Duration> {
     ///     let seconds = error

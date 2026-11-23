@@ -1,8 +1,8 @@
 //! Status-based credential verification.
 //!
 //! ```
-//! use crate::operation::{Verify, VerifyDecoder};
-//! use crate::wire::Decoder;
+//! use rig::operation::{Verify, VerifyDecoder};
+//! use rig::wire::Decoder;
 //!
 //! fn decodes<'id, D: Decoder<'id, Verify>>(_: D) {}
 //! decodes(VerifyDecoder);

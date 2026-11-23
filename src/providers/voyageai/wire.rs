@@ -1,7 +1,7 @@
 //! Voyage AI configuration and embedding and reranking endpoint wires.
 //!
 //! ```no_run
-//! use crate::providers::voyageai::{VoyageAi, VOYAGE_3_5};
+//! use rig::providers::voyageai::{VoyageAi, VOYAGE_3_5};
 //! let wire = VoyageAi::from_env()?.embedding(VOYAGE_3_5, None);
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```

@@ -2,7 +2,7 @@
 //! and credential verification. [`Dialect`] describes endpoint defaults and capabilities.
 //!
 //! ```no_run
-//! use crate::providers::anthropic::{Anthropic, completion::CLAUDE_SONNET_4_6};
+//! use rig::providers::anthropic::{Anthropic, completion::CLAUDE_SONNET_4_6};
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let wire = Anthropic::from_env()?.completion(CLAUDE_SONNET_4_6);
@@ -278,7 +278,7 @@ pub const XIAOMIMIMO: Dialect = compatible(
 /// credential; Ollama's cloud takes its key only as a bearer token. Its
 /// thinking carries no signature, and it constrains no output to a schema.
 /// It lists no models in Anthropic's shape: list them through the
-/// [`Ollama`](crate::providers::ollama::Ollama) client.
+/// [`Ollama`](rig::providers::ollama::Ollama) client.
 pub const OLLAMA: Dialect = Dialect {
     quirks: Quirks {
         auth: Auth::OptionalBearer,
@@ -516,7 +516,7 @@ pub struct Messages {
     /// Manual prompt caching: `cache_control` breakpoints on the system
     /// prompt, the last tool definition, and the last content block of the
     /// last message. The request's
-    /// [`cache`](crate::completion::GenerationOptions::cache) sets the
+    /// [`cache`](rig::completion::GenerationOptions::cache) sets the
     /// top-level marker and its TTL.
     pub prompt_caching: bool,
     /// TTL for the static prefix (tools + system), independent of the
@@ -554,7 +554,7 @@ impl Messages {
     }
 
     /// Enable cache breakpoints on the system prompt, final tool, and final message block.
-    /// With a request [`cache`](crate::completion::GenerationOptions::cache), the
+    /// With a request [`cache`](rig::completion::GenerationOptions::cache), the
     /// provider owns the moving message breakpoint and the markers take its TTL.
     /// Existing tool markers are preserved and count toward the four-breakpoint budget.
     pub fn with_prompt_caching(mut self) -> Self {
@@ -569,8 +569,8 @@ impl Messages {
     /// changing the conversation tail's TTL.
     ///
     /// ```no_run
-    /// use crate::providers::anthropic::completion::{CLAUDE_SONNET_4_6, CacheTtl};
-    /// use crate::providers::anthropic::Anthropic;
+    /// use rig::providers::anthropic::completion::{CLAUDE_SONNET_4_6, CacheTtl};
+    /// use rig::providers::anthropic::Anthropic;
     ///
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let mut messages = Anthropic::from_env()?.completion(CLAUDE_SONNET_4_6);
@@ -581,7 +581,7 @@ impl Messages {
     ///
     /// One-hour markers must precede five-minute markers. A five-minute
     /// prefix under a request with
-    /// [`CacheRetention::Long`](crate::completion::CacheRetention::Long) fails
+    /// [`CacheRetention::Long`](rig::completion::CacheRetention::Long) fails
     /// during encoding.
     /// Each marker must meet the model's minimum cacheable prompt length.
     pub fn with_static_prefix_cache_ttl(mut self, ttl: CacheTtl) -> Self {
@@ -614,8 +614,8 @@ impl Messages {
     /// field, [`ToolInputStreaming::Off`] for one that rejects both.
     ///
     /// ```no_run
-    /// use crate::providers::anthropic::{Anthropic, completion::CLAUDE_SONNET_4_6};
-    /// use crate::providers::anthropic::ToolInputStreaming;
+    /// use rig::providers::anthropic::{Anthropic, completion::CLAUDE_SONNET_4_6};
+    /// use rig::providers::anthropic::ToolInputStreaming;
     ///
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let mut messages = Anthropic::from_env()?.completion(CLAUDE_SONNET_4_6);

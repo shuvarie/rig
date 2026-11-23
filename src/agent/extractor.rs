@@ -1,8 +1,8 @@
 //! Typed extraction through an agent's `submit` output tool, with configurable retries.
 //!
 //! ```no_run
-//! use crate::agent::extractor::ExtractorBuilder;
-//! use crate::{Model, providers::openai::{self, OpenAI}};
+//! use rig::agent::extractor::ExtractorBuilder;
+//! use rig::{Model, providers::openai::{self, OpenAI}};
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! #[derive(serde::Deserialize, serde::Serialize, schemars::JsonSchema)]
 //! struct Person { name: String, age: u8 }
@@ -70,7 +70,7 @@ where
     ///
     /// The returned run supports history, a per-run model, and retry overrides,
     /// and can be awaited for a
-    /// [`TypedPromptResponse<T>`](crate::agent::agent::TypedPromptResponse). The
+    /// [`TypedPromptResponse<T>`](rig::agent::agent::TypedPromptResponse). The
     /// model must call the `submit` tool; a run in which it does not is an
     /// empty response and, within the retry budget, is retried from scratch.
     /// Usage accumulates across attempts, including attempts that received a

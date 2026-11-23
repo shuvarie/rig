@@ -13,7 +13,7 @@
 //! [`ToolResultContext::get`](super::ToolResultContext::get).
 //!
 //! ```
-//! use crate::tool::{
+//! use rig::tool::{
 //!     ExitStatus, FileChange, FileRead, FilesChanged, FilesRead, ToolContext, content_hash,
 //! };
 //!
@@ -29,7 +29,7 @@
 //! let read = published.get::<FilesRead>()?.unwrap_or_default();
 //! assert_eq!(read.paths().collect::<Vec<_>>(), ["/work/README.md"]);
 //! assert_eq!(read.0.first().map(|file| &file.hash), Some(&content_hash(b"# Work\n")));
-//! # Ok::<(), crate::tool::ToolContextError>(())
+//! # Ok::<(), rig::tool::ToolContextError>(())
 //! ```
 
 use std::fmt::{self, Write as _};
@@ -47,7 +47,7 @@ pub struct ContentHash(pub String);
 /// The [`ContentHash`] of `bytes`.
 ///
 /// ```
-/// use crate::tool::content_hash;
+/// use rig::tool::content_hash;
 ///
 /// assert_eq!(
 ///     content_hash(b"").0,
@@ -112,7 +112,7 @@ impl FileRead {
 /// the `total` it has.
 ///
 /// ```
-/// use crate::tool::LinesShown;
+/// use rig::tool::LinesShown;
 ///
 /// assert!(LinesShown { first: 1, count: 3, total: 3 }.whole());
 /// assert!(!LinesShown { first: 2, count: 2, total: 3 }.whole());
@@ -186,7 +186,7 @@ pub struct FileChange {
 /// as the change left it.
 ///
 /// ```
-/// use crate::tool::{FileState, content_hash};
+/// use rig::tool::{FileState, content_hash};
 ///
 /// let state = FileState::of(b"one\ntwo");
 /// assert_eq!((state.bytes, state.lines), (7, Some(2)));
@@ -289,7 +289,7 @@ impl FileChange {
     /// it has no hunks.
     ///
     /// ```
-    /// use crate::tool::{FileChange, Hunk, HunkLine, Lines};
+    /// use rig::tool::{FileChange, Hunk, HunkLine, Lines};
     ///
     /// let change = FileChange::modified("a.rs", 1, 1).with_hunks(vec![Hunk {
     ///     old: Lines { start: 1, count: 2 },
@@ -342,7 +342,7 @@ impl FileChange {
     /// the text before).
     ///
     /// ```
-    /// use crate::tool::{FileChange, Hunk, HunkLine, Lines};
+    /// use rig::tool::{FileChange, Hunk, HunkLine, Lines};
     ///
     /// let change = FileChange::modified("a.rs", 1, 1)
     ///     .with_before_text("one\ntwo\n")
@@ -540,7 +540,7 @@ pub enum ChangeKind {
 /// cut.
 ///
 /// ```
-/// use crate::tool::{KeptEnd, OutputCut};
+/// use rig::tool::{KeptEnd, OutputCut};
 ///
 /// let cut = OutputCut { kept: KeptEnd::Ends, kept_lines: 2000, total_lines: 5120, spill: None };
 /// assert_eq!(cut.cut_lines(), 3120);

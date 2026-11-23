@@ -1,7 +1,7 @@
 //! Target-dependent thread bounds, boxed futures, and executor-independent timers.
 //!
 //! ```
-//! use crate::wasm_compat::WasmBoxedFuture;
+//! use rig::wasm_compat::WasmBoxedFuture;
 //! let future: WasmBoxedFuture<'_, u32> = Box::pin(async { 42 });
 //! ```
 
@@ -26,7 +26,7 @@ compile_error!(
 ///
 /// ```compile_fail
 /// use std::rc::Rc;
-/// use crate::wasm_compat::WasmCompatSend;
+/// use rig::wasm_compat::WasmCompatSend;
 ///
 /// fn shared<T: WasmCompatSend>(_: T) {}
 /// shared(Rc::new(0u8));
@@ -51,7 +51,7 @@ impl<T> WasmCompatSend for T {}
 ///
 /// ```compile_fail
 /// use std::cell::Cell;
-/// use crate::wasm_compat::WasmCompatSync;
+/// use rig::wasm_compat::WasmCompatSync;
 ///
 /// fn shared<T: WasmCompatSync>(_: T) {}
 /// shared(Cell::new(0u8));

@@ -1,7 +1,7 @@
 //! Speech model identifiers for OpenAI's `/audio/speech` endpoint.
 //!
 //! ```
-//! use crate::providers::openai::{OpenAI, audio_generation::TTS_1};
+//! use rig::providers::openai::{OpenAI, audio_generation::TTS_1};
 //! let wire = OpenAI::new("key").audio_generation(TTS_1);
 //! ```
 

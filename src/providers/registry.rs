@@ -9,7 +9,7 @@
 //! configuration, which discards its credential when written.
 //!
 //! ```no_run
-//! use crate::catalog::Catalog;
+//! use rig::catalog::Catalog;
 //! let model = Catalog::builtin().connect("deepseek/deepseek-chat")?; // DEEPSEEK_API_KEY
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```
@@ -445,15 +445,15 @@ impl ProviderId {
     /// back like a built-in reference once the catalog lists the model
     /// ([`Catalog::insert`]). The registry cannot configure it: whoever
     /// declares it says how its models are reached, such as with
-    /// [`Connector::provide`](crate::catalog::Connector::provide) or by
+    /// [`Connector::provide`](rig::catalog::Connector::provide) or by
     /// building a [`ProviderConfig`] from a dialect of its own.
     ///
     /// Declaring is idempotent and process-wide. A vendor this build already
     /// knows comes back as [`Self::catalog`] gives it.
     ///
     /// ```
-    /// use crate::catalog::{Catalog, ModelSpec};
-    /// use crate::providers::registry::ProviderId;
+    /// use rig::catalog::{Catalog, ModelSpec};
+    /// use rig::providers::registry::ProviderId;
     ///
     /// let corp = ProviderId::declare("corp")?;
     /// let mut catalog = Catalog::builtin().clone();
@@ -889,7 +889,7 @@ impl ProviderConfig {
     /// catalog lists under a declared vendor ([`ProviderId::declare`]) is
     /// reached on a gateway of its own, with its catalog prices. Pass
     /// [`ModelFacts::new`] of the model's spec, or
-    /// [`Catalog::facts`](crate::catalog::Catalog::facts).
+    /// [`Catalog::facts`](rig::catalog::Catalog::facts).
     ///
     /// The model uses the provider's own completion wire, including
     /// Copilot's model-dependent routing and request envelope. Explicit
@@ -956,8 +956,8 @@ impl<'a> From<&'a String> for ModelSelector<'a> {
 /// dialect's base URL.
 ///
 /// ```no_run
-/// use crate::catalog::Catalog;
-/// use crate::providers::registry::{ConnectOptions, Format};
+/// use rig::catalog::Catalog;
+/// use rig::providers::registry::{ConnectOptions, Format};
 ///
 /// let options = ConnectOptions::new().format(Format::Anthropic);
 /// let model = Catalog::builtin().connect_with("zai/glm-5", options)?;
@@ -991,8 +991,8 @@ impl ConnectOptions {
     /// Only the OpenAI family sends it; the others ignore it.
     ///
     /// ```no_run
-    /// use crate::catalog::Catalog;
-    /// use crate::providers::registry::ConnectOptions;
+    /// use rig::catalog::Catalog;
+    /// use rig::providers::registry::ConnectOptions;
     ///
     /// let options = ConnectOptions::new().api_key("access-token").account_id("account");
     /// let model = Catalog::builtin().connect_with("chatgpt/gpt-6.1-sol", options)?;
@@ -1076,7 +1076,7 @@ pub enum ConnectError {
         tried: Vec<Cow<'static, str>>,
     },
     /// The provider serving the model failed, in its own words, such as a
-    /// [`Provide`](crate::catalog::Provide) whose gateway is not configured.
+    /// [`Provide`](rig::catalog::Provide) whose gateway is not configured.
     #[error("{0}")]
     Provider(String),
     /// A variable the dialect reads is set but unusable.
@@ -1094,7 +1094,7 @@ impl Catalog {
     /// [`Self::connect_with`].
     ///
     /// ```no_run
-    /// use crate::catalog::Catalog;
+    /// use rig::catalog::Catalog;
     ///
     /// let catalog = Catalog::builtin();
     /// let model = catalog.connect("anthropic/claude-opus-5-5")?; // ANTHROPIC_API_KEY

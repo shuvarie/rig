@@ -4,9 +4,9 @@
 //! when the wire would take that item back.
 //!
 //! ```
-//! use crate::providers::anthropic::streaming::MessagesDecoder;
+//! use rig::providers::anthropic::streaming::MessagesDecoder;
 //!
-//! use crate::providers::anthropic::wire::Quirks;
+//! use rig::providers::anthropic::wire::Quirks;
 //!
 //! let decoder = MessagesDecoder::new(Quirks::anthropic());
 //! # let _ = decoder;

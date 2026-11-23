@@ -7,8 +7,8 @@
 //! [`Reply::written`] offers a writer that mints stream block identities.
 //!
 //! ```
-//! use crate::serve::Dispatch;
-//! use crate::effect::EffectId;
+//! use rig::serve::Dispatch;
+//! use rig::effect::EffectId;
 //!
 //! let dispatch = Dispatch::new(EffectId::from_raw(1), false);
 //! assert!(!dispatch.is_stream());

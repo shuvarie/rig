@@ -12,9 +12,9 @@ use crate::tool::ToolResultContext;
 /// the live one did. The model never sees them.
 ///
 /// ```
-/// use crate::conversation::{CallRef, Conversation, ResultFacts};
-/// use crate::message::{CallId, Message};
-/// use crate::tool::{ExitStatus, ToolContext};
+/// use rig::conversation::{CallRef, Conversation, ResultFacts};
+/// use rig::message::{CallId, Message};
+/// use rig::tool::{ExitStatus, ToolContext};
 ///
 /// let mut context = ToolContext::new();
 /// context.insert_result(ExitStatus::Exited(3))?;
@@ -27,7 +27,7 @@ use crate::tool::ToolResultContext;
 /// let found = facts.of([(at, &call)]);
 /// let status = found.first().copied().flatten().map(|facts| facts.get::<ExitStatus>());
 /// assert_eq!(status.transpose()?.flatten(), Some(ExitStatus::Exited(3)));
-/// # Ok::<(), crate::tool::ToolContextError>(())
+/// # Ok::<(), rig::tool::ToolContextError>(())
 /// ```
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(transparent)]

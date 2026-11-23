@@ -6,10 +6,10 @@
 //! downloads and ONNX Runtime binary downloads.
 //!
 //! ```no_run
-//! use crate::Model;
-//! use crate::providers::fastembed::{Fastembed, FastembedModel, text_embeddings};
+//! use rig::Model;
+//! use rig::providers::fastembed::{Fastembed, FastembedModel, text_embeddings};
 //!
-//! # fn run() -> Result<(), crate::providers::fastembed::FastembedError> {
+//! # fn run() -> Result<(), rig::providers::fastembed::FastembedError> {
 //! let model = Fastembed::load(&FastembedModel::AllMiniLML6V2Q)?.embedding(&FastembedModel::AllMiniLML6V2Q, None)?;
 //! # let _ = model;
 //! # Ok(())

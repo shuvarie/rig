@@ -5,7 +5,7 @@
 //! request.
 //!
 //! ```
-//! use crate::completion::{CacheRetention, CompletionRequest, Effort, GenerationOptions};
+//! use rig::completion::{CacheRetention, CompletionRequest, Effort, GenerationOptions};
 //!
 //! let options = GenerationOptions::default()
 //!     .reasoning(Effort::High)
@@ -345,7 +345,7 @@ pub enum OnUnsupported {
 }
 
 /// An option the wire or model cannot honour. Carried by
-/// [`ProviderError::UnsupportedOption`](crate::error::ProviderError::UnsupportedOption).
+/// [`ProviderError::UnsupportedOption`](rig::error::ProviderError::UnsupportedOption).
 #[non_exhaustive]
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
 #[error("`{option}` is not supported by {provider} model `{model}`: {reason}")]
@@ -381,7 +381,7 @@ impl UnsupportedOption {
 }
 
 /// Why a dry run of a completion request failed: what
-/// [`DynModel::check`](crate::DynModel::check) returns.
+/// [`DynModel::check`](rig::DynModel::check) returns.
 #[non_exhaustive]
 #[derive(Debug, thiserror::Error)]
 pub enum CheckError {

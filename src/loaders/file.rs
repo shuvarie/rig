@@ -1,12 +1,12 @@
 //! Lazy UTF-8 loading from filesystem paths or in-memory bytes.
 //!
 //! ```
-//! use crate::loaders::FileLoader;
+//! use rig::loaders::FileLoader;
 //!
 //! let documents = FileLoader::from_bytes(b"hello".to_vec())
 //!     .read().into_iter().collect::<Result<Vec<_>, _>>()?;
 //! assert_eq!(documents, vec!["hello"]);
-//! # Ok::<(), crate::loaders::file::FileLoaderError>(())
+//! # Ok::<(), rig::loaders::file::FileLoaderError>(())
 //! ```
 
 use std::{fs, path::PathBuf, string::FromUtf8Error};
@@ -66,7 +66,7 @@ impl<'a, T: Readable + 'a> FileLoader<'a, T> {
     /// Decodes each input as UTF-8 during iteration, yielding I/O or decoding errors.
     ///
     /// ```no_run
-    /// # use crate::loaders::FileLoader;
+    /// # use rig::loaders::FileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = FileLoader::with_glob("files/*.txt")?.read();
     /// for result in content {
@@ -87,7 +87,7 @@ impl<'a, T: Readable + 'a> FileLoader<'a, T> {
     /// I/O or decoding errors. In-memory inputs use the path `<memory>`.
     ///
     /// ```no_run
-    /// # use crate::loaders::FileLoader;
+    /// # use rig::loaders::FileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = FileLoader::with_glob("files/*.txt")?.read_with_path();
     /// for result in content {

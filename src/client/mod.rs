@@ -1,10 +1,10 @@
 //! Provider clients and environment configuration helpers. A provider's
-//! client (such as [`crate::providers::openai::OpenAI`]) puts its
+//! client (such as [`rig::providers::openai::OpenAI`]) puts its
 //! configuration on a transport and builds the models it serves; each is
 //! re-exported from its provider module.
 //!
 //! ```no_run
-//! use crate::client::env;
+//! use rig::client::env;
 //!
 //! let credential = env::required("OPENAI_API_KEY")?;
 //! # let _ = credential;

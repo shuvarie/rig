@@ -88,7 +88,7 @@ pub trait Store: Files {
     /// one appends and the other is refused. A log that shrank and grew
     /// back to exactly `len` bytes since it was read is not told apart;
     /// rig shrinks a log only by setting a torn last line aside, or by
-    /// [`rewrite`](crate::memory::rewrite) and [`Self::destroy`], which are for a
+    /// [`rewrite`](rig::memory::rewrite) and [`Self::destroy`], which are for a
     /// stopped session.
     fn append_log(&self, name: &str, len: u64, bytes: &[u8]) -> Result<(), LogWriteError>;
 
@@ -105,7 +105,7 @@ pub trait Store: Files {
 }
 
 /// A session's storage reached asynchronously: the part of [`Store`] that
-/// [`load_async`](crate::memory::load_async) and [`save_async`](crate::memory::save_async)
+/// [`load_async`](rig::memory::load_async) and [`save_async`](rig::memory::save_async)
 /// use, for a store behind a network or a JavaScript promise. Every
 /// [`Store`] is one, its calls done when made: a local store pays no thread
 /// hop and no allocation for it. A type that implements [`Store`] gets this
@@ -119,7 +119,7 @@ pub trait Store: Files {
 /// `UPDATE … WHERE octet_length(bytes) = $len` or one IndexedDB
 /// `readwrite` transaction, never a read followed by a write. An append
 /// adds its bytes whole, or at worst leaves a cut last line, which the next
-/// save sets aside: [`save_async`](crate::memory::save_async) writes one turn with
+/// save sets aside: [`save_async`](rig::memory::save_async) writes one turn with
 /// one append, so a cancelled or failed save never stores part of one.
 /// [`io::ErrorKind::NotFound`] means there is no such log or file.
 ///
@@ -279,7 +279,7 @@ pub(crate) fn now<T>(
 /// wherever the store keeps it.
 ///
 /// ```
-/// use crate::memory::check_name;
+/// use rig::memory::check_name;
 ///
 /// assert!(check_name("plugins/notes.json").is_ok());
 /// assert!(check_name("../elsewhere").is_err());
@@ -301,7 +301,7 @@ pub fn check_name(name: &str) -> io::Result<()> {
 /// Refuses `name` as a log name: [`check_name`], in one part.
 ///
 /// ```
-/// use crate::memory::check_log_name;
+/// use rig::memory::check_log_name;
 ///
 /// assert!(check_log_name("main").is_ok());
 /// assert!(check_log_name("agents/main").is_err());

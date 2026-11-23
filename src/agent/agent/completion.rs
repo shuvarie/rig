@@ -1,7 +1,7 @@
 //! Agent configuration, request preparation, and prompting entry points.
 //!
 //! ```no_run
-//! # async fn example(agent: crate::agent::agent::Agent) -> Result<(), crate::agent::completion::PromptError> {
+//! # async fn example(agent: rig::agent::agent::Agent) -> Result<(), rig::agent::completion::PromptError> {
 //! let response = agent.prompt("Explain ownership.").await?;
 //! println!("{}", response.output());
 //! # Ok(())
@@ -183,13 +183,13 @@ fn unforce_output_tool(
 /// Configured model, request settings, hooks, and tool registry for runs.
 /// Per-run overrides and dynamic retrieval determine each turn's effective request.
 ///
-/// Default hooks attached with [`AgentBuilder::add_hook`](crate::agent::agent::AgentBuilder::add_hook)
+/// Default hooks attached with [`AgentBuilder::add_hook`](rig::agent::agent::AgentBuilder::add_hook)
 /// are used for every prompt request, plus any added on the request or runner.
 ///
 /// # Example
 /// ```no_run
-/// use crate::agent::prelude::*;
-/// use crate::{Model, providers::openai::{self, OpenAI}};
+/// use rig::agent::prelude::*;
+/// use rig::{Model, providers::openai::{self, OpenAI}};
 ///
 /// # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 /// let model = OpenAI::from_env()?.completion(openai::GPT_5_2);
@@ -488,7 +488,7 @@ impl Agent {
 
     /// The owner segment of the keys this agent minted
     /// (`<owner>/model:<label>`, ...): the label given to
-    /// [`AgentBuilder::owner`](crate::agent::agent::AgentBuilder::owner), else
+    /// [`AgentBuilder::owner`](rig::agent::agent::AgentBuilder::owner), else
     /// `agent#<n>`.
     pub fn owner(&self) -> &str {
         &self.config.owner
@@ -586,7 +586,7 @@ impl Agent {
     /// Hooks, tools and the resulting history are the same in each.
     ///
     /// ```rust,no_run
-    /// # use crate::agent::agent::Agent;
+    /// # use rig::agent::agent::Agent;
     /// # use futures::StreamExt;
     /// # async fn example(agent: Agent) -> Result<(), Box<dyn std::error::Error>> {
     /// let response = agent.prompt("What is 2 + 2?").max_turns(3).await?;
@@ -635,7 +635,7 @@ impl Agent {
     /// suspended by the same rig version.
     ///
     /// ```rust,no_run
-    /// # use crate::agent::{Agent, AgentRun};
+    /// # use rig::agent::{Agent, AgentRun};
     /// # async fn example(agent: Agent, saved: &str) -> Result<(), Box<dyn std::error::Error>> {
     /// let run: AgentRun = serde_json::from_str(saved)?;
     /// let response = agent.resume(run).tool_concurrency(4).await?;
@@ -675,7 +675,7 @@ impl Agent {
     /// outputs constrain the model's response to match it.
     ///
     /// ```no_run
-    /// # async fn example(agent: crate::agent::agent::Agent) -> Result<(), Box<dyn std::error::Error>> {
+    /// # async fn example(agent: rig::agent::agent::Agent) -> Result<(), Box<dyn std::error::Error>> {
     /// #[derive(Debug, serde::Deserialize, schemars::JsonSchema)]
     /// struct WeatherForecast { city: String, temperature_f: f64 }
     /// let forecast = agent

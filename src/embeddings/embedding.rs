@@ -1,8 +1,8 @@
 //! Text and image embedding models, responses, and input identifiers.
 //!
 //! ```no_run
-//! use crate::DynModel;
-//! use crate::operation::Embedding;
+//! use rig::DynModel;
+//! use rig::operation::Embedding;
 //!
 //! # async fn example(model: DynModel<Embedding>) -> Result<(), Box<dyn std::error::Error>> {
 //! let embedding = model.embed_text("A document").await?;

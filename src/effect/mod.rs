@@ -3,7 +3,7 @@
 //! the exchange. Host-defined operations use [`CustomEffect`].
 //!
 //! ```
-//! use crate::effect::{EffectFamily, EffectRow, model_key};
+//! use rig::effect::{EffectFamily, EffectRow, model_key};
 //!
 //! let mut row = EffectRow::new();
 //! row.insert(model_key("primary"), EffectFamily::Completion);
@@ -277,7 +277,7 @@ impl<F: Family> Served for F {
 /// The context the tool runs with is not part of the request: it travels
 /// beside the dispatch, attached by the driver to the handler's sink
 /// (`Dispatch::scope::<ToolContext>()`), and what the tool publishes
-/// comes back the same way ([`crate::tool::PublishedContext`]).
+/// comes back the same way ([`rig::tool::PublishedContext`]).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ToolCallRequest {
     /// The tool's name (the name the model calls it by).
@@ -286,7 +286,7 @@ pub struct ToolCallRequest {
     pub args: String,
 }
 
-/// A host's own effect, typed the way a [`ToolContext`](crate::tool::ToolContext) value is: a
+/// A host's own effect, typed the way a [`ToolContext`](rig::tool::ToolContext) value is: a
 /// declared kind label and a declared answer type, both serde. The wire
 /// form is [`EffectKind::Custom`] / [`Answered::Custom`]; the type never
 /// crosses it.
@@ -331,7 +331,7 @@ pub fn retrieve_key(label: &str) -> HandlerKey {
 /// Type-level markers for built-in and host-defined effect families.
 ///
 /// ```
-/// use crate::effect::{family, Family, EffectFamily};
+/// use rig::effect::{family, Family, EffectFamily};
 /// assert_eq!(family::Completion::FAMILY, EffectFamily::Completion);
 /// ```
 pub mod family {
@@ -606,7 +606,7 @@ impl FamilyDescriptor {
 }
 
 /// The embedding context of a retrievable tool: what
-/// [`ToolEmbedding`](crate::tool::ToolEmbedding) advertises, as data.
+/// [`ToolEmbedding`](rig::tool::ToolEmbedding) advertises, as data.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ToolEmbeddingDescriptor {
     /// The tool's serialized context.
@@ -672,8 +672,8 @@ pub enum EffectKind {
 /// arguments, as a tool handler is dispatched it.
 ///
 /// ```
-/// use crate::effect::EffectKind;
-/// use crate::message::{ToolCall, ToolFunction, ToolName};
+/// use rig::effect::EffectKind;
+/// use rig::message::{ToolCall, ToolFunction, ToolName};
 ///
 /// let read = ToolFunction::new(ToolName::new("read")?, serde_json::json!({ "path": "a.rs" }));
 /// let kind = EffectKind::from(&ToolCall::from_wire("call-1", read));
@@ -741,7 +741,7 @@ pub enum EmbedInputs {
 }
 
 /// A retrieval: the transcription of
-/// [`VectorStoreIndex`](crate::vector_store::VectorStoreIndex) over the
+/// [`VectorStoreIndex`](rig::vector_store::VectorStoreIndex) over the
 /// dynamic filter. The typed result parameter of `top_n<T>` stays on the
 /// client side.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -767,7 +767,7 @@ pub enum Answered {
     Completion(Arc<CompletionResponse>),
     /// A tool call's result. The values the tool published into its
     /// context are not on the wire: they come back beside the sink
-    /// ([`crate::tool::PublishedContext`]).
+    /// ([`rig::tool::PublishedContext`]).
     ToolResult {
         /// The result.
         result: ToolResult,
@@ -824,7 +824,7 @@ pub enum RetrievedDocuments {
 pub struct EffectRecord {
     /// Explicitly published result metadata, including on errors: a
     /// tool's, or the facts any layer of the dispatch published
-    /// ([`PublishedContext`](crate::tool::PublishedContext)). Never
+    /// ([`PublishedContext`](rig::tool::PublishedContext)). Never
     /// inbound authentication values or runtime scopes. `None` means nothing
     /// was published before resolving; the wire field is required, and
     /// `null` records that nothing was published.
@@ -858,7 +858,7 @@ pub struct EffectRecord {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub scope: Option<std::sync::Arc<str>>,
     /// What the dispatcher made the effect for, such as `"turn"` or
-    /// `"compaction"`, from its [`DispatchContext`](crate::serve::DispatchContext). `None` when
+    /// `"compaction"`, from its [`DispatchContext`](rig::serve::DispatchContext). `None` when
     /// it named no purpose.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub purpose: Option<std::borrow::Cow<'static, str>>,

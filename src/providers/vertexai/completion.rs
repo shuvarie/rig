@@ -3,10 +3,10 @@
 //! streaming RPC.
 //!
 //! ```no_run
-//! use crate::Model;
-//! use crate::providers::vertexai::{VertexAi, completion::{GEMINI_2_5_FLASH, GenerateContent}};
+//! use rig::Model;
+//! use rig::providers::vertexai::{VertexAi, completion::{GEMINI_2_5_FLASH, GenerateContent}};
 //!
-//! # async fn example() -> Result<(), crate::providers::vertexai::client::VertexAiClientError> {
+//! # async fn example() -> Result<(), rig::providers::vertexai::client::VertexAiClientError> {
 //! let model = VertexAi::from_env()?.completion(GEMINI_2_5_FLASH);
 //! # let _ = model;
 //! # Ok(())

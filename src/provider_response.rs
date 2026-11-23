@@ -1,7 +1,7 @@
 //! Preserved provider error responses and their machine codes.
 //!
 //! ```
-//! use crate::ProviderResponseError;
+//! use rig::ProviderResponseError;
 //!
 //! let reply = ProviderResponseError::new(http::StatusCode::TOO_MANY_REQUESTS, "slow down");
 //! assert!(reply.is_retryable());
@@ -108,7 +108,7 @@ impl ProviderResponseError {
 
     /// Whether the same request may reasonably be sent again, decided in
     /// this order: a refusal never is; a non-success HTTP status decides
-    /// through [`crate::error::retryable_status`]; then a provider code the
+    /// through [`rig::error::retryable_status`]; then a provider code the
     /// one table knows (the explicit [`Self::code`], else the code the body's
     /// error envelope names); then the `transient` hint; otherwise not.
     ///
@@ -355,7 +355,7 @@ impl<'a> Envelope<'a> {
     }
 
     /// The one provider code → retry verdict table, beside
-    /// [`crate::error::retryable_status`]: what the name says, else what
+    /// [`rig::error::retryable_status`]: what the name says, else what
     /// the number says read as an HTTP status, else nothing. gRPC
     /// `INTERNAL` stays out, as its transports have always left it.
     fn verdict(&self) -> Option<bool> {

@@ -2,7 +2,7 @@
 //! Completions wires, and every OpenAI-shaped dialect.
 //!
 //! ```no_run
-//! use crate::providers::openai;
+//! use rig::providers::openai;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = openai::OpenAI::from_env()?;
@@ -17,7 +17,7 @@
 //!
 //! Each model pairs a wire, which says what to send and how to read the reply,
 //! with the client's transport. A vendor that speaks this format builds its
-//! client from its own module, such as [`crate::providers::deepseek::from_env`].
+//! client from its own module, such as [`rig::providers::deepseek::from_env`].
 
 /// The provider key: the dialect name, a reply's `Origin::provider` and
 /// the typed provider-options key.

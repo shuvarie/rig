@@ -9,7 +9,7 @@
 //! serves no completion.
 //!
 //! ```
-//! use crate::wire::document::{Reassemble, Unreassembled};
+//! use rig::wire::document::{Reassemble, Unreassembled};
 //!
 //! let mut document = Unreassembled;
 //! Reassemble::<String>::absorb(&mut document, &"event".to_owned());
@@ -86,8 +86,8 @@ impl<Event> Reassemble<Event> for Unreassembled {
 /// must name a reassembler that rebuilds its document:
 ///
 /// ```compile_fail,E0271
-/// use crate::operation::Completion;
-/// use crate::wire::document::{Serves, Unreassembled};
+/// use rig::operation::Completion;
+/// use rig::wire::document::{Serves, Unreassembled};
 ///
 /// fn completion_reassembler<R: Serves<Completion>>() {}
 /// completion_reassembler::<Unreassembled>();

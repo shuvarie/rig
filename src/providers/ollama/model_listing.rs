@@ -1,7 +1,7 @@
 //! Ollama's model-listing wire, `GET /api/tags`.
 //!
 //! ```
-//! use crate::providers::ollama::ListModelsResponse;
+//! use rig::providers::ollama::ListModelsResponse;
 //! let reply: ListModelsResponse =
 //!     serde_json::from_str(r#"{"models": [{"name": "qwen3:4b", "model": "qwen3:4b"}]}"#)?;
 //! assert_eq!(reply.models.len(), 1);

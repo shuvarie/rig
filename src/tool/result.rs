@@ -1,7 +1,7 @@
 //! Structured tool failures and model-visible execution results.
 //!
 //! ```
-//! use crate::tool::{ToolExecutionError, ToolResult};
+//! use rig::tool::{ToolExecutionError, ToolResult};
 //!
 //! let result = ToolResult::failed(ToolExecutionError::invalid_args("Provide a name"));
 //! assert!(result.is_error());

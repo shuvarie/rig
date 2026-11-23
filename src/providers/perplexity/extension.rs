@@ -4,8 +4,8 @@
 //! recordings.
 //!
 //! ```
-//! use crate::completion::CompletionResponse;
-//! use crate::providers::perplexity::extension::PerplexityExt;
+//! use rig::completion::CompletionResponse;
+//! use rig::providers::perplexity::extension::PerplexityExt;
 //!
 //! fn sources(reply: &CompletionResponse) -> Vec<String> {
 //!     reply

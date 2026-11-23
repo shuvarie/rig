@@ -1,14 +1,14 @@
 //! Z.AI's endpoints and model identifiers.
 //!
 //! [`from_env`] and [`new`] build a client on the chat-completions
-//! [`ZAI`](crate::providers::openai::wire::ZAI) dialect, the module's primary
+//! [`ZAI`](rig::providers::openai::wire::ZAI) dialect, the module's primary
 //! one; [`anthropic_from_env`] and [`anthropic_new`] build a Messages-format
 //! client. The coding endpoint is
-//! [`ZAI_CODING`](crate::providers::openai::wire::ZAI_CODING). Both read
+//! [`ZAI_CODING`](rig::providers::openai::wire::ZAI_CODING). Both read
 //! `ZAI_API_KEY`.
 //!
 //! ```no_run
-//! use crate::providers::zai;
+//! use rig::providers::zai;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let glm_4_6 = zai::from_env()?.chat(zai::GLM_4_6);

@@ -62,7 +62,7 @@ pub enum CommittedItem<'a> {
 /// call, and an output reprompt commits the call with its feedback result.
 ///
 /// ```
-/// use crate::agent::run::{AgentRun, CommittedItem, project};
+/// use rig::agent::run::{AgentRun, CommittedItem, project};
 /// let run = AgentRun::new("hi");
 /// let cursor = run.projection_start(); // then drive one protocol call
 /// for item in project(&run.messages()[cursor..]) {

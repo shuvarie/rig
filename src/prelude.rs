@@ -2,7 +2,7 @@
 //! vector-store imports.
 //!
 //! ```
-//! use crate::prelude::*;
+//! use rig::prelude::*;
 //!
 //! let message = Message::user("Hello");
 //! ```

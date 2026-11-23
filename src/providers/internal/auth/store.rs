@@ -20,7 +20,7 @@ use std::sync::{Arc, Mutex, PoisonError};
 /// client or process saved there, before asking for a new sign-in.
 ///
 /// ```
-/// use crate::providers::chatgpt::auth::{AuthSource, Authenticator, DeviceCodeHandler, MemoryTokenStore};
+/// use rig::providers::chatgpt::auth::{AuthSource, Authenticator, DeviceCodeHandler, MemoryTokenStore};
 /// use std::sync::Arc;
 ///
 /// let store = Arc::new(MemoryTokenStore::default());

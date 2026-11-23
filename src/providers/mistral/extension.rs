@@ -2,8 +2,8 @@
 //! (<https://docs.mistral.ai/api/endpoint/chat>).
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::mistral::extension::{MistralOptions, PromptMode};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::mistral::extension::{MistralOptions, PromptMode};
 //!
 //! let options = MistralOptions::new().prompt_mode(PromptMode::Reasoning).safe_prompt(true);
 //! let request = CompletionRequest::new("hi").provider_option(options);

@@ -1,7 +1,7 @@
 //! Invalid tool-call diagnostics and recovery decisions exchanged with drivers.
 //!
 //! ```
-//! use crate::agent::run::policy::InvalidToolCallAction;
+//! use rig::agent::run::policy::InvalidToolCallAction;
 //! let action = InvalidToolCallAction::retry("Use an advertised tool name.");
 //! assert!(matches!(action, InvalidToolCallAction::Retry { .. }));
 //! ```

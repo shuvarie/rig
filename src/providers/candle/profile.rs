@@ -1,7 +1,7 @@
 //! Model architectures, conversation protocols, and checkpoint validation profiles.
 //!
 //! ```
-//! use crate::providers::candle::ConversationProtocol;
+//! use rig::providers::candle::ConversationProtocol;
 //!
 //! let protocol = ConversationProtocol::Qwen3;
 //! ```

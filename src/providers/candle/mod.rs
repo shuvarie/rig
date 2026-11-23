@@ -4,7 +4,7 @@
 //! network access. WASM inference is synchronous; use a worker.
 //!
 //! ```
-//! use crate::providers::candle::ConversationProtocol;
+//! use rig::providers::candle::ConversationProtocol;
 //!
 //! let protocol = ConversationProtocol::Qwen3;
 //! ```

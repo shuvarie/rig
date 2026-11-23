@@ -1,7 +1,7 @@
 //! Per-turn overrides applied before request preparation without changing agent defaults.
 //!
 //! ```
-//! use crate::agent::run::patch::RequestPatch;
+//! use rig::agent::run::patch::RequestPatch;
 //! let patch = RequestPatch::new().temperature(0.2).max_tokens(256);
 //! assert!(!patch.is_empty());
 //! ```

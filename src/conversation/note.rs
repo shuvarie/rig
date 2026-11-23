@@ -11,8 +11,8 @@ use super::{Aside, Author, MessageId};
 /// made [`unsaved`](Aside::unsaved) is not saved.
 ///
 /// ```
-/// use crate::conversation::{Author, Conversation, Note};
-/// use crate::message::Message;
+/// use rig::conversation::{Author, Conversation, Note};
+/// use rig::message::Message;
 ///
 /// let mut conversation = Conversation::new();
 /// conversation.push(Message::user("Why tabs?"));

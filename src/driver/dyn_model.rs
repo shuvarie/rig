@@ -64,11 +64,11 @@ where
 /// dispatched, recorded and observed there.
 ///
 /// ```no_run
-/// use crate::embeddings::EmbeddingsBuilder;
-/// use crate::vector_store::in_memory_store::InMemoryVectorStore;
-/// use crate::{Model, providers::openai::{self, OpenAIConfig}};
+/// use rig::embeddings::EmbeddingsBuilder;
+/// use rig::vector_store::in_memory_store::InMemoryVectorStore;
+/// use rig::{Model, providers::openai::{self, OpenAIConfig}};
 ///
-/// # async fn example(http: crate::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
+/// # async fn example(http: rig::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
 /// let model = OpenAIConfig::from_env()?.connect(http).embedding(openai::TEXT_EMBEDDING_3_SMALL, None).erase();
 /// let embeddings = EmbeddingsBuilder::new(model.clone())
 ///     .documents(["a document".to_owned()])?
@@ -205,9 +205,9 @@ impl DynModel<crate::operation::Completion> {
     /// sent; [`Model::check`] with the model erased.
     ///
     /// ```no_run
-    /// use crate::catalog::Catalog;
-    /// use crate::completion::{CheckError, CompletionRequest, Effort};
-    /// use crate::providers::registry::ConnectOptions;
+    /// use rig::catalog::Catalog;
+    /// use rig::completion::{CheckError, CompletionRequest, Effort};
+    /// use rig::providers::registry::ConnectOptions;
     ///
     /// let model = Catalog::builtin().connect_with("openai/gpt-6-sol", ConnectOptions::new())?;
     /// let request = CompletionRequest::new("hi")

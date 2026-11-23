@@ -1,12 +1,12 @@
 //! Hugging Face's model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`HUGGINGFACE`](crate::providers::openai::wire::HUGGINGFACE) dialect.
-//! [`OpenAIConfig::with_sub_route`](crate::providers::openai::OpenAIConfig::with_sub_route)
+//! [`from_env`] and [`new`] build a client on the [`HUGGINGFACE`](rig::providers::openai::wire::HUGGINGFACE) dialect.
+//! [`OpenAIConfig::with_sub_route`](rig::providers::openai::OpenAIConfig::with_sub_route)
 //! selects a backend; transcription
 //! and image generation require `HFInference`.
 //!
 //! ```no_run
-//! use crate::providers::huggingface;
+//! use rig::providers::huggingface;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let router = huggingface::from_env()?;

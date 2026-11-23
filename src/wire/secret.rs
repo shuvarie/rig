@@ -1,7 +1,7 @@
 //! Redacted credentials for serializable provider configuration.
 //!
 //! ```
-//! use crate::wire::Secret;
+//! use rig::wire::Secret;
 //!
 //! let secret = Secret::from("api-key");
 //! assert_eq!(format!("{secret:?}"), "[redacted]");

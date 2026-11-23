@@ -1,7 +1,7 @@
 //! ChatGPT access-token configuration and native OAuth authentication.
 //!
 //! ```no_run
-//! use crate::providers::chatgpt::auth::{AuthSource, Authenticator, DeviceCodeHandler, FileTokenStore};
+//! use rig::providers::chatgpt::auth::{AuthSource, Authenticator, DeviceCodeHandler, FileTokenStore};
 //!
 //! let store = FileTokenStore::new("/path/to/credentials");
 //! let auth = Authenticator::new(AuthSource::OAuth, store, DeviceCodeHandler::default(), true);

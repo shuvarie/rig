@@ -5,7 +5,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Value;
 use std::collections::BTreeMap;
 
-/// Model-independent input to an evaluation. [`crate::providers::typesafeai::Jev`] supplies the model
+/// Model-independent input to an evaluation. [`rig::providers::typesafeai::Jev`] supplies the model
 /// from its configuration when encoding the full HTTP request.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Request {

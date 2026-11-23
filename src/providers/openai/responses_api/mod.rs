@@ -2,7 +2,7 @@
 //! Endpoint and dialect configuration lives in [`wire`].
 //!
 //! ```no_run
-//! use crate::providers::openai::{self, OpenAI};
+//! use rig::providers::openai::{self, OpenAI};
 //!
 //! # fn example() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = OpenAI::from_env()?.responses(openai::GPT_5_2);

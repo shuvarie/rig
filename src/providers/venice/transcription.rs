@@ -1,7 +1,7 @@
 //! Venice's transcription model identifiers.
 //!
 //! ```
-//! use crate::providers::venice::transcription::WHISPER_LARGE_V3;
+//! use rig::providers::venice::transcription::WHISPER_LARGE_V3;
 //! assert_eq!(WHISPER_LARGE_V3, "openai/whisper-large-v3");
 //! ```
 

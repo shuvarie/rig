@@ -5,7 +5,7 @@
 //! synchronously and collects stream events before returning them.
 //!
 //! ```no_run
-//! use crate::providers::candle::{CandleError, CandleModel, ModelData};
+//! use rig::providers::candle::{CandleError, CandleModel, ModelData};
 //!
 //! fn load(data: ModelData) -> Result<CandleModel, CandleError> {
 //!     CandleModel::builder(data).temperature(0.0).max_tokens(256).build()
@@ -312,8 +312,8 @@ fn stream_infer(
 /// runs it.
 ///
 /// ```no_run
-/// use crate::providers::candle::{CandleModel, Generation};
-/// use crate::Model;
+/// use rig::providers::candle::{CandleModel, Generation};
+/// use rig::Model;
 ///
 /// fn model(candle: CandleModel) -> Model<Generation, CandleModel> {
 ///     candle.completion()

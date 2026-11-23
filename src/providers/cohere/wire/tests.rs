@@ -115,7 +115,7 @@ fn an_error_body_with_a_success_status_fails_the_turn() {
 }
 
 /// The facts the Cohere wire (both of its APIs) is given are the facts it answers with: its
-/// [`ReplayTarget::facts`](crate::completion::ReplayTarget::facts), which
+/// [`ReplayTarget::facts`](rig::completion::ReplayTarget::facts), which
 /// the shared option rules and the cost read, and its descriptor's spec,
 /// which `DynModel::spec` returns.
 #[test]

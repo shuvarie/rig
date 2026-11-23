@@ -1,13 +1,13 @@
 //! Groq's model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`GROQ`](crate::providers::openai::wire::GROQ) dialect. A
+//! [`from_env`] and [`new`] build a client on the [`GROQ`](rig::providers::openai::wire::GROQ) dialect. A
 //! request sets its reasoning effort with
-//! [`GenerationOptions::reasoning`](crate::completion::GenerationOptions::reasoning);
+//! [`GenerationOptions::reasoning`](rig::completion::GenerationOptions::reasoning);
 //! Groq's own fields such as `reasoning_format` are typed in [`extension`].
 //! `.responses(model)` speaks Groq's Responses endpoint (beta).
 //!
 //! ```no_run
-//! use crate::providers::groq;
+//! use rig::providers::groq;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let gpt_oss = groq::from_env()?.chat(groq::GPT_OSS_120B);

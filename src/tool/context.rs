@@ -1,14 +1,14 @@
 //! Typed inbound context and explicitly published host-only tool-result metadata.
 //!
 //! ```
-//! use crate::tool::{ContextValue, ToolContext};
+//! use rig::tool::{ContextValue, ToolContext};
 //! #[derive(serde::Serialize, serde::Deserialize)]
 //! struct Session(String);
 //! impl ContextValue for Session { const KEY: &'static str = "session"; }
 //! let mut context = ToolContext::new();
 //! context.insert(Session("example".into()))?;
 //! assert_eq!(context.require::<Session>()?.0, "example");
-//! # Ok::<(), crate::tool::ToolContextError>(())
+//! # Ok::<(), rig::tool::ToolContextError>(())
 //! ```
 
 use std::any::Any;
@@ -110,7 +110,7 @@ impl ToolResultContext {
     }
 
     /// These values as a conversation keeps them with the call's result
-    /// ([`ResultFacts`](crate::conversation::ResultFacts)), for a view to
+    /// ([`ResultFacts`](rig::conversation::ResultFacts)), for a view to
     /// draw the call from after a resume: the whole old text of each
     /// changed file ([`FileChange::before_text`]) left out, since the hunks
     /// show the change, and, past
@@ -118,7 +118,7 @@ impl ToolResultContext {
     /// small one such as an exit status stays.
     ///
     /// ```
-    /// use crate::tool::{ExitStatus, FileChange, FilesChanged, ToolContext};
+    /// use rig::tool::{ExitStatus, FileChange, FilesChanged, ToolContext};
     ///
     /// let mut context = ToolContext::new();
     /// context.insert_result(ExitStatus::Exited(0))?;
@@ -128,7 +128,7 @@ impl ToolResultContext {
     /// assert_eq!(kept.get::<ExitStatus>()?, Some(ExitStatus::Exited(0)));
     /// let changed = kept.get::<FilesChanged>()?.unwrap_or_default();
     /// assert_eq!(changed.0.first().map(|change| change.before_text.is_none()), Some(true));
-    /// # Ok::<(), crate::tool::ToolContextError>(())
+    /// # Ok::<(), rig::tool::ToolContextError>(())
     /// ```
     ///
     /// [`FileChange::before_text`]: super::FileChange::before_text
@@ -357,7 +357,7 @@ impl std::fmt::Debug for ToolContext {
 /// sink rather than on the wire. A tool's adapter fills it with the tool's
 /// whole context (a second publish replaces the first); any other layer,
 /// such as a stream rewrite
-/// ([`ErasedHandler::map_stream`](crate::serve::ErasedHandler::map_stream)),
+/// ([`ErasedHandler::map_stream`](rig::serve::ErasedHandler::map_stream)),
 /// adds single facts with [`insert`](Self::insert).
 #[derive(Debug, Default)]
 pub struct PublishedContext(std::sync::Mutex<Option<ToolContext>>);

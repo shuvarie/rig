@@ -3,7 +3,7 @@
 //! read, change or move a section by its tag.
 //!
 //! ```
-//! use crate::completion::{CompletionRequest, Section, SystemPrompt};
+//! use rig::completion::{CompletionRequest, Section, SystemPrompt};
 //!
 //! let mut prompt = SystemPrompt {
 //!     role: "You are a coding agent.".into(),

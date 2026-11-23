@@ -2,7 +2,7 @@
 //! response's `raw` value.
 //!
 //! ```
-//! assert_eq!(crate::providers::llamacpp::LLAMA_CPP, "LLaMA_CPP");
+//! assert_eq!(rig::providers::llamacpp::LLAMA_CPP, "LLaMA_CPP");
 //! ```
 
 /// Conventional identifier for a single-model server. For a multi-model router,

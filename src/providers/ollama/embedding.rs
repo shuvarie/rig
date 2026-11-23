@@ -1,7 +1,7 @@
 //! Ollama's embedding wire, `POST /api/embed`, and its embedding models.
 //!
 //! ```
-//! use crate::providers::ollama::{ALL_MINILM, OllamaConfig};
+//! use rig::providers::ollama::{ALL_MINILM, OllamaConfig};
 //! let model = OllamaConfig::new().client().embedding(ALL_MINILM, None);
 //! assert_eq!(model.wire.ndims, 384);
 //! ```

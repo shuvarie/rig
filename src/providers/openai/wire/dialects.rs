@@ -1,7 +1,7 @@
 //! Registered OpenAI-compatible dialects and their endpoint policies.
 //!
 //! ```
-//! use crate::providers::openai::wire::by_name;
+//! use rig::providers::openai::wire::by_name;
 //! assert!(by_name("deepseek").is_some());
 //! ```
 
@@ -520,7 +520,7 @@ pub const OLLAMA: Dialect = Dialect {
 
 /// OpenCode Zen's Chat Completions and Responses endpoints. Which one serves
 /// a model is in the model catalog; its Messages-format models are the
-/// [Anthropic dialect](crate::providers::anthropic::wire::OPENCODE)'s.
+/// [Anthropic dialect](rig::providers::anthropic::wire::OPENCODE)'s.
 pub const OPENCODE: Dialect = Dialect {
     base_url_env: Some("OPENCODE_BASE_URL"),
     quirks: Quirks {

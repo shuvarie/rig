@@ -40,7 +40,7 @@ impl Ollama {
 
     /// The chat model for `model`, on the daemon's OpenAI-compatible API. It
     /// takes `keep_alive`, and a request's
-    /// [`reasoning`](crate::completion::GenerationOptions::reasoning) as
+    /// [`reasoning`](rig::completion::GenerationOptions::reasoning) as
     /// `reasoning_effort`. It refuses `num_ctx` and `options`, which only
     /// [`native_completion`](Self::native_completion) can send.
     pub fn completion(&self, model: impl Into<String>) -> Model<Chat> {

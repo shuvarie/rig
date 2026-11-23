@@ -2,8 +2,8 @@
 //! alike. Copilot has no typed request option.
 //!
 //! ```
-//! use crate::completion::CompletionResponse;
-//! use crate::providers::copilot::extension::CopilotExt;
+//! use rig::completion::CompletionResponse;
+//! use rig::providers::copilot::extension::CopilotExt;
 //!
 //! fn billed(reply: &CompletionResponse) -> Option<u64> {
 //!     reply.extras_lossy::<CopilotExt>().copilot_usage?.total_nano_aiu

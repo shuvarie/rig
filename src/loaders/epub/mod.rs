@@ -1,12 +1,12 @@
 //! EPUB loading with raw or XML-stripped chapter text.
 //!
 //! ```no_run
-//! use crate::loaders::{EpubFileLoader, StripXmlProcessor};
+//! use rig::loaders::{EpubFileLoader, StripXmlProcessor};
 //!
 //! let documents = EpubFileLoader::<_, StripXmlProcessor>::with_glob("books/*.epub")?
 //!     .read().into_iter().collect::<Result<Vec<_>, _>>()?;
 //! # let _ = documents;
-//! # Ok::<(), crate::loaders::epub::EpubLoaderError>(())
+//! # Ok::<(), rig::loaders::epub::EpubLoaderError>(())
 //! ```
 
 mod errors;

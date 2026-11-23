@@ -1,12 +1,12 @@
 //! Provider-agnostic reranking abstractions.
 //!
 //! Reranking models reorder a list of documents by relevance to a query.
-//! A [`Model`](crate::driver::Model) over a rerank wire calls one, and
+//! A [`Model`](rig::driver::Model) over a rerank wire calls one, and
 //! [`RerankResponse`] carries both the scored results and token usage.
 //!
 //! ```no_run
-//! use crate::DynModel;
-//! use crate::operation::{Rerank, RerankRequest};
+//! use rig::DynModel;
+//! use rig::operation::{Rerank, RerankRequest};
 //!
 //! # async fn example(model: &DynModel<Rerank>) -> Result<(), Box<dyn std::error::Error>> {
 //! let request = RerankRequest {

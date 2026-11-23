@@ -1,7 +1,7 @@
 //! GenAI tracing spans, completion-parent adoption, and opt-in content recording.
 //!
 //! ```
-//! use crate::telemetry::{GenAiOperation, SpanBuilder};
+//! use rig::telemetry::{GenAiOperation, SpanBuilder};
 //!
 //! let span = SpanBuilder::new("provider", "model", GenAiOperation::Chat).build();
 //! ```
@@ -168,7 +168,7 @@ pub const COMPLETION_PARENT_REQUIRED_FIELDS: &[&str] = &[
 /// `tracing` dependency.
 ///
 /// ```
-/// use crate::telemetry::completion_parent_span;
+/// use rig::telemetry::completion_parent_span;
 ///
 /// let span = completion_parent_span!(
 ///     target: "my_runtime",

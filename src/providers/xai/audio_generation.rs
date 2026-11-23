@@ -3,7 +3,7 @@
 //! The speech encoder omits the model field and uses `voice_id`, defaulting to `eve`.
 //!
 //! ```
-//! use crate::providers::xai::audio_generation::TTS_1;
+//! use rig::providers::xai::audio_generation::TTS_1;
 //! assert_eq!(TTS_1, "tts-1");
 //! ```
 

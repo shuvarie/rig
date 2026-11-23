@@ -3,7 +3,7 @@
 //! extraction by page or chapter with source numbering.
 //!
 //! ```
-//! use crate::loaders::FileLoader;
+//! use rig::loaders::FileLoader;
 //!
 //! let documents: Vec<_> = FileLoader::from_bytes(b"document".to_vec()).into_iter().collect();
 //! assert_eq!(documents.len(), 1);

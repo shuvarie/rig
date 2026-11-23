@@ -3,7 +3,7 @@
 //! [`DynamicTool::is_live`] reports disconnection without tool execution.
 //!
 //! ```
-//! use crate::tool::ManagedToolToken;
+//! use rig::tool::ManagedToolToken;
 //!
 //! let token = ManagedToolToken::new();
 //! assert_eq!(token, token.clone());

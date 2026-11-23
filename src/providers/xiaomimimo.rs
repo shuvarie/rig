@@ -1,12 +1,12 @@
 //! Xiaomi MiMo's endpoints and model identifiers.
 //!
 //! [`from_env`] and [`new`] build a client on the chat-completions
-//! [`XIAOMIMIMO`](crate::providers::openai::wire::XIAOMIMIMO) dialect, the
+//! [`XIAOMIMIMO`](rig::providers::openai::wire::XIAOMIMIMO) dialect, the
 //! module's primary one; [`anthropic_from_env`] and [`anthropic_new`] build a
 //! Messages-format client.
 //!
 //! ```no_run
-//! use crate::providers::xiaomimimo;
+//! use rig::providers::xiaomimimo;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = xiaomimimo::from_env()?.chat(xiaomimimo::MIMO_V2_6_PRO);

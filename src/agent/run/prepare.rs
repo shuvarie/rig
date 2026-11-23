@@ -2,10 +2,10 @@
 //! and per-turn overrides. Retrieval and model execution remain driver responsibilities.
 //!
 //! ```
-//! use crate::agent::run::{prepare::prepare_request, spec::RunSpec};
+//! use rig::agent::run::{prepare::prepare_request, spec::RunSpec};
 //! let request = prepare_request(&RunSpec::new(), &Default::default(), &[], vec![], None, None)?;
 //! assert!(request.tools.is_empty());
-//! # Ok::<(), crate::agent::run::prepare::PrepareError>(())
+//! # Ok::<(), rig::agent::run::prepare::PrepareError>(())
 //! ```
 
 use std::collections::BTreeSet;

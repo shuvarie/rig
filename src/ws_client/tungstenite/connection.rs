@@ -1,5 +1,5 @@
 //! The websocket connection: a socket the caller polls itself, each operation
-//! in the runtime context of [`crate::runtime`].
+//! in the runtime context of [`rig::runtime`].
 
 use crate::http_client::Result;
 use crate::wasm_compat::WasmBoxedFuture;

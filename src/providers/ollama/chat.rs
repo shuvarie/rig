@@ -6,7 +6,7 @@
 //! output schema as `format`.
 //!
 //! ```
-//! use crate::providers::ollama::OllamaConfig;
+//! use rig::providers::ollama::OllamaConfig;
 //!
 //! let wire = OllamaConfig::new().client().native_completion("qwen3:4b").wire;
 //! assert_eq!(wire.model, "qwen3:4b");

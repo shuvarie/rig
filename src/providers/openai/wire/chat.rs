@@ -2,7 +2,7 @@
 //! a whole reply and a stream of chunks.
 //!
 //! ```
-//! use crate::providers::openai::OpenAI;
+//! use rig::providers::openai::OpenAI;
 //! let wire = OpenAI::new("key").chat("gpt-5.2");
 //! ```
 
@@ -57,7 +57,7 @@ pub struct Chat {
 
 /// The error for media in a form Chat Completions cannot carry, which the
 /// adapter replaces before a request is encoded
-/// ([`ReplayTarget::encodes`](crate::completion::ReplayTarget::encodes)).
+/// ([`ReplayTarget::encodes`](rig::completion::ReplayTarget::encodes)).
 fn unsendable(what: &str) -> EncodeError {
     EncodeError::request(format!("Chat Completions cannot carry {what} in this form"))
 }

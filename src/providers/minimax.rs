@@ -2,14 +2,14 @@
 //!
 //! Global and China configurations support chat-completions and Messages wires,
 //! using `MINIMAX_API_KEY`. [`from_env`] and [`new`] build a client on the
-//! chat-completions [`MINIMAX`](crate::providers::openai::wire::MINIMAX)
+//! chat-completions [`MINIMAX`](rig::providers::openai::wire::MINIMAX)
 //! dialect; [`anthropic_from_env`] and [`anthropic_new`] build a Messages-format
 //! client. The chat-completions client also generates images and speech, and
 //! `voice_clone` clones a voice from uploaded audio, and `.responses(model)`
 //! speaks MiniMax's Responses API on either endpoint.
 //!
 //! ```no_run
-//! use crate::providers::minimax;
+//! use rig::providers::minimax;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = minimax::from_env()?.chat(minimax::MINIMAX_M3);

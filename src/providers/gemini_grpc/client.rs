@@ -2,8 +2,8 @@
 //! channel, with the API key sent as request metadata.
 //!
 //! ```no_run
-//! use crate::providers::gemini::GeminiConfig;
-//! use crate::providers::gemini_grpc::{GeminiGrpc, GeminiGrpcError};
+//! use rig::providers::gemini::GeminiConfig;
+//! use rig::providers::gemini_grpc::{GeminiGrpc, GeminiGrpcError};
 //!
 //! # async fn example() -> Result<(), GeminiGrpcError> {
 //! let transport = GeminiGrpc::connect(&GeminiConfig::from_env()?).await?;

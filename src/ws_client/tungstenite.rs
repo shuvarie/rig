@@ -9,14 +9,14 @@
     )
 )]
 //! The bundled native websocket backend for Rig: a
-//! [`crate::ws_client::WebSocketClientExt`] implementation over tokio-tungstenite. rig-core's `tungstenite` feature
+//! [`rig::ws_client::WebSocketClientExt`] implementation over tokio-tungstenite. rig-core's `tungstenite` feature
 //! opens Responses WebSocket sessions over it with no backend named.
 //!
 //! The caller owns and polls every socket, in the current Tokio runtime's
-//! context or the lazy fallback's ([`crate::runtime`]), from any executor.
+//! context or the lazy fallback's ([`rig::runtime`]), from any executor.
 //!
 //! ```
-//! let backend = crate::ws_client::tungstenite::TungsteniteClient::new();
+//! let backend = rig::ws_client::tungstenite::TungsteniteClient::new();
 //! ```
 
 // The native dependency is target-gated; diagnose unsupported WASM use before

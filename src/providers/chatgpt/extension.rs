@@ -1,11 +1,11 @@
 //! ChatGPT's typed request options and reply extras, keyed by
-//! [`PROVIDER_NAME`](crate::providers::chatgpt::PROVIDER_NAME). The backend
+//! [`PROVIDER_NAME`](rig::providers::chatgpt::PROVIDER_NAME). The backend
 //! speaks only the Responses format, so its options are one
 //! `"openai.responses"` section. An `openai` entry is not read here.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::chatgpt::extension::{ChatGptOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::chatgpt::extension::{ChatGptOptions};
 //!
 //! let options = ChatGptOptions::default().prompt_cache_key("conversation-1");
 //! let request = CompletionRequest::new("hi").provider_option(options);

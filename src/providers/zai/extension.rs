@@ -4,8 +4,8 @@
 //! own.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::zai::extension::ZaiOptions;
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::zai::extension::ZaiOptions;
 //!
 //! let options = ZaiOptions::new().user_id("user-1");
 //! let request = CompletionRequest::new("hi").provider_option(options);

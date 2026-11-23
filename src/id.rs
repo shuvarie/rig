@@ -2,7 +2,7 @@
 //! caller-supplied conversation keys. Do not use generated IDs as secrets.
 //!
 //! ```
-//! let id = crate::id::generate();
+//! let id = rig::id::generate();
 //! assert_eq!(id.len(), 21);
 //! ```
 

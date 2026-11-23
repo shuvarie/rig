@@ -1,9 +1,9 @@
 //! Image-generation requests, normalized responses, and model interfaces.
 //!
 //! ```no_run
-//! use crate::DynModel;
-//! use crate::image_generation::ImageGenerationRequestBuilder;
-//! use crate::operation::ImageGeneration;
+//! use rig::DynModel;
+//! use rig::image_generation::ImageGenerationRequestBuilder;
+//! use rig::operation::ImageGeneration;
 //!
 //! # async fn example(model: DynModel<ImageGeneration>) -> Result<(), Box<dyn std::error::Error>> {
 //! let request = ImageGenerationRequestBuilder::new("A mountain lake")

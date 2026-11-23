@@ -5,13 +5,13 @@
 //! a [`PoseTrack`]. Coordinates are pixels of the frame as supplied.
 //!
 //! ```no_run
-//! use crate::providers::candle::pose::{CandlePoseModel, ImageFrame};
+//! use rig::providers::candle::pose::{CandlePoseModel, ImageFrame};
 //!
 //! # async fn example(weights: Vec<u8>, width: u32, height: u32, rgb: Vec<u8>) -> Result<(), Box<dyn std::error::Error>> {
 //! let model = CandlePoseModel::from_safetensors(weights)?.pose();
 //! let track = model.call(ImageFrame::from_rgb8(width, height, rgb)?).await?;
 //! for person in &track.frames[0].people {
-//!     println!("{:?}", person.keypoint(crate::providers::candle::pose::BodyPart::Nose));
+//!     println!("{:?}", person.keypoint(rig::providers::candle::pose::BodyPart::Nose));
 //! }
 //! # Ok(())
 //! # }

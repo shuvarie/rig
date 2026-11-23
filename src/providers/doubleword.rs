@@ -1,15 +1,15 @@
 //! Doubleword's model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`DOUBLEWORD`](crate::providers::openai::wire::DOUBLEWORD) dialect for
+//! [`from_env`] and [`new`] build a client on the [`DOUBLEWORD`](rig::providers::openai::wire::DOUBLEWORD) dialect for
 //! realtime chat, embeddings and its Responses endpoint. On `.responses(model)`,
-//! [`ServiceTier::Flex`](crate::completion::ServiceTier::Flex) runs a request
+//! [`ServiceTier::Flex`](rig::completion::ServiceTier::Flex) runs a request
 //! at the flex tier and a unary call waits for its result; a long wait can
 //! time out the connection. Background polling and batch submission are not
 //! modeled by these operations.
 //!
 //! ```no_run
-//! use crate::completion::{CompletionRequest, GenerationOptions, ServiceTier};
-//! use crate::providers::doubleword;
+//! use rig::completion::{CompletionRequest, GenerationOptions, ServiceTier};
+//! use rig::providers::doubleword;
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let doubleword = doubleword::from_env()?;
@@ -38,7 +38,7 @@ pub const QWEN3_VL_30B: &str = "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8";
 pub const QWEN3_VL_235B: &str = "Qwen/Qwen3-VL-235B-A22B-Instruct-FP8";
 
 /// Identifier for the Qwen3 Embedding 8B model. Supported output dimensions are
-/// defined by [`crate::providers::openai::wire::DOUBLEWORD`].
+/// defined by [`rig::providers::openai::wire::DOUBLEWORD`].
 pub const QWEN3_EMBEDDING_8B: &str = "Qwen/Qwen3-Embedding-8B";
 
 /// The provider key: the dialect name, a reply's `Origin::provider` and

@@ -2,7 +2,7 @@
 //! requests and tools.
 //!
 //! ```rust,no_run
-//! # use crate::agent::agent::Agent;
+//! # use rig::agent::agent::Agent;
 //! # async fn example(agent: Agent) -> Result<(), Box<dyn std::error::Error>> {
 //! let response = agent
 //!     .prompt("What is 2 + 2?")
@@ -128,7 +128,7 @@ impl<O> AgentRunner<O> {
     /// event-dependent (model selections and `ToolCall`/`ToolResult` rewrites
     /// chain, `CompletionCall` request patches accumulate and merge, while
     /// model-turn steering and observe-only/recovery events use their
-    /// event-specific terminal action). See the [`hook`](crate::agent::agent::hook)
+    /// event-specific terminal action). See the [`hook`](rig::agent::agent::hook)
     /// module docs.
     pub fn add_hook<H>(mut self, hook: H) -> Self
     where
@@ -142,7 +142,7 @@ impl<O> AgentRunner<O> {
     /// retry or continuation. Zero emits no model calls; one permits only the
     /// initial call. Exceeding the budget returns [`PromptError::MaxTurns`],
     /// which a typed run wraps in
-    /// [`StructuredOutputError::Prompt`](crate::agent::completion::StructuredOutputError::Prompt).
+    /// [`StructuredOutputError::Prompt`](rig::agent::completion::StructuredOutputError::Prompt).
     pub fn max_turns(mut self, max_turns: usize) -> Self {
         self.config.spec_mut().max_turns = Some(max_turns);
         self
@@ -312,9 +312,9 @@ impl<O> AgentRunner<O> {
 
     /// Overlay `options` on the agent's generation options for this run:
     /// each field `options` sets wins, every other field keeps the agent's
-    /// ([`GenerationOptions::overlay`](crate::completion::GenerationOptions::overlay)).
+    /// ([`GenerationOptions::overlay`](rig::completion::GenerationOptions::overlay)).
     /// A policy `options` sets wins too, so a run can restore
-    /// [`OnUnsupported::Error`](crate::completion::OnUnsupported::Error)
+    /// [`OnUnsupported::Error`](rig::completion::OnUnsupported::Error)
     /// over an agent's `Ignore`.
     ///
     /// Calls apply in order: this overlays only the fields `options` sets,
@@ -340,9 +340,9 @@ impl<O> AgentRunner<O> {
     /// Overlay `options` on the agent's provider options for this run: each
     /// provider entry `options` holds replaces the agent's, every other
     /// entry keeps the agent's
-    /// ([`ProviderOptions::overlay`](crate::completion::ProviderOptions::overlay)).
+    /// ([`ProviderOptions::overlay`](rig::completion::ProviderOptions::overlay)).
     ///
-    /// Unlike [`AgentBuilder::provider_options`](crate::agent::agent::AgentBuilder::provider_options),
+    /// Unlike [`AgentBuilder::provider_options`](rig::agent::agent::AgentBuilder::provider_options),
     /// it merges rather than replaces, so calls apply in order without
     /// loss: an entry set by an earlier [`Self::provider_option`] is kept
     /// unless `options` holds an entry for the same provider, and a later
@@ -354,7 +354,7 @@ impl<O> AgentRunner<O> {
     }
 
     /// Store `options` as the entry of their provider
-    /// ([`ExtensionOptions::Ext`](crate::completion::ExtensionOptions::Ext))
+    /// ([`ExtensionOptions::Ext`](rig::completion::ExtensionOptions::Ext))
     /// for this run, in place of the agent's entry for that provider; every
     /// other entry keeps the agent's. The same as
     /// `.provider_options(ProviderOptions::new().set(options))`, so options
@@ -362,7 +362,7 @@ impl<O> AgentRunner<O> {
     /// that provider. Options that do not serialize fail each request's
     /// encode. See [`Self::provider_options`] for the order of calls. A
     /// third-party provider reusing a built-in options type needs
-    /// [`ProviderOptions::with::<P>`](crate::completion::ProviderOptions::with)
+    /// [`ProviderOptions::with::<P>`](rig::completion::ProviderOptions::with)
     /// and [`Self::provider_options`]: this stores under the built-in key.
     pub fn provider_option<E: crate::completion::ExtensionOptions>(self, options: E) -> Self {
         self.provider_options(crate::completion::ProviderOptions::new().set(options))
@@ -396,7 +396,7 @@ impl<O> AgentRunner<O> {
     }
 
     /// Accept finish reasons outside the normalized vocabulary
-    /// ([`FinishReason::Other`](crate::completion::FinishReason::Other))
+    /// ([`FinishReason::Other`](rig::completion::FinishReason::Other))
     /// as a normal stop, for this run. Off by default: such a turn fails the run,
     /// and history replay leaves it out. When on, the turn succeeds, its
     /// tool calls run, and it replays.

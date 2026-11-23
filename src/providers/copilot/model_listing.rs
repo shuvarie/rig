@@ -1,11 +1,11 @@
 //! Copilot's model-listing wire: `GET /models` with the editor envelope.
 //!
 //! ```no_run
-//! use crate::driver::Model;
-//! use crate::providers::copilot::{DIALECT, model_listing::Models};
-//! use crate::providers::openai::OpenAIConfig;
+//! use rig::driver::Model;
+//! use rig::providers::copilot::{DIALECT, model_listing::Models};
+//! use rig::providers::openai::OpenAIConfig;
 //!
-//! # async fn run(http: crate::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
+//! # async fn run(http: rig::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
 //! let config = OpenAIConfig::with_key(&DIALECT, "tid=session-token");
 //! let models = Model::new(Models::new(config), http).list().await?;
 //! let takes_tools = models.iter().filter(|m| m.supports_tool_calls == Some(true));

@@ -4,8 +4,8 @@
 //! request the Compatibility API takes.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::cohere::extension::{CitationMode, CohereOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::cohere::extension::{CitationMode, CohereOptions};
 //!
 //! let options = CohereOptions::default()
 //!     .frequency_penalty(0.2)

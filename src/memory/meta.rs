@@ -101,7 +101,7 @@ impl SessionMeta {
 /// ellipsis when cut).
 ///
 /// ```
-/// use crate::memory::title_of;
+/// use rig::memory::title_of;
 ///
 /// assert_eq!(title_of("  fix\n the   parser "), "fix the parser");
 /// assert_eq!(title_of(&"a".repeat(80)).chars().count(), 60);

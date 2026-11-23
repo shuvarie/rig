@@ -50,7 +50,7 @@ fn value<T: DeserializeOwned>(
 }
 
 impl Session {
-    /// The session's own saved value under `key` (the [`SESSION`](crate::memory::SESSION)
+    /// The session's own saved value under `key` (the [`SESSION`](rig::memory::SESSION)
     /// log's), read as a `T`: `None` when it has none, an error when the
     /// value is not a `T`.
     pub fn value<T: DeserializeOwned>(&self, key: &str) -> Option<Result<T, serde_json::Error>> {

@@ -118,7 +118,7 @@ impl VertexAiBuilder {
     ///     .with_endpoint("https://us-central1-aiplatform.googleapis.com")
     ///     .build()
     ///     .await?;
-    /// let client = crate::providers::vertexai::VertexAi::builder()
+    /// let client = rig::providers::vertexai::VertexAi::builder()
     ///     .with_project("my-project")
     ///     .with_location("us-central1")
     ///     .with_prediction_service(service)
@@ -252,7 +252,7 @@ impl VertexAi {
 
     /// The Claude model `model` (`claude-sonnet-4-6`,
     /// `claude-haiku-4-5@20251001`), served through the `anthropic`
-    /// publisher. See [`crate::providers::vertexai::anthropic`].
+    /// publisher. See [`rig::providers::vertexai::anthropic`].
     pub fn anthropic(&self, model: impl Into<String>) -> Model<RawPredict, Self> {
         Model::new(
             RawPredict::new(&self.project, &self.location, model),

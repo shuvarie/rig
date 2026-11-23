@@ -6,8 +6,8 @@
 //! ```
 //! use std::sync::Arc;
 //!
-//! use crate::completion::Message;
-//! use crate::memory::recent::{LastMessages, view};
+//! use rig::completion::Message;
+//! use rig::memory::recent::{LastMessages, view};
 //!
 //! let messages = [Message::user("1"), Message::assistant("2"), Message::user("3")].map(Arc::new);
 //! assert_eq!(view(&messages, &LastMessages(2)), &messages[1..]);

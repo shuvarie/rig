@@ -1,7 +1,7 @@
 //! Venice's text-to-speech model identifiers.
 //!
 //! ```
-//! use crate::providers::venice::audio_generation::TTS_KOKORO;
+//! use rig::providers::venice::audio_generation::TTS_KOKORO;
 //! assert_eq!(TTS_KOKORO, "tts-kokoro");
 //! ```
 

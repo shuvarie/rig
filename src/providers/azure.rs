@@ -2,11 +2,11 @@
 //! replace these constants with the names configured on your resource.
 //!
 //! [`from_env`] builds a client on the
-//! [`AZURE`](crate::providers::openai::wire::AZURE) dialect from `AZURE_ENDPOINT`,
+//! [`AZURE`](rig::providers::openai::wire::AZURE) dialect from `AZURE_ENDPOINT`,
 //! `AZURE_API_VERSION`, and either `AZURE_API_KEY` or `AZURE_TOKEN`.
 //!
 //! ```no_run
-//! use crate::providers::azure;
+//! use rig::providers::azure;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let gpt4o = azure::from_env()?.chat(azure::GPT_4O);

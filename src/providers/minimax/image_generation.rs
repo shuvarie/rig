@@ -6,8 +6,8 @@
 //! `subject_reference` there. Rig asks for base64 and returns the first image.
 //!
 //! ```no_run
-//! use crate::image_generation::ImageGenerationRequestBuilder;
-//! use crate::providers::minimax;
+//! use rig::image_generation::ImageGenerationRequestBuilder;
+//! use rig::providers::minimax;
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = minimax::from_env()?.image_generation(minimax::IMAGE_01);

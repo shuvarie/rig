@@ -4,7 +4,7 @@
 //! unavailable tool names and arguments that do not fit a tool.
 //!
 //! ```
-//! use crate::tool::feedback::invalid_arguments_feedback;
+//! use rig::tool::feedback::invalid_arguments_feedback;
 //!
 //! assert!(invalid_arguments_feedback("add", "[1]").contains("not a JSON object"));
 //! ```
@@ -67,7 +67,7 @@ pub fn unknown_tool_feedback<'a>(name: &str, tools: impl IntoIterator<Item = &'a
 /// What the model reads for its call to `tool` that its reply ended in the
 /// middle of, having reached the output limit after sending `raw` of the
 /// arguments (a response's
-/// [`unfinished_calls`](crate::completion::CompletionResponse::unfinished_calls)):
+/// [`unfinished_calls`](rig::completion::CompletionResponse::unfinished_calls)):
 /// the tool never ran, and sending as much again would be cut off again.
 /// `raw` is echoed up to [`ECHOED_CHARS`].
 pub fn output_limit_feedback(tool: &str, raw: &str) -> String {
@@ -151,7 +151,7 @@ pub fn not_executed(call: &ToolCall) -> UserContent {
 /// Why `call`'s arguments do not fit a tool whose JSON schema is
 /// `parameters`, for the model to read as the call's error: they are not a
 /// JSON object ([`invalid_arguments_feedback`]), name an argument the
-/// schema does not declare, or do not [`validate`](crate::tool::validate)
+/// schema does not declare, or do not [`validate`](rig::tool::validate)
 /// against it (up to five of the problems are named). `None` when they fit
 /// as far as the validator checks; the tool checks the rest.
 ///
@@ -222,8 +222,8 @@ pub fn arguments_refusal(parameters: &serde_json::Value, call: &ToolCall) -> Opt
 /// is, without a final period.
 ///
 /// ```
-/// use crate::tool::feedback::not_finished;
-/// use crate::tool::{Scope, Touches};
+/// use rig::tool::feedback::not_finished;
+/// use rig::tool::{Scope, Touches};
 ///
 /// let reads = Touches::Reads(Scope::Anything);
 /// let why = "the user stopped the turn";

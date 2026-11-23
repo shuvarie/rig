@@ -1,12 +1,12 @@
 //! Lazy PDF loading and text extraction from paths or bytes.
 //!
 //! ```no_run
-//! use crate::loaders::PdfFileLoader;
+//! use rig::loaders::PdfFileLoader;
 //!
 //! let documents = PdfFileLoader::with_glob("documents/*.pdf")?
 //!     .read().into_iter().collect::<Result<Vec<_>, _>>()?;
 //! # let _ = documents;
-//! # Ok::<(), crate::loaders::pdf::PdfLoaderError>(())
+//! # Ok::<(), rig::loaders::pdf::PdfLoaderError>(())
 //! ```
 
 use std::path::PathBuf;
@@ -62,7 +62,7 @@ impl<'a, T: Loadable + 'a> PdfFileLoader<'a, T> {
     /// Parses each input as a PDF during iteration, yielding document-loading errors.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?.load().into_iter();
     /// for result in content {
@@ -84,7 +84,7 @@ impl<'a, T: Loadable + 'a> PdfFileLoader<'a, T> {
     /// In-memory inputs use the path `<memory>`.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?.load_with_path().into_iter();
     /// for result in content {
@@ -128,7 +128,7 @@ impl<'a, T: Loadable + 'a> PdfFileLoader<'a, T> {
     /// Yields a loading error or the first page-extraction error for each document.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?.read().into_iter();
     /// for result in content {
@@ -150,7 +150,7 @@ impl<'a, T: Loadable + 'a> PdfFileLoader<'a, T> {
     /// Yields loading or extraction errors; in-memory inputs use `<memory>`.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?.read_with_path().into_iter();
     /// for result in content {
@@ -178,7 +178,7 @@ impl<'a> PdfFileLoader<'a, Document> {
     /// sequence of per-page extraction results.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?
     ///     .load()
@@ -209,7 +209,7 @@ impl<'a> PdfFileLoader<'a, (PathBuf, Document)> {
     /// Pairs each source path with zero-based page numbers and extraction results.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?
     ///     .load_with_path()
@@ -241,7 +241,7 @@ impl<'a> PdfFileLoader<'a, ByPage> {
     /// zero-based page numbers. Documents with no successful pages remain.
     ///
     /// ```no_run
-    /// # use crate::loaders::PdfFileLoader;
+    /// # use rig::loaders::PdfFileLoader;
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = PdfFileLoader::with_glob("tests/data/*.pdf")?
     ///     .load_with_path()

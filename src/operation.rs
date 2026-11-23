@@ -1,4 +1,4 @@
-//! The operations a [`Wire`](crate::wire::Wire) can perform.
+//! The operations a [`Wire`](rig::wire::Wire) can perform.
 //!
 //! Each operation declares its request, event, end and response types and
 //! the fold one reply goes through. [`Completion`] streams events; most
@@ -6,8 +6,8 @@
 //! follow their cursors above the driver: each page is one call.
 //!
 //! ```
-//! use crate::operation::{Completion, Embedding};
-//! use crate::wire::Operation;
+//! use rig::operation::{Completion, Embedding};
+//! use rig::wire::Operation;
 //!
 //! fn streams<Op: Operation>() {}
 //! streams::<Completion>();
@@ -37,8 +37,8 @@ pub use verify::{Verify, VerifyDecoder};
 ///
 /// ```
 /// use std::convert::Infallible;
-/// use crate::operation::Whole;
-/// use crate::wire::{Call, Free, Operation};
+/// use rig::operation::Whole;
+/// use rig::wire::{Call, Free, Operation};
 ///
 /// struct Echo;
 ///

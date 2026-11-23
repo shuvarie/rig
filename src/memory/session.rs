@@ -1,5 +1,5 @@
 //! Reading a session back ([`Session`]), saving to it without a running
-//! [`Writer`](crate::memory::Writer) ([`load`], [`save`]), and one log's history
+//! [`Writer`](rig::memory::Writer) ([`load`], [`save`]), and one log's history
 //! ([`history`], [`as_of`]).
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -550,7 +550,7 @@ impl Session {
     /// save that fails leaves the others with their unsaved changes, so it
     /// can be tried again, and writes no change twice. A torn last line of
     /// a log written to is first set aside, as
-    /// [`Writer::open`](crate::memory::Writer::open) does.
+    /// [`Writer::open`](rig::memory::Writer::open) does.
     ///
     /// # Errors
     ///
@@ -668,18 +668,18 @@ pub(crate) fn conversation_of(folded: Option<Folded>) -> Result<Conversation, Se
 /// Appends the unsaved changes of `conversation` to the log `log` of
 /// `store`, starting it when there is none, and leaves the conversation
 /// with nothing unsaved. A torn last line of the log is first set aside, as
-/// [`Writer::open`](crate::memory::Writer::open) does.
+/// [`Writer::open`](rig::memory::Writer::open) does.
 ///
 /// ```
-/// use crate::message::Message;
-/// use crate::memory::{MemoryStore, load, save};
+/// use rig::message::Message;
+/// use rig::memory::{MemoryStore, load, save};
 ///
 /// let store = MemoryStore::default();
 /// let mut conversation = load(&store, "user-123")?;
 /// conversation.push(Message::user("My name is Alice."));
 /// save(&store, "user-123", &mut conversation)?;
 /// assert_eq!(load(&store, "user-123")?, conversation);
-/// # Ok::<(), crate::memory::SessionError>(())
+/// # Ok::<(), rig::memory::SessionError>(())
 /// ```
 ///
 /// # Errors
@@ -702,7 +702,7 @@ pub fn save(
     now(save_async(store, log, conversation))
 }
 
-/// [`load`] from an [`AsyncStore`](crate::memory::AsyncStore), such as a database
+/// [`load`] from an [`AsyncStore`](rig::memory::AsyncStore), such as a database
 /// or IndexedDB: the log read once, and the blobs its records name.
 ///
 /// # Errors
@@ -739,7 +739,7 @@ pub async fn load_async<S: crate::memory::AsyncStore + ?Sized>(
     )?)
 }
 
-/// [`save`] to an [`AsyncStore`](crate::memory::AsyncStore): the log read once,
+/// [`save`] to an [`AsyncStore`](rig::memory::AsyncStore): the log read once,
 /// then the blobs of new images written, then the changes appended with
 /// one write, which the store makes only if the log is still as it was
 /// read. A save reads only its own log, so one store holds many
@@ -748,9 +748,9 @@ pub async fn load_async<S: crate::memory::AsyncStore + ?Sized>(
 /// save), or, for a remote store that already applied it, all of it.
 ///
 /// ```
-/// # async fn run() -> Result<(), crate::memory::SessionError> {
-/// use crate::message::Message;
-/// use crate::memory::{MemoryStore, load_async, save_async};
+/// # async fn run() -> Result<(), rig::memory::SessionError> {
+/// use rig::message::Message;
+/// use rig::memory::{MemoryStore, load_async, save_async};
 ///
 /// let store = MemoryStore::default();
 /// let mut conversation = load_async(&store, "user-123").await?;

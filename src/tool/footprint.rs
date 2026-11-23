@@ -4,7 +4,7 @@
 //!
 //! ```
 //! use std::path::PathBuf;
-//! use crate::tool::{Scope, Touches};
+//! use rig::tool::{Scope, Touches};
 //!
 //! let paths = |path: &str| Scope::Paths(vec![PathBuf::from(path)]);
 //! let edit = Touches::Writes(paths("/work/src/a.rs"));

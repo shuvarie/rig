@@ -16,7 +16,7 @@ use crate::memory::{CURRENT, SessionError, Store};
 ///
 /// # Errors
 ///
-/// As [`load`](crate::memory::load), or when there is no such agent.
+/// As [`load`](rig::memory::load), or when there is no such agent.
 pub fn read_conversation(
     store: &dyn Store,
     agent: Option<&str>,
@@ -35,7 +35,7 @@ pub fn read_conversation(
 
 /// The main agent's log, folded: of the logs whose header names no parent
 /// and that are not retired, the one the session's [`CURRENT`] names, else
-/// the first by id, as [`Session::main_agent`](crate::memory::Session::main_agent)
+/// the first by id, as [`Session::main_agent`](rig::memory::Session::main_agent)
 /// finds it; only its candidates are folded.
 fn main_log(store: &dyn Store, how: Fold) -> Result<Option<Folded>, SessionError> {
     let own = Fold {

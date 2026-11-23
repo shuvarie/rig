@@ -1,7 +1,7 @@
 //! Batch text embeddings through the [Gemini API](https://ai.google.dev/api/embeddings).
 //!
 //! ```no_run
-//! use crate::providers::gemini::{Gemini, embedding::EMBEDDING_001};
+//! use rig::providers::gemini::{Gemini, embedding::EMBEDDING_001};
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = Gemini::from_env()?.embedding(EMBEDDING_001, None);
@@ -132,7 +132,7 @@ impl Wire for Embeddings {
 /// Request and response types for [Gemini embeddings](https://ai.google.dev/api/embeddings).
 ///
 /// ```
-/// use crate::providers::gemini::embedding::gemini_api_types::EmbeddingValues;
+/// use rig::providers::gemini::embedding::gemini_api_types::EmbeddingValues;
 ///
 /// let vector = EmbeddingValues { values: vec![1.into(), 2.into()] };
 /// ```

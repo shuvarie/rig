@@ -5,9 +5,9 @@
 //! part of a reply.
 //!
 //! ```no_run
-//! use crate::image_generation::ImageGenerationRequestBuilder;
-//! use crate::providers::gemini::{Gemini, ImageSize};
-//! use crate::providers::gemini::image_generation::{GEMINI_3_1_FLASH_IMAGE, ImageOptions};
+//! use rig::image_generation::ImageGenerationRequestBuilder;
+//! use rig::providers::gemini::{Gemini, ImageSize};
+//! use rig::providers::gemini::image_generation::{GEMINI_3_1_FLASH_IMAGE, ImageOptions};
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = Gemini::from_env()?.image_generation(GEMINI_3_1_FLASH_IMAGE);

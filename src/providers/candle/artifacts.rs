@@ -1,7 +1,7 @@
 //! Owned and borrowed model artifact buffers.
 //!
 //! ```
-//! use crate::providers::candle::ModelData;
+//! use rig::providers::candle::ModelData;
 //!
 //! fn artifacts(config: Vec<u8>, tokenizer: Vec<u8>, weights: Vec<u8>) -> ModelData {
 //!     ModelData { config, tokenizer, weights }
@@ -32,7 +32,7 @@ pub struct GgufModelData<'a> {
     pub weights: &'a [u8],
 }
 
-/// Byte-backed checkpoint format supplied to [`crate::providers::candle::CandleModel`].
+/// Byte-backed checkpoint format supplied to [`rig::providers::candle::CandleModel`].
 #[derive(Debug)]
 pub enum ModelArtifacts {
     /// One unsharded Hugging Face safetensors checkpoint.

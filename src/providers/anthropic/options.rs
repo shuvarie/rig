@@ -4,7 +4,7 @@
 //! the effort levels and budget it takes, whether thinking turns off and
 //! how, and whether it fixes its sampling.
 //!
-//! [`GenerationOptions`]: crate::completion::GenerationOptions
+//! [`GenerationOptions`]: rig::completion::GenerationOptions
 
 use serde_json::json;
 

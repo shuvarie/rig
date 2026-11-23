@@ -3,9 +3,9 @@
 //! decode them and compared after [`comparable`].
 //!
 //! ```no_run
-//! # async fn example() -> Result<(), crate::error::ProviderError> {
-//! use crate::providers::openai::OpenAIConfig;
-//! use crate::test_utils::raw_parity::assert_raw_parity;
+//! # async fn example() -> Result<(), rig::error::ProviderError> {
+//! use rig::providers::openai::OpenAIConfig;
+//! use rig::test_utils::raw_parity::assert_raw_parity;
 //!
 //! let wire = OpenAIConfig::new("sk-test").chat("gpt-4.1-nano");
 //! let unary = r#"{"id":"a","object":"chat.completion","choices":[]}"#;

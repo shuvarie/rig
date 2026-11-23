@@ -1565,6 +1565,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "custom_integrations"
+version = "0.46.0"
+dependencies = [
+ "futures",
+ "rig",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "custom_vector_store"
 version = "0.46.0"
 dependencies = [

@@ -2,9 +2,9 @@
 //! sent through.
 //!
 //! ```no_run
-//! use crate::providers::bedrock::client::BedrockRuntime;
-//! use crate::providers::bedrock::completion::{AMAZON_NOVA_LITE, Converse};
-//! use crate::Model;
+//! use rig::providers::bedrock::client::BedrockRuntime;
+//! use rig::providers::bedrock::completion::{AMAZON_NOVA_LITE, Converse};
+//! use rig::Model;
 //!
 //! let model = BedrockRuntime::from_env().completion(AMAZON_NOVA_LITE);
 //! # let _ = model;
@@ -74,7 +74,7 @@ impl BedrockRuntime {
     /// A builder for a runtime with an explicit region or profile.
     ///
     /// ```no_run
-    /// use crate::providers::bedrock::client::BedrockRuntime;
+    /// use rig::providers::bedrock::client::BedrockRuntime;
     ///
     /// let runtime = BedrockRuntime::builder()
     ///     .profile_name("bedrock")
@@ -94,7 +94,7 @@ impl BedrockRuntime {
 
     /// The Converse model for `model`. Request options such as a guardrail
     /// go in the request's provider options
-    /// ([`BedrockOptions`](crate::providers::bedrock::extension::BedrockOptions)).
+    /// ([`BedrockOptions`](rig::providers::bedrock::extension::BedrockOptions)).
     pub fn completion(&self, model: impl Into<String>) -> Model<Converse, Self> {
         Model::new(Converse::new(model), self.clone())
     }

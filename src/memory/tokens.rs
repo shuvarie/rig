@@ -35,8 +35,8 @@ where
 /// message overhead have fixed costs.
 ///
 /// ```
-/// use crate::completion::Message;
-/// use crate::memory::{HeuristicTokenCounter, TokenCounter};
+/// use rig::completion::Message;
+/// use rig::memory::{HeuristicTokenCounter, TokenCounter};
 ///
 /// let counter = HeuristicTokenCounter::default();
 /// assert_eq!(counter.count(&Message::user("12345678")), 2 + 4);

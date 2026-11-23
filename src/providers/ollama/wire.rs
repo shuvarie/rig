@@ -1,7 +1,7 @@
 //! Ollama daemon configuration: its address and optional credential.
 //!
 //! ```
-//! use crate::providers::ollama::OllamaConfig;
+//! use rig::providers::ollama::OllamaConfig;
 //! let ollama = OllamaConfig::new().client();
 //! assert_eq!(ollama.completion("qwen3").wire.model, "qwen3");
 //! assert_eq!(ollama.native_completion("qwen3").wire.model, "qwen3");

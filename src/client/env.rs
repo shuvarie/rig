@@ -1,7 +1,7 @@
 //! Reads Unicode provider configuration values from the process environment.
 //!
 //! ```no_run
-//! use crate::client::env;
+//! use rig::client::env;
 //!
 //! let credential = env::required("OPENAI_API_KEY")?;
 //! # let _ = credential;

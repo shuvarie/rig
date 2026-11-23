@@ -1,7 +1,7 @@
 //! Missing and provided states for type-safe builders.
 //!
 //! ```
-//! use crate::markers::Provided;
+//! use rig::markers::Provided;
 //!
 //! let value = Provided("ready");
 //! assert_eq!(value.0, "ready");

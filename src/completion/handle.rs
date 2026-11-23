@@ -1,7 +1,7 @@
 //! Serializable model labels resolved to live handles by a runtime.
 //!
 //! ```
-//! use crate::completion::ModelRef;
+//! use rig::completion::ModelRef;
 //!
 //! let model = ModelRef::new("assistant");
 //! assert_eq!(model.as_str(), "assistant");

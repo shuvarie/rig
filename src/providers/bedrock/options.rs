@@ -1,5 +1,5 @@
 //! How Bedrock Converse answers
-//! [`GenerationOptions`](crate::completion::GenerationOptions): reasoning
+//! [`GenerationOptions`](rig::completion::GenerationOptions): reasoning
 //! goes in the model's own request fields (`additionalModelRequestFields`)
 //! and depends on the model's family and catalog entry; the rest are
 //! Converse fields or checkpoints the base builder places.

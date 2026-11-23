@@ -3,7 +3,7 @@
 //! available provider metadata, and textual source chains.
 //!
 //! ```
-//! use crate::error::{ErrorKind, ProviderError};
+//! use rig::error::{ErrorKind, ProviderError};
 //!
 //! let error = ProviderError::from_http_response(http::StatusCode::TOO_MANY_REQUESTS, "slow down");
 //! assert!(error.is_retryable());
@@ -258,7 +258,7 @@ pub type SharedError = Arc<dyn std::error::Error + 'static>;
 /// read it through [`Self::provider_response`] or the accessors below.
 ///
 /// ```
-/// use crate::error::ProviderError;
+/// use rig::error::ProviderError;
 ///
 /// fn log(error: &ProviderError) {
 ///     if let Some(status) = error.provider_response_status() {
@@ -331,9 +331,9 @@ pub enum ProviderError {
     /// no frame, such as an event stream's comments, do not count.
     /// Retryable.
     Stalled(std::time::Duration),
-    /// A [`GenerationOptions`](crate::completion::GenerationOptions) field
+    /// A [`GenerationOptions`](rig::completion::GenerationOptions) field
     /// the wire or model cannot honour, under
-    /// [`OnUnsupported::Error`](crate::completion::OnUnsupported::Error).
+    /// [`OnUnsupported::Error`](rig::completion::OnUnsupported::Error).
     UnsupportedOption(UnsupportedOption),
 }
 
@@ -509,7 +509,7 @@ impl ProviderError {
     /// This example reads the seconds form of `Retry-After`:
     ///
     /// ```no_run
-    /// # use crate::error::ProviderError;
+    /// # use rig::error::ProviderError;
     /// # use std::time::Duration;
     /// fn backoff(error: &ProviderError) -> Option<Duration> {
     ///     let seconds = error
@@ -632,7 +632,7 @@ impl From<http_client::Error> for ProviderError {
 }
 
 /// A failure to build a provider request, returned by
-/// [`Wire::encode`](crate::wire::Wire::encode). It converts only into
+/// [`Wire::encode`](rig::wire::Wire::encode). It converts only into
 /// [`ProviderError::Request`] or [`ProviderError::UnsupportedOption`], both
 /// of kind [`ErrorKind::Request`], so every provider classifies its encode
 /// failures alike.

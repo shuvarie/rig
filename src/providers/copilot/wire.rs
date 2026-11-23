@@ -5,10 +5,10 @@
 //! exchanged before encoding (see [`auth`](super::auth)).
 //!
 //! ```no_run
-//! use crate::providers::copilot::{self, DIALECT};
-//! use crate::providers::openai::OpenAIConfig;
+//! use rig::providers::copilot::{self, DIALECT};
+//! use rig::providers::openai::OpenAIConfig;
 //!
-//! # fn run(http: crate::http_client::DynHttpClient) {
+//! # fn run(http: rig::http_client::DynHttpClient) {
 //! let github = OpenAIConfig::with_key(&DIALECT, "tid=session-token").connect(http);
 //! let model = github.completion(copilot::GPT_4O);
 //! # let _ = model;

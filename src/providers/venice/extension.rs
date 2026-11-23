@@ -1,10 +1,10 @@
 //! Venice's typed request options and reply extras. Turning reasoning off
-//! is [`Reasoning::Off`](crate::completion::Reasoning::Off), not a Venice
+//! is [`Reasoning::Off`](rig::completion::Reasoning::Off), not a Venice
 //! parameter.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::venice::extension::{VeniceOptions, WebSearchMode};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::venice::extension::{VeniceOptions, WebSearchMode};
 //!
 //! let options = VeniceOptions::new()
 //!     .enable_web_search(WebSearchMode::On)

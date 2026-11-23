@@ -1,7 +1,7 @@
 //! Buffered embedding, reranking, transcription, image, and audio operations.
 //!
 //! ```
-//! use crate::wire::Capabilities;
+//! use rig::wire::Capabilities;
 //!
 //! let capabilities = Capabilities::embedding(32, 768).declaring(Some(768));
 //! assert_eq!(capabilities.declared, Some(768));

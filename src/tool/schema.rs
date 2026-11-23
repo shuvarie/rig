@@ -11,7 +11,7 @@
 //!     limit: Option<u32>,
 //! }
 //!
-//! let schema = crate::tool::args_schema::<Args>();
+//! let schema = rig::tool::args_schema::<Args>();
 //! let limit = serde_json::json!({"type": "integer", "minimum": 0,
 //!     "description": "How many lines to read."});
 //! assert_eq!(schema["properties"]["limit"], limit);

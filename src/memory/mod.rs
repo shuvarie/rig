@@ -1,4 +1,4 @@
-//! Conversations over time, over the crate's [`Conversation`](crate::conversation::Conversation):
+//! Conversations over time, over the crate's [`Conversation`](rig::conversation::Conversation):
 //! - [`recent`]: which newest messages a request sends.
 //! - [`CompactionPolicy`], [`apply_summary`], [`undo_summary`]: compacting a long conversation.
 //! - [`load`], [`save`], [`Session`], [`Writer`]: saving and resuming, in the one format
@@ -18,9 +18,9 @@
 //!   `conformance` (feature `test-utils`) checks a store against the contract.
 //!
 //! ```
-//! use crate::message::Message;
-//! use crate::memory::recent::{LastMessages, view};
-//! use crate::memory::{MemoryStore, load, save};
+//! use rig::message::Message;
+//! use rig::memory::recent::{LastMessages, view};
+//! use rig::memory::{MemoryStore, load, save};
 //!
 //! let store = MemoryStore::default();
 //! let mut conversation = load(&store, "user-123")?;
@@ -30,10 +30,10 @@
 //! let resumed = load(&store, "user-123")?;
 //! assert_eq!(resumed, conversation);
 //! assert_eq!(view(resumed.messages(), &LastMessages(1)).len(), 1);
-//! # Ok::<(), crate::memory::SessionError>(())
+//! # Ok::<(), rig::memory::SessionError>(())
 //! ```
 //!
-//! [`Conversation`]: crate::conversation::Conversation
+//! [`Conversation`]: rig::conversation::Conversation
 
 mod blobs;
 mod compaction;
@@ -62,6 +62,7 @@ pub use compaction::{
 pub use format::{FORMAT, LogRewrite, Repair, SESSION, SessionError, Stamp};
 pub use listing::read_conversation;
 pub use meta::{META, SessionMeta, excerpt, title_of};
+pub use recent::{LastMessages, Recent, TokenBudget};
 pub use rewrite::{
     Messages, Place, Rewrite, Rewritten, RewrittenLog, Strings, map_strings, rewrite, rewrite_file,
 };

@@ -1,5 +1,5 @@
 //! How the OpenAI-shaped wires answer
-//! [`GenerationOptions`](crate::completion::GenerationOptions): Chat
+//! [`GenerationOptions`](rig::completion::GenerationOptions): Chat
 //! Completions per dialect, and the OpenAI and xAI model facts Chat and
 //! Responses share, which the catalog holds: whether a model reasons, the
 //! effort levels it takes, its sampling rule and its prompt cache.
@@ -282,7 +282,7 @@ pub(crate) enum Endpoint {
 /// `body` after the refusals of OpenAI's catalog entry for its model, by
 /// its exact id (an OpenRouter `openai/` id is the gateway's to check),
 /// reported through the request's policy by
-/// [`catalog_refusals`](crate::completion::options::catalog_refusals): a
+/// [`catalog_refusals`](rig::completion::options::catalog_refusals): a
 /// request that sets no generation options is sent as built. It applies
 /// the [`Sampling::ReasoningOff`] rule of [`ModelSpec::refusals`] to the
 /// final body, which also holds what `additional_params` and the provider
@@ -297,7 +297,7 @@ pub(crate) enum Endpoint {
 ///
 /// # Errors
 ///
-/// A refusal under [`OnUnsupported::Error`](crate::completion::OnUnsupported::Error).
+/// A refusal under [`OnUnsupported::Error`](rig::completion::OnUnsupported::Error).
 pub(crate) fn check_body(
     target: &dyn ReplayTarget,
     facts: &ModelFacts,

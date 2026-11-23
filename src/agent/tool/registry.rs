@@ -1,7 +1,7 @@
 //! Ordered tool registrations, request catalogs, and inline dispatch by name.
 //!
 //! ```
-//! use crate::agent::tool::ToolSet;
+//! use rig::agent::tool::ToolSet;
 //! let tools = ToolSet::default();
 //! assert!(tools.catalog().is_empty());
 //! ```
@@ -19,9 +19,10 @@ use crate::{
     error::{ErrorKind, ErrorReport},
     message::ToolName,
     tool::{
-        DynamicTool, LivenessFn, Tool, ToolContext, ToolEmbedding, ToolExecutionError, ToolResult,
-        tool_definition,
+        DynamicTool, LivenessFn, Tool, ToolContext, ToolEmbedding, ToolExecutionError, ToolOutput,
+        ToolResult, tool_definition,
     },
+    wasm_compat::WasmBoxedFuture,
 };
 use indexmap::IndexMap;
 
@@ -85,6 +86,28 @@ impl RegisteredTool {
     pub fn from_dynamic(tool: DynamicTool) -> Self {
         let (definition, handler, liveness) = tool.into_parts();
         Self::from_parts(definition, None, handler, liveness)
+    }
+
+    /// This registration as a runtime-defined tool: its definition,
+    /// annotations, dispatch and liveness. The key and embedding context
+    /// describe the registration rather than the tool, so they do not carry
+    /// over.
+    pub fn into_dynamic(self) -> DynamicTool {
+        let definition = (*self.definition).clone();
+        let liveness = self.liveness.clone();
+        let tool = DynamicTool::new_with_context(
+            definition.name.clone(),
+            definition.description.clone(),
+            definition.parameters.clone(),
+            move |context: &mut ToolContext, arguments: serde_json::Value| {
+                dispatch_registered(self.clone(), context, arguments)
+            },
+        )
+        .with_annotations(definition.annotations.clone());
+        match liveness {
+            Some(liveness) => tool.with_liveness(move || liveness()),
+            None => tool,
+        }
     }
 
     /// Register a handler under its descriptor's key.
@@ -423,6 +446,33 @@ impl ToolSet {
                 })
             })
             .collect())
+    }
+}
+
+/// Dispatches a registration from a runtime-defined tool's callback, so the
+/// two forms share one execution path.
+fn dispatch_registered(
+    registered: RegisteredTool,
+    context: &mut ToolContext,
+    arguments: serde_json::Value,
+) -> WasmBoxedFuture<'_, Result<ToolOutput, ToolExecutionError>> {
+    Box::pin(async move {
+        let args = serde_json::to_string(&arguments).map_err(|error| {
+            ToolExecutionError::invalid_args(format!(
+                "tool `{}` arguments do not serialize: {error}",
+                registered.definition().name
+            ))
+        })?;
+        registered.execute(args, context).await.into_result()
+    })
+}
+
+impl crate::tool::ToolSource for ToolSet {
+    fn tools(&self) -> Vec<DynamicTool> {
+        self.tools
+            .values()
+            .map(|registration| registration.tool.clone().into_dynamic())
+            .collect()
     }
 }
 

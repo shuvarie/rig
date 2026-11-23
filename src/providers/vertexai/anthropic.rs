@@ -5,9 +5,9 @@
 //! model is named in the URL and `anthropic_version` travels in the body.
 //!
 //! ```no_run
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::anthropic::CLAUDE_SONNET_4_6;
-//! use crate::providers::vertexai::VertexAi;
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::anthropic::CLAUDE_SONNET_4_6;
+//! use rig::providers::vertexai::VertexAi;
 //!
 //! # async fn example() -> anyhow::Result<()> {
 //! let claude = VertexAi::from_env()?.anthropic(CLAUDE_SONNET_4_6);

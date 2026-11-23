@@ -37,7 +37,7 @@ macro_rules! http_client {
             }
 
             /// A client that sends through the shared reqwest client
-            /// (`crate::http_client::reqwest_client::shared()`), built once per process.
+            /// (`rig::http_client::reqwest_client::shared()`), built once per process.
             #[cfg(feature = "reqwest")]
             #[cfg_attr(docsrs, doc(cfg(feature = "reqwest")))]
             pub fn client(self) -> $client {
@@ -50,7 +50,7 @@ macro_rules! http_client {
 pub(crate) use http_client;
 
 /// Declare a vendor's by-name constructors for the OpenAI-shaped `$dialect`:
-/// `$from_env` and `$new`, each an [`OpenAI`](crate::providers::openai::OpenAI)
+/// `$from_env` and `$new`, each an [`OpenAI`](rig::providers::openai::OpenAI)
 /// client on the shared reqwest client.
 macro_rules! openai_vendor {
     ($dialect:path, $name:literal) => {
@@ -83,7 +83,7 @@ pub(crate) use openai_vendor;
 
 /// Declare a vendor's by-name constructors for the Anthropic-format
 /// `$dialect`: `$from_env` and `$new`, each an
-/// [`Anthropic`](crate::providers::anthropic::Anthropic) client on the
+/// [`Anthropic`](rig::providers::anthropic::Anthropic) client on the
 /// shared reqwest client.
 macro_rules! anthropic_vendor {
     ($dialect:path, $name:literal, $from_env:ident, $new:ident) => {

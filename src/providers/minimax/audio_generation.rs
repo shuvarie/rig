@@ -7,8 +7,8 @@
 //! Rig asks for hex audio, which is the only form it decodes.
 //!
 //! ```no_run
-//! use crate::audio_generation::AudioGenerationRequestBuilder;
-//! use crate::providers::minimax;
+//! use rig::audio_generation::AudioGenerationRequestBuilder;
+//! use rig::providers::minimax;
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let model = minimax::from_env()?.audio_generation(minimax::SPEECH_2_8_HD);

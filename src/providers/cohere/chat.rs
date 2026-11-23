@@ -3,7 +3,7 @@
 //! are read by [`ChatDecoder`].
 //!
 //! ```
-//! use crate::providers::cohere::{COMMAND_A_03_2025, CohereConfig, NativeChat};
+//! use rig::providers::cohere::{COMMAND_A_03_2025, CohereConfig, NativeChat};
 //!
 //! let wire = NativeChat::new(CohereConfig::new("key"), COMMAND_A_03_2025);
 //! assert_eq!(wire.model, COMMAND_A_03_2025);

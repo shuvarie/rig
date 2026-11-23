@@ -3,7 +3,7 @@
 //! the model sees, and the schema check on an answer.
 //!
 //! ```
-//! use crate::structured_output::{output_tool_augmentation, output_tool_name};
+//! use rig::structured_output::{output_tool_augmentation, output_tool_name};
 //! let name = output_tool_name(|taken| taken == "final_result");
 //! assert_eq!(name, "final_result_1");
 //! assert!(output_tool_augmentation(&name).contains("`final_result_1`"));
@@ -104,7 +104,7 @@ pub fn missing_required_fields(
 }
 
 /// Checks that `text` carries JSON that fits `schema`, as
-/// [`validate`](crate::tool::validate::validate) checks it: the whole text,
+/// [`validate`](rig::tool::validate::validate) checks it: the whole text,
 /// else one value starting at its first `{` or `[` (JSON wrapped in prose or
 /// a markdown fence), as typed prompts read it. Without a schema any JSON
 /// passes. `Err` holds every problem; text with no JSON is one problem for

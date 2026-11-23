@@ -2,8 +2,8 @@
 //! thinking and its effort are generation options.
 //!
 //! ```
-//! use crate::completion::CompletionResponse;
-//! use crate::providers::deepseek::extension::DeepSeekExt;
+//! use rig::completion::CompletionResponse;
+//! use rig::providers::deepseek::extension::DeepSeekExt;
 //!
 //! fn cache_hits(reply: &CompletionResponse) -> Option<u64> {
 //!     reply.extras_lossy::<DeepSeekExt>().prompt_cache_hit_tokens

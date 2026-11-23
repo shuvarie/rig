@@ -309,7 +309,7 @@ pub fn parse_partial_object(text: &str) -> Option<serde_json::Map<String, serde_
 /// only those are validated and executed.
 ///
 /// ```
-/// use crate::streaming::parse_partial_arguments;
+/// use rig::streaming::parse_partial_arguments;
 ///
 /// let partial = parse_partial_arguments(r#"{"path": "notes.md", "content": "Hel"#);
 /// assert_eq!(partial["path"], "notes.md");
@@ -426,7 +426,7 @@ mod tests;
 /// needs can never fail a reply.
 ///
 /// ```
-/// use crate::json_utils::Lenient;
+/// use rig::json_utils::Lenient;
 /// use serde_json::json;
 ///
 /// let reply = json!({"id": "r1", "usage": {"input_tokens": "7"}, "output": null});

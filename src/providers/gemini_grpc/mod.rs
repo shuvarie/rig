@@ -13,10 +13,10 @@
 //! once to its REST JSON, which the Gemini API's decoder reads.
 //!
 //! ```no_run
-//! use crate::Model;
-//! use crate::providers::gemini_grpc::{GeminiGrpc, completion::{GEMINI_2_5_FLASH, GenerateContent}};
+//! use rig::Model;
+//! use rig::providers::gemini_grpc::{GeminiGrpc, completion::{GEMINI_2_5_FLASH, GenerateContent}};
 //!
-//! # async fn example() -> Result<(), crate::providers::gemini_grpc::GeminiGrpcError> {
+//! # async fn example() -> Result<(), rig::providers::gemini_grpc::GeminiGrpcError> {
 //! let transport = GeminiGrpc::new("YOUR_API_KEY").await?;
 //! let model = transport.completion(GEMINI_2_5_FLASH);
 //! # let _ = model;
@@ -36,7 +36,7 @@ pub use client::{GeminiGrpc, GeminiGrpcError};
 /// Generated Gemini protobuf messages and service client.
 ///
 /// ```
-/// use crate::providers::gemini_grpc::proto::GenerateContentResponse;
+/// use rig::providers::gemini_grpc::proto::GenerateContentResponse;
 ///
 /// let response = GenerateContentResponse::default();
 /// assert!(response.candidates.is_empty());

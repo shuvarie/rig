@@ -7,7 +7,7 @@
 //! block or finish needs never fails a reply.
 //!
 //! ```
-//! use crate::providers::openai::responses_api::streaming::ResponsesDecoder;
+//! use rig::providers::openai::responses_api::streaming::ResponsesDecoder;
 //! let decoder = ResponsesDecoder::new();
 //! # let _ = decoder;
 //! ```

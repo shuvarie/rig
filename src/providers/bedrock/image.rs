@@ -1,8 +1,8 @@
 //! The Bedrock text-to-image wire over `InvokeModel`.
 //!
 //! ```no_run
-//! use crate::providers::bedrock::{client::BedrockRuntime, image::{AMAZON_NOVA_CANVAS, Images}};
-//! use crate::Model;
+//! use rig::providers::bedrock::{client::BedrockRuntime, image::{AMAZON_NOVA_CANVAS, Images}};
+//! use rig::Model;
 //!
 //! let model = BedrockRuntime::from_env().image_generation(AMAZON_NOVA_CANVAS);
 //! # let _ = model;

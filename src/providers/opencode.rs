@@ -2,13 +2,13 @@
 //! Chat Completions, Responses or Anthropic's Messages.
 //!
 //! Which API serves a model is in the model catalog, so
-//! [`Catalog::connect`](crate::catalog::Catalog::connect) reaches each one on
+//! [`Catalog::connect`](rig::catalog::Catalog::connect) reaches each one on
 //! its own. The constructors here build one client per format: [`from_env`]
 //! and [`new`] for Zen's Chat Completions and Responses, which
-//! [`OpenAI::completion`](crate::providers::openai::OpenAI::completion)
+//! [`OpenAI::completion`](rig::providers::openai::OpenAI::completion)
 //! chooses between by the catalog (a model it does not list goes to Chat
 //! Completions; name another route with
-//! [`with_route`](crate::providers::openai::OpenAIConfig::with_route)), and
+//! [`with_route`](rig::providers::openai::OpenAIConfig::with_route)), and
 //! [`anthropic_from_env`] and [`anthropic_new`] for its Messages models. A
 //! Messages model asked of the first client goes to Chat Completions, which
 //! does not serve it. The `go_` constructors are Go's. Both read
@@ -18,13 +18,13 @@
 //!
 //! Go refuses a request without an `x-opencode-session` header, which
 //! carries the request's
-//! [`cache_key`](crate::completion::GenerationOptions::cache_key), or a fresh
+//! [`cache_key`](rig::completion::GenerationOptions::cache_key), or a fresh
 //! id without one. Set one key per conversation, so Go routes its turns
 //! together and reuses their prompt cache.
 //!
 //! ```no_run
-//! use crate::catalog::Catalog;
-//! use crate::providers::opencode;
+//! use rig::catalog::Catalog;
+//! use rig::providers::opencode;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let haiku = Catalog::builtin().connect("opencode/claude-haiku-5-5")?;

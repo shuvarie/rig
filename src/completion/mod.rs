@@ -1,11 +1,11 @@
 //! Provider-agnostic completion requests and responses. A provider's wire
 //! translates [`CompletionRequest`] into its own request and normalizes the
-//! reply as [`CompletionResponse`]; a [`Model`](crate::Model) sends it.
+//! reply as [`CompletionResponse`]; a [`Model`](rig::Model) sends it.
 //!
 //! ```no_run
-//! use crate::{Model, completion::CompletionRequest, providers::openai::OpenAIConfig};
+//! use rig::{Model, completion::CompletionRequest, providers::openai::OpenAIConfig};
 //!
-//! # async fn run(http: crate::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
+//! # async fn run(http: rig::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
 //! let model = OpenAIConfig::from_env()?.connect(http).completion("gpt-4o");
 //! let request = CompletionRequest::new("What is Rig?");
 //! let response = model.call(request).await?;

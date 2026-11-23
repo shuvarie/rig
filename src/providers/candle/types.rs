@@ -1,7 +1,7 @@
 //! Local inference errors, finish reasons, and response metadata.
 //!
 //! ```
-//! use crate::providers::candle::FinishReason;
+//! use rig::providers::candle::FinishReason;
 //!
 //! assert_eq!(serde_json::to_string(&FinishReason::Eos)?, "\"eos\"");
 //! # Ok::<(), serde_json::Error>(())

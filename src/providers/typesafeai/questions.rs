@@ -100,7 +100,7 @@ impl<L: Ord> Score<L> {
     /// positions; the enum's discriminants and ordering do not.
     ///
     /// ```compile_fail,E0080
-    /// use crate::providers::typesafeai::Score;
+    /// use rig::providers::typesafeai::Score;
     /// let _ = Score::new("Rate risk", [(0u8, "Only one level")]);
     /// ```
     pub fn new<const N: usize, D: Serialize>(
@@ -197,7 +197,7 @@ impl<T: Serialize + DeserializeOwned + Ord> Choice<T> {
     /// arrays, or `None` when the label needs no explanation.
     ///
     /// ```compile_fail,E0080
-    /// use crate::providers::typesafeai::Choice;
+    /// use rig::providers::typesafeai::Choice;
     /// let _ = Choice::new("Choose a route", [("only".to_owned(), "One option")]);
     /// ```
     pub fn new<const N: usize, D: Serialize>(
@@ -263,7 +263,7 @@ impl DynamicScore {
     /// Levels run from low to high; descriptions may be structured.
     ///
     /// ```compile_fail,E0080
-    /// use crate::providers::typesafeai::DynamicScore;
+    /// use rig::providers::typesafeai::DynamicScore;
     /// let _ = DynamicScore::new("Rate severity", ["Only one level"]);
     /// ```
     pub fn new<const N: usize, D: Serialize>(
@@ -324,8 +324,8 @@ impl Noul {
 /// against its original question and converts it to its application answer.
 ///
 /// ```
-/// use crate::error::ProviderError;
-/// use crate::providers::typesafeai::{Noul, NoulAnswer, Query};
+/// use rig::error::ProviderError;
+/// use rig::providers::typesafeai::{Noul, NoulAnswer, Query};
 /// use serde::{Serialize, Deserialize};
 ///
 /// // The fields are declared once, for both questions and answers.

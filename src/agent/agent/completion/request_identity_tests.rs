@@ -2,7 +2,7 @@
 //! tool turn — preamble, static context, a `CompletionCall` patch
 //! (preamble/temperature/max_tokens/tool_choice/active_tools/
 //! additional_params/extra_context), an output schema in Tool mode — so
-//! `crate::agent::run::prepare::prepare_request` cannot drift from what the agent sent before
+//! `rig::agent::run::prepare::prepare_request` cannot drift from what the agent sent before
 //! request preparation moved into the protocol crate. The golden values
 //! were captured from the pre-move driver; the cassette suites replay the
 //! same bodies against recorded provider traffic.

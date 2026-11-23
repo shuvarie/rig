@@ -21,10 +21,10 @@ http_client!(
     /// model it builds sends through that transport.
     ///
     /// ```no_run
-    /// use crate::completion::CompletionRequest;
-    /// use crate::providers::openai::{self, OpenAIConfig};
+    /// use rig::completion::CompletionRequest;
+    /// use rig::providers::openai::{self, OpenAIConfig};
     ///
-    /// # async fn run(http: crate::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
+    /// # async fn run(http: rig::http_client::DynHttpClient) -> Result<(), Box<dyn std::error::Error>> {
     /// let openai = OpenAIConfig::from_env()?.connect(http);
     /// let model = openai.completion(openai::GPT_5_2);
     /// let response = model.call(CompletionRequest::new("Capital of France?")).await?;

@@ -2,8 +2,8 @@
 //! (<https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md>).
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::llamacpp::extension::{LlamaCppOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::llamacpp::extension::{LlamaCppOptions};
 //!
 //! let options = LlamaCppOptions::new().top_k(40).min_p(0.05);
 //! let request = CompletionRequest::new("hi").provider_option(options);

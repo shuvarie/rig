@@ -1,26 +1,26 @@
 //! The declarative per-wire-family conformance suite macro.
 //!
-//! [`streaming_conformance_suite!`](crate::streaming_conformance_suite)
+//! [`streaming_conformance_suite!`](rig::streaming_conformance_suite)
 //! expands the canonical scenario set for one wire family, one named
 //! `#[tokio::test]` per scenario, plus `suite_is_complete`, which checks that
 //! the expanded list equals
-//! [`CANONICAL_SCENARIOS`](crate::test_utils::streaming_conformance::CANONICAL_SCENARIOS).
+//! [`CANONICAL_SCENARIOS`](rig::test_utils::streaming_conformance::CANONICAL_SCENARIOS).
 //! The list it checks is generated from the same entries as the test
 //! functions, so deleting a scenario fails it.
 //!
 //! Each gated test derives its capability flags from the fixture
-//! ([`ProviderWireFixture::capabilities`](crate::test_utils::streaming_conformance::ProviderWireFixture::capabilities)).
+//! ([`ProviderWireFixture::capabilities`](rig::test_utils::streaming_conformance::ProviderWireFixture::capabilities)).
 //! A scenario that skips while its capability is declared fails, and so does
 //! one that runs while the capability is disclaimed. The registry test in
 //! `tests/core/streaming_conformance_registry.rs` fails when a
-//! [`WIRE_FAMILIES`](crate::test_utils::streaming_conformance::WIRE_FAMILIES)
+//! [`WIRE_FAMILIES`](rig::test_utils::streaming_conformance::WIRE_FAMILIES)
 //! entry has no invocation.
 
 /// One scenario entry of [`__streaming_conformance_scenarios`].
 ///
 /// `ungated <name>` drives the scenario unconditionally; `gated <name> =>
 /// <field> && <field>…` reads the gate off the fixture-derived
-/// [`SuiteCapabilities`](crate::test_utils::streaming_conformance::SuiteCapabilities)
+/// [`SuiteCapabilities`](rig::test_utils::streaming_conformance::SuiteCapabilities)
 /// fields it names. `$name` is both the emitted `fn` name and the scenario
 /// label passed to the outcome checkers.
 #[doc(hidden)]
@@ -85,7 +85,7 @@ macro_rules! __streaming_conformance_scenarios {
 /// mod anthropic_suite {
 ///     use super::*;
 ///
-///     crate::streaming_conformance_suite! {
+///     rig::streaming_conformance_suite! {
 ///         provider: "anthropic",
 ///         fixture: anthropic::fixture(),
 ///         manifest: [partial_tool_args, malformed_frame, unknown_event_frame],
@@ -94,9 +94,9 @@ macro_rules! __streaming_conformance_scenarios {
 /// ```
 ///
 /// `provider` is the wire-family name from
-/// [`WIRE_FAMILIES`](crate::test_utils::streaming_conformance::WIRE_FAMILIES).
+/// [`WIRE_FAMILIES`](rig::test_utils::streaming_conformance::WIRE_FAMILIES).
 /// `fixture` is an expression producing a fresh
-/// [`ProviderWireFixture`](crate::test_utils::streaming_conformance::ProviderWireFixture)
+/// [`ProviderWireFixture`](rig::test_utils::streaming_conformance::ProviderWireFixture)
 /// per test. `manifest` is the required snapshot of the fixture-derived
 /// capability set, so losing a fixture sample fails
 /// `derived_capabilities_match_the_manifest`.

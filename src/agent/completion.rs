@@ -1,7 +1,7 @@
 //! Runtime errors for the classic agent runtime, plus the portable completion contracts.
 //!
 //! ```
-//! use crate::agent::completion::StructuredOutputError;
+//! use rig::agent::completion::StructuredOutputError;
 //! let error = StructuredOutputError::EmptyResponse;
 //! assert!(error.provider_response_body().is_none());
 //! ```

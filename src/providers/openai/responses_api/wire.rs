@@ -1,7 +1,7 @@
 //! Responses endpoint encoding and observation for configured OpenAI dialects.
 //!
 //! ```
-//! use crate::providers::openai::OpenAI;
+//! use rig::providers::openai::OpenAI;
 //! let wire = OpenAI::new("key").responses("gpt-5.2");
 //! ```
 
@@ -176,7 +176,7 @@ impl Wire for Responses {
 
 impl crate::completion::ReplayTarget for Responses {
     /// Whether the catalog prices this dialect's replies
-    /// ([`Quirks::catalog_priced`](crate::providers::openai::wire::Quirks::catalog_priced)).
+    /// ([`Quirks::catalog_priced`](rig::providers::openai::wire::Quirks::catalog_priced)).
     fn catalog_priced(&self) -> bool {
         self.provider.dialect.quirks.catalog_priced
     }

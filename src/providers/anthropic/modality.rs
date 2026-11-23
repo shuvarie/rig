@@ -3,7 +3,7 @@
 //! for its status alone.
 //!
 //! ```no_run
-//! use crate::providers::anthropic::Anthropic;
+//! use rig::providers::anthropic::Anthropic;
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let models = Anthropic::from_env()?.list_models().await?;

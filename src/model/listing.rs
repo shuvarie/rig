@@ -1,7 +1,7 @@
 //! Provider model metadata and listing interfaces.
 //!
 //! ```
-//! use crate::model::{ModelInfo, ModelList};
+//! use rig::model::{ModelInfo, ModelList};
 //!
 //! let models = ModelList::new(vec![ModelInfo::new("example", "Example model")]);
 //! assert_eq!(models.len(), 1);

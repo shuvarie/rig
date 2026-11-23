@@ -4,10 +4,10 @@
 //! turns are skipped, and every tool call gets an answer.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::completion::history::{Accepts, ReplayTarget, adapt};
-//! use crate::completion::options::{Mapping, OptionFields, OptionMap};
-//! use crate::message::{Api, Message};
+//! use rig::completion::CompletionRequest;
+//! use rig::completion::history::{Accepts, ReplayTarget, adapt};
+//! use rig::completion::options::{Mapping, OptionFields, OptionMap};
+//! use rig::message::{Api, Message};
 //!
 //! #[derive(Debug)]
 //! struct Target;
@@ -120,7 +120,7 @@ pub struct Accepts {
     /// Completions' `reasoning_content` field. Read only for a request that
     /// asks for it ([`CompletionRequest::foreign_reasoning`]).
     ///
-    /// [`CompletionRequest::foreign_reasoning`]: field@crate::completion::CompletionRequest::foreign_reasoning
+    /// [`CompletionRequest::foreign_reasoning`]: field@rig::completion::CompletionRequest::foreign_reasoning
     pub foreign_reasoning: bool,
 }
 
@@ -268,7 +268,7 @@ pub trait ReplayTarget: std::fmt::Debug + WasmCompatSync {
     /// encrypted copy of the reasoning), as JSON pointers tried in order.
     /// A `*` step stands for each index of an array. The reply fold
     /// records the first that holds one on the block's
-    /// [`Native`](crate::message::Native). By default there are none.
+    /// [`Native`](rig::message::Native). By default there are none.
     fn blob_slots(&self) -> &'static [&'static str] {
         &[]
     }
@@ -479,7 +479,7 @@ fn set_pointer(item: &mut serde_json::Value, pointer: &str, value: serde_json::V
 ///   reasoning becomes plain text, or stays reasoning when the request asks
 ///   for it and the model reads it ([`Accepts::foreign_reasoning`]);
 ///   redacted or empty reasoning is dropped;
-///   [`Opaque`](crate::message::Opaque) items are dropped and call ids go
+///   [`Opaque`](rig::message::Opaque) items are dropped and call ids go
 ///   through [`ReplayTarget::normalize_tool_call_id`], made distinct when two
 ///   calls would share one.
 /// - Content the model does not read ([`ReplayTarget::accepts`]) is
@@ -490,9 +490,9 @@ fn set_pointer(item: &mut serde_json::Value, pointer: &str, value: serde_json::V
 ///   that ended in an error, with the results answering it. An aborted turn
 ///   is read as the text it had sent, as a turn from no known model: its
 ///   reasoning, its calls and the results answering them are dropped.
-/// - Calls and results pair by [`crate::conversation::pairing::pair`]: an
+/// - Calls and results pair by [`rig::conversation::pairing::pair`]: an
 ///   unanswered call gets a
-///   [`NO_RESULT_PROVIDED`](crate::conversation::pairing::NO_RESULT_PROVIDED)
+///   [`NO_RESULT_PROVIDED`](rig::conversation::pairing::NO_RESULT_PROVIDED)
 ///   result and an orphan result is dropped.
 /// - Adjacent user messages become one. A turn left empty is dropped, and so
 ///   is a user message left empty. A message that was empty to begin with is
@@ -543,7 +543,7 @@ pub(crate) struct Request<'a> {
     /// Whether it asks for other models' reasoning as reasoning
     /// ([`CompletionRequest::foreign_reasoning`]).
     ///
-    /// [`CompletionRequest::foreign_reasoning`]: field@crate::completion::CompletionRequest::foreign_reasoning
+    /// [`CompletionRequest::foreign_reasoning`]: field@rig::completion::CompletionRequest::foreign_reasoning
     pub(crate) foreign_reasoning: bool,
 }
 
@@ -1134,7 +1134,7 @@ impl<'a> Renamed<'a> {
     /// the id's length and is legal on every wire. An id rig issued stays
     /// as it is: [`WireIds`] spells it.
     ///
-    /// [`WireIds`]: crate::providers::internal::wire_ids::WireIds
+    /// [`WireIds`]: rig::providers::internal::wire_ids::WireIds
     fn claim(&mut self, source: Cow<'a, CallId>, wanted: Cow<'a, str>) -> Cow<'a, CallId> {
         let id = match &*source {
             CallId::Local(_) => source.clone(),

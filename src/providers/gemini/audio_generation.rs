@@ -4,9 +4,9 @@
 //! format of the audio a reply carries.
 //!
 //! ```no_run
-//! use crate::audio_generation::AudioGenerationRequestBuilder;
-//! use crate::providers::gemini::Gemini;
-//! use crate::providers::gemini::audio_generation::{
+//! use rig::audio_generation::AudioGenerationRequestBuilder;
+//! use rig::providers::gemini::Gemini;
+//! use rig::providers::gemini::audio_generation::{
 //!     AudioFormat, GEMINI_3_8_FLASH_TTS, Script, Turn,
 //! };
 //!

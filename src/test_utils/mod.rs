@@ -53,7 +53,7 @@ pub(crate) fn json_body(request: &http::Request<crate::wire::Body>) -> serde_jso
     serde_json::from_slice(bytes).expect("the request body is JSON")
 }
 
-/// [`decode_reply`](crate::wire::decode_reply), with the reply's whole
+/// [`decode_reply`](rig::wire::decode_reply), with the reply's whole
 /// document as a transport reports it (`Null` for none).
 #[cfg(test)]
 pub(crate) use crate::driver::decode_reply;

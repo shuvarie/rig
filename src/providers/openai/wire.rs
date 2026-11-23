@@ -1,12 +1,12 @@
 //! OpenAI-compatible configurations, dialect policies, and endpoint wires.
-//! A [`Dialect`](crate::providers::openai::wire::Dialect) selects request
-//! and response policies; [`OpenAIConfig`](crate::providers::openai::OpenAIConfig)
+//! A [`Dialect`](rig::providers::openai::wire::Dialect) selects request
+//! and response policies; [`OpenAIConfig`](rig::providers::openai::OpenAIConfig)
 //! holds credentials and overrides. An
-//! [`OpenAI`](crate::providers::openai::OpenAI) client puts
+//! [`OpenAI`](rig::providers::openai::OpenAI) client puts
 //! the configuration on a transport and builds each endpoint's model.
 //!
 //! ```
-//! use crate::providers::openai::{OpenAIConfig, Route, wire::OpenAiWire};
+//! use rig::providers::openai::{OpenAIConfig, Route, wire::OpenAiWire};
 //!
 //! let openai = OpenAIConfig::new("key").with_route(Route::Chat).client();
 //! assert!(matches!(openai.completion("gpt-5.2").wire, OpenAiWire::Chat(_)));
@@ -308,13 +308,13 @@ pub struct Quirks {
     /// How the dialect addresses a model.
     pub routing: Routing,
     /// Which completion endpoint
-    /// [`OpenAI::completion`](crate::providers::openai::OpenAI::completion) builds: the
+    /// [`OpenAI::completion`](rig::providers::openai::OpenAI::completion) builds: the
     /// dialect's flagship. Chat Completions is the one endpoint every
     /// dialect serves, so it is the baseline; OpenAI itself, xAI and ChatGPT
     /// serve `/responses` as their primary API and say so.
     pub completion_route: Route,
     /// Whether a model's catalog row picks
-    /// [`OpenAI::completion`](crate::providers::openai::OpenAI::completion)'s
+    /// [`OpenAI::completion`](rig::providers::openai::OpenAI::completion)'s
     /// route when the configuration does not, before any hook, for a gateway
     /// that serves each model on the API models.dev lists for it.
     pub routes_by_catalog: bool,
@@ -374,7 +374,7 @@ pub struct Quirks {
     /// Whether `completion_tokens_details.reasoning_tokens` can be trusted as
     /// a part of `completion_tokens`, as OpenAI documents it. A dialect whose
     /// replies report more reasoning than completion leaves the count
-    /// unreported, so [`Usage`](crate::completion::Usage) never reports more
+    /// unreported, so [`Usage`](rig::completion::Usage) never reports more
     /// reasoning than output.
     pub reliable_reasoning_count: bool,
     /// Whether a bare JSON string is accepted as a text-only completion reply.
@@ -494,9 +494,9 @@ impl Quirks {
 
     /// These quirks for a gateway whose streams omit `finish_reason`: a
     /// `[DONE]` after at least one chunk ends the turn as
-    /// [`FinishReason::ToolCalls`](crate::completion::FinishReason::ToolCalls)
+    /// [`FinishReason::ToolCalls`](rig::completion::FinishReason::ToolCalls)
     /// when the reply holds a tool call, and
-    /// [`FinishReason::Stop`](crate::completion::FinishReason::Stop)
+    /// [`FinishReason::Stop`](rig::completion::FinishReason::Stop)
     /// otherwise. A cut-off stream that still sends `[DONE]` then reads as
     /// complete, so set this only for a gateway known to omit the field.
     pub const fn done_without_finish_reason(mut self) -> Self {
@@ -803,7 +803,7 @@ impl OpenAIConfig {
     }
 
     /// Override dialect and model-specific routing for the client's
-    /// [`completion`](crate::providers::openai::OpenAI::completion).
+    /// [`completion`](rig::providers::openai::OpenAI::completion).
     pub fn with_route(mut self, route: Route) -> Self {
         self.route = Some(route);
         self

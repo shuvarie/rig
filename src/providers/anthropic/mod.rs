@@ -1,7 +1,7 @@
 //! Anthropic provider configuration and Messages-format endpoint wires.
 //!
 //! ```no_run
-//! use crate::providers::anthropic;
+//! use rig::providers::anthropic;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = anthropic::Anthropic::from_env()?;
@@ -11,7 +11,7 @@
 //! # }
 //! ```
 //!
-//! Pair a wire with a transport in a [`Model`](crate::Model) to send it.
+//! Pair a wire with a transport in a [`Model`](rig::Model) to send it.
 
 pub mod completion;
 pub mod extension;

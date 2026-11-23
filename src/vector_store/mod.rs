@@ -3,7 +3,7 @@
 //! filter is deserializable and uses JSON values.
 //!
 //! ```
-//! use crate::vector_store::in_memory_store::InMemoryVectorStore;
+//! use rig::vector_store::in_memory_store::InMemoryVectorStore;
 //!
 //! let store = InMemoryVectorStore::<String>::from_documents([]);
 //! assert!(store.is_empty());
@@ -78,10 +78,10 @@ pub enum VectorStoreError {
     /// HTTP request failed for an external vector store service.
     ///
     /// Non-success responses arrive as the status-bearing
-    /// [`crate::http_client::Error`] variants, so callers can still inspect
+    /// [`rig::http_client::Error`] variants, so callers can still inspect
     /// the status code; response-less transport failures arrive as
-    /// [`crate::http_client::Error::Transient`] or
-    /// [`crate::http_client::Error::Permanent`].
+    /// [`rig::http_client::Error::Transient`] or
+    /// [`rig::http_client::Error::Permanent`].
     #[error("HTTP request error: {0}")]
     Http(#[from] crate::http_client::Error),
 

@@ -4,7 +4,7 @@
 //! Responses endpoint and reads `XAI_API_KEY`.
 //!
 //! ```no_run
-//! use crate::providers::xai;
+//! use rig::providers::xai;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let grok = xai::from_env()?.completion(xai::GROK_3);

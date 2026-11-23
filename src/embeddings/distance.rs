@@ -1,10 +1,10 @@
 //! Similarity and distance of embedding vectors.
 //!
-//! [`Embedding`](crate::embeddings::Embedding) reductions use fixed chunks and
+//! [`Embedding`](rig::embeddings::Embedding) reductions use fixed chunks and
 //! left-to-right summation for reproducible ordering.
 //!
 //! ```
-//! use crate::embeddings::{Embedding, distance::VectorDistance};
+//! use rig::embeddings::{Embedding, distance::VectorDistance};
 //!
 //! let vector = Embedding { document: String::new(), vec: vec![1.0, 0.0] };
 //! assert_eq!(vector.cosine_similarity(&vector, true), 1.0);

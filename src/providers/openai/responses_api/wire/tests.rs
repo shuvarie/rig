@@ -494,7 +494,7 @@ fn an_error_event_projects_only_the_envelope_it_carries() {
 mod provider_options;
 
 /// The model the ChatGPT wire sends is the one
-/// [`requested_model`](crate::providers::chatgpt::requested_model) reads,
+/// [`requested_model`](rig::providers::chatgpt::requested_model) reads,
 /// however the request names it, so the account check sees what is sent.
 #[test]
 fn the_chatgpt_body_sends_the_model_requested_model_reads() {

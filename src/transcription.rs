@@ -1,9 +1,9 @@
 //! Audio transcription requests, normalized responses, and model interfaces.
 //!
 //! ```no_run
-//! use crate::DynModel;
-//! use crate::operation::Transcription;
-//! use crate::transcription::TranscriptionRequestBuilder;
+//! use rig::DynModel;
+//! use rig::operation::Transcription;
+//! use rig::transcription::TranscriptionRequestBuilder;
 //!
 //! # async fn example(model: DynModel<Transcription>) -> Result<(), Box<dyn std::error::Error>> {
 //! let request = TranscriptionRequestBuilder::from_file("audio.wav")?.build();

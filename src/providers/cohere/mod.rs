@@ -3,14 +3,14 @@
 //!
 //! Chat goes through [`CohereChat`]: by default Cohere's OpenAI
 //! Compatibility API on the shared Chat Completions wire, as the
-//! [`COHERE`](crate::providers::openai::wire::COHERE) dialect. A
+//! [`COHERE`](rig::providers::openai::wire::COHERE) dialect. A
 //! [`ChatRoute`] opts in to Cohere's native chat API ([`NativeChat`]), which
 //! grounds the answer in the request's documents and keeps the citations
 //! that point at each text block in its provider item. Text and image
 //! embeddings use Cohere's own `/v1/embed`.
 //!
 //! ```no_run
-//! use crate::providers::cohere;
+//! use rig::providers::cohere;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = cohere::Cohere::from_env()?;

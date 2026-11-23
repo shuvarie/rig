@@ -1,7 +1,7 @@
 //! Random-projection hashing for approximate vector-search candidates.
 //!
 //! ```
-//! use crate::vector_store::lsh::LSHIndex;
+//! use rig::vector_store::lsh::LSHIndex;
 //!
 //! let mut index = LSHIndex::new(2, 4, 8);
 //! index.insert("document", &[1.0, 0.0]);

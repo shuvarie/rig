@@ -3,9 +3,9 @@
 //! conversation before a run's first model call and saves the run's
 //! messages to it, with one append, once the run finished; a run that fails
 //! or is cancelled saves nothing, and a failed load or save fails the run
-//! ([`PromptError::Memory`](crate::agent::completion::PromptError::Memory)).
+//! ([`PromptError::Memory`](rig::agent::completion::PromptError::Memory)).
 //!
-//! The store is any [`AsyncStore`](crate::memory::AsyncStore): a local
+//! The store is any [`AsyncStore`](rig::memory::AsyncStore): a local
 //! `MemoryStore`, whose calls are done when made, a host's `Arc<dyn Store>`,
 //! or one behind a network or a JavaScript promise. A save appends only if
 //! the log is as the save read it, the store checking and appending in one

@@ -59,13 +59,13 @@ pub(crate) type DriveStream<'a> = WasmBoxedStream<'a, Result<Surfaced, PromptErr
 /// What a model turn surfaces directly. It has no tool variants: tool items
 /// reach the stream only as [`ProjectedItems`] of committed history.
 pub(crate) enum Surfaced {
-    /// See [`MultiTurnStreamItem::StreamAssistantItem`](crate::agent::agent::MultiTurnStreamItem::StreamAssistantItem).
+    /// See [`MultiTurnStreamItem::StreamAssistantItem`](rig::agent::agent::MultiTurnStreamItem::StreamAssistantItem).
     Provider(Item<StreamEvent>),
-    /// See [`MultiTurnStreamItem::CompletionCall`](crate::agent::agent::MultiTurnStreamItem::CompletionCall).
+    /// See [`MultiTurnStreamItem::CompletionCall`](rig::agent::agent::MultiTurnStreamItem::CompletionCall).
     CompletionCall(CompletionCall),
-    /// See [`MultiTurnStreamItem::ModelTurnRetried`](crate::agent::agent::MultiTurnStreamItem::ModelTurnRetried).
+    /// See [`MultiTurnStreamItem::ModelTurnRetried`](rig::agent::agent::MultiTurnStreamItem::ModelTurnRetried).
     ModelTurnRetried { turn: usize },
-    /// See [`MultiTurnStreamItem::FinalResponse`](crate::agent::agent::MultiTurnStreamItem::FinalResponse).
+    /// See [`MultiTurnStreamItem::FinalResponse`](rig::agent::agent::MultiTurnStreamItem::FinalResponse).
     Final(PromptResponse),
 }
 
@@ -456,7 +456,7 @@ where
 /// Execute a turn's tool calls **atomically per batch**, shared by both surfaces.
 /// It streams nothing: the engine projects what it commits. It returns one
 /// slot per committed result, in commit order, holding the effective call when
-/// that body ran (a [`ToolExecutionCommitted`](crate::agent::agent::MultiTurnStreamItem::ToolExecutionCommitted)).
+/// that body ran (a [`ToolExecutionCommitted`](rig::agent::agent::MultiTurnStreamItem::ToolExecutionCommitted)).
 ///
 /// - Every tool runs (sequentially at `tool_concurrency <= 1`, else
 ///   concurrently bounded by it), with outcomes collected. A malformed call
@@ -1255,7 +1255,7 @@ pub(crate) struct ToolCallOutcome {
     pub result: ToolResult,
     /// The effective call when the tool's body ran: the model's call with any
     /// [`DispatchAction::Patch`] hook rewrite applied, reported as
-    /// [`ToolExecutionCommitted`](crate::agent::streaming::MultiTurnStreamItem::ToolExecutionCommitted).
+    /// [`ToolExecutionCommitted`](rig::agent::streaming::MultiTurnStreamItem::ToolExecutionCommitted).
     /// `None` when a hook skipped the call ([`DispatchAction::skip`]).
     pub executed: Option<ToolCall>,
 }

@@ -42,7 +42,7 @@ pub struct OpenAiResponsesOptions {
     pub prompt_cache_options: Option<PromptCacheOptions>,
     /// `background`: run the response asynchronously. HTTP only: a
     /// WebSocket session refuses it through the request's
-    /// [`OnUnsupported`](crate::completion::OnUnsupported) policy.
+    /// [`OnUnsupported`](rig::completion::OnUnsupported) policy.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub background: Option<bool>,
     /// `max_tool_calls`: the most built-in tool calls the response makes.

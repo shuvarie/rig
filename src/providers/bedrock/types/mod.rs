@@ -1,7 +1,7 @@
 //! Bedrock's error conversions and the image-generation wire types.
 //!
 //! ```
-//! use crate::providers::bedrock::types::text_to_image::TextToImageResponse;
+//! use rig::providers::bedrock::types::text_to_image::TextToImageResponse;
 //!
 //! let response: TextToImageResponse = serde_json::from_str(r#"{"images":[]}"#)?;
 //! assert!(response.error.is_none());

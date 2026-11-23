@@ -7,8 +7,8 @@
 //! tool loop; provider-hosted tools execute on Gemini.
 //!
 //! ```no_run
-//! use crate::providers::gemini::cached_content::{CacheExpiry, NewCachedContent};
-//! use crate::providers::gemini::completion::GEMINI_2_5_FLASH;
+//! use rig::providers::gemini::cached_content::{CacheExpiry, NewCachedContent};
+//! use rig::providers::gemini::completion::GEMINI_2_5_FLASH;
 //! use std::time::Duration;
 //!
 //! let corpus = NewCachedContent::new(GEMINI_2_5_FLASH)
@@ -342,7 +342,7 @@ impl Operation for ContextCache {
 /// [`ContextCache`].
 ///
 /// Built by [`Gemini::cached_contents`](super::Gemini::cached_contents); the
-/// calls are the inherent methods of a [`Model`](crate::Model) over it.
+/// calls are the inherent methods of a [`Model`](rig::Model) over it.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct CachedContents {
     /// The provider this wire speaks to.

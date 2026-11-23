@@ -1,6 +1,6 @@
 //! The [`Caching`] transport and the cache book's I/O: the part of Gemini's
 //! automatic caching that sends requests. What to read, create and retire is
-//! decided by [`CacheBook`] in [`crate::providers::gemini::caching`], from
+//! decided by [`CacheBook`] in [`rig::providers::gemini::caching`], from
 //! bytes alone.
 
 use futures::StreamExt;
@@ -93,7 +93,7 @@ impl<T> std::fmt::Debug for Caching<T> {
 
 impl<T> Model<GenerateContent, T> {
     /// This model, reading and creating explicit caches as `book` decides.
-    /// See [`crate::providers::gemini::caching`].
+    /// See [`rig::providers::gemini::caching`].
     pub fn caching(self, book: &CacheBook) -> Model<GenerateContent, Caching<T>> {
         let caching = Caching {
             inner: self.transport,

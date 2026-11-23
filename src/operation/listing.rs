@@ -2,8 +2,8 @@
 //! cursors.
 //!
 //! ```
-//! use crate::model::ModelList;
-//! use crate::operation::ModelPage;
+//! use rig::model::ModelList;
+//! use rig::operation::ModelPage;
 //!
 //! let page = ModelPage { models: ModelList::new(Vec::new()), next: None };
 //! assert!(page.next.is_none());

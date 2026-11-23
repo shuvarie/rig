@@ -2,9 +2,9 @@
 //! its owner to take.
 //!
 //! ```
-//! use crate::effect::{EffectId, EffectKind, Answered, tool_key};
-//! use crate::serve::{DispatchContext, RecordBuffer, Recorder};
-//! use crate::tool::ToolResult;
+//! use rig::effect::{EffectId, EffectKind, Answered, tool_key};
+//! use rig::serve::{DispatchContext, RecordBuffer, Recorder};
+//! use rig::tool::ToolResult;
 //!
 //! let buffer = RecordBuffer::new();
 //! let id = EffectId::from_raw(1);

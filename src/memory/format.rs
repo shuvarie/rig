@@ -2,13 +2,13 @@
 //! by the agent's id, plus the session's own ([`SESSION`]). Each line is a
 //! [`Stamp`] and one record: a `header` first, then `state` (a saved value
 //! by key; the latest wins, `null` removes it), `retired`, or one
-//! [`Change`](crate::conversation::Change) of the agent's conversation
+//! [`Change`](rig::conversation::Change) of the agent's conversation
 //! (`push`, `splice`, `halt`, `aside`, `reset`) with who made it (`by`).
 //! The header's `lineage` is the log's own
-//! [`Lineage`](crate::conversation::Lineage), chosen when it was
+//! [`Lineage`](rig::conversation::Lineage), chosen when it was
 //! started, so a conversation saved to it can be told from one that only
 //! has as many changes. Its `rewrites` say who rewrote the log in place
-//! ([`rewrite`](crate::memory::rewrite)) and when; each rewrite gives the log a
+//! ([`rewrite`](rig::memory::rewrite)) and when; each rewrite gives the log a
 //! fresh lineage.
 //!
 //! A record keeps when each entry was made: a new entry was made when its
@@ -37,15 +37,15 @@ pub const FORMAT: &str = "rig-session/4";
 pub const SESSION: &str = "session";
 
 /// Where a record is in a session: its place among the session's records
-/// in the order they were made (`n`, what [`as_of`](crate::memory::as_of) cuts
+/// in the order they were made (`n`, what [`as_of`](rig::memory::as_of) cuts
 /// by), its place in its log (`seq`, dense from
 /// the header's 0), and when it was written (`t`, milliseconds since the
 /// Unix epoch).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Stamp {
     /// Its place among the session's records: it increases along every
-    /// log, and across the logs one [`Writer`](crate::memory::Writer) or
-    /// [`Session::save`](crate::memory::Session::save) wrote.
+    /// log, and across the logs one [`Writer`](rig::memory::Writer) or
+    /// [`Session::save`](rig::memory::Session::save) wrote.
     pub n: u64,
     /// Its place in its log.
     pub seq: u64,
@@ -173,7 +173,7 @@ pub(crate) struct Header {
     pub rewrites: Vec<LogRewrite>,
 }
 
-/// A rewrite of a log in place ([`rewrite`](crate::memory::rewrite)): when, and by
+/// A rewrite of a log in place ([`rewrite`](rig::memory::rewrite)): when, and by
 /// whom, such as the plugin that redacted it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LogRewrite {

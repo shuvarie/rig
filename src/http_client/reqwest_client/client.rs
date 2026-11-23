@@ -8,16 +8,16 @@
 //! that build failure in-band.
 //!
 //! Native requests and bodies enter the captured Tokio context on each poll
-//! ([`crate::runtime`]), using a lazy fallback when no runtime is current. Callers retain ownership;
+//! ([`rig::runtime`]), using a lazy fallback when no runtime is current. Callers retain ownership;
 //! dropping an operation cancels local work, not accepted remote work. Hosts
 //! must keep their runtime driven with I/O and timers enabled until operations
 //! finish. Missing drivers can panic; a stopped runtime causes I/O failure.
 //!
 //! ```no_run
-//! use crate::http_client::reqwest_client::ReqwestClient;
+//! use rig::http_client::reqwest_client::ReqwestClient;
 //!
 //! let shared = ReqwestClient::default();
-//! let custom = ReqwestClient::from(crate::http_client::reqwest_client::reqwest::Client::new());
+//! let custom = ReqwestClient::from(rig::http_client::reqwest_client::reqwest::Client::new());
 //! # let _ = (shared, custom);
 //! ```
 

@@ -1,7 +1,7 @@
 //! OpenRouter's text-to-speech model identifiers.
 //!
 //! ```
-//! use crate::providers::openrouter::audio_generation::KOKORO_82M;
+//! use rig::providers::openrouter::audio_generation::KOKORO_82M;
 //! assert_eq!(KOKORO_82M, "hexgrad/kokoro-82m");
 //! ```
 

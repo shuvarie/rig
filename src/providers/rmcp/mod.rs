@@ -1,7 +1,7 @@
 //! MCP clients for Rig on the rmcp SDK.
 //!
 //! [`McpConnection`] owns a connected client: its [`McpTool`]s convert to
-//! context-aware [`DynamicTool`](crate::tool::DynamicTool)s and keep it
+//! context-aware [`DynamicTool`](rig::tool::DynamicTool)s and keep it
 //! open, and its resources can be read directly or as agent context.
 //! [`McpClientHandler`] instead keeps a tool registry in sync with the
 //! server's tool list.
@@ -13,13 +13,13 @@
 //! content.
 //!
 //! ```
-//! use crate::tool::ToolContext;
-//! use crate::providers::rmcp::McpMeta;
-//! use crate::providers::rmcp::rmcp::model::RequestMetaObject;
+//! use rig::tool::ToolContext;
+//! use rig::providers::rmcp::McpMeta;
+//! use rig::providers::rmcp::rmcp::model::RequestMetaObject;
 //!
 //! let mut context = ToolContext::new();
 //! context.insert(McpMeta(RequestMetaObject::new()))?;
-//! # Ok::<(), crate::tool::ToolContextError>(())
+//! # Ok::<(), rig::tool::ToolContextError>(())
 //! ```
 
 // rmcp requires Send + Sync handlers even with local futures, while Rig's

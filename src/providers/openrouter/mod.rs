@@ -1,13 +1,13 @@
 //! OpenRouter model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`OPENROUTER`](crate::providers::openai::wire::OPENROUTER) dialect.
+//! [`from_env`] and [`new`] build a client on the [`OPENROUTER`](rig::providers::openai::wire::OPENROUTER) dialect.
 //! Routing preferences, model fallbacks and the reply's cost are typed in
 //! [`extension`].
 //!
 //! ```no_run
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::openrouter;
-//! use crate::providers::openrouter::extension::{
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::openrouter;
+//! use rig::providers::openrouter::extension::{
 //!     OpenRouterOptions, ProviderPreferences, ProviderSortStrategy,
 //! };
 //!

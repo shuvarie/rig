@@ -9,7 +9,7 @@
 //! the fold resolves it to bytes when the text block closes.
 //!
 //! ```
-//! use crate::message::{Citation, Source, SourceLocation, Text};
+//! use rig::message::{Citation, Source, SourceLocation, Text};
 //!
 //! let text = Text::new("Dock Seven is open.");
 //! let span = text.span(0..10).ok_or("on a character boundary")?;

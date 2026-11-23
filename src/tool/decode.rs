@@ -1,7 +1,7 @@
 //! A tool call's arguments decoded into the tool's arguments type, the one
 //! way every tool path decodes them. A model may send a whole number as a
 //! float, such as `30.0`, which the schema check accepts as an integer
-//! ([`validate`](crate::tool::validate)); where the type asks for an
+//! ([`validate`](rig::tool::validate)); where the type asks for an
 //! integer, it gets that integer. A fraction, a number out of the type's
 //! range and a negative number for an unsigned type are refused, never
 //! rounded.
@@ -16,9 +16,9 @@
 //!     scale: f64,
 //! }
 //!
-//! let args: Args = crate::tool::decode_args(&json!({"limit": 30.0, "scale": 2.0}))?;
+//! let args: Args = rig::tool::decode_args(&json!({"limit": 30.0, "scale": 2.0}))?;
 //! assert_eq!((args.limit, args.scale), (30, 2.0));
-//! assert!(crate::tool::decode_args::<Args>(&json!({"limit": 1.5, "scale": 2.0})).is_err());
+//! assert!(rig::tool::decode_args::<Args>(&json!({"limit": 1.5, "scale": 2.0})).is_err());
 //! # Ok::<(), serde_json::Error>(())
 //! ```
 

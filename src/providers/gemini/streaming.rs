@@ -4,7 +4,7 @@
 //! provider item is the part as Gemini sent it.
 //!
 //! ```
-//! use crate::providers::gemini::streaming::GenerateContentDecoder;
+//! use rig::providers::gemini::streaming::GenerateContentDecoder;
 //!
 //! let decoder = GenerateContentDecoder::default();
 //! # let _ = decoder;

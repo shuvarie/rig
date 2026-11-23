@@ -1,10 +1,10 @@
 //! Text extraction for embedding builders, including implementations for common types.
 //!
 //! ```
-//! use crate::embeddings::to_texts;
+//! use rig::embeddings::to_texts;
 //!
 //! assert_eq!(to_texts("document")?, vec!["document"]);
-//! # Ok::<(), crate::embeddings::EmbedError>(())
+//! # Ok::<(), rig::embeddings::EmbedError>(())
 //! ```
 
 /// Failure extracting text for embedding.
@@ -22,7 +22,7 @@ impl EmbedError {
 /// Implementations report extraction failures through [`EmbedError`].
 ///
 /// ```
-/// use crate::{Embed, embeddings::{EmbedError, TextEmbedder, to_texts}};
+/// use rig::{Embed, embeddings::{EmbedError, TextEmbedder, to_texts}};
 ///
 /// struct Definitions(String);
 /// impl Embed for Definitions {

@@ -5,7 +5,7 @@
 //! plus one byte of a frame: a larger frame is refused as [`TooLarge`].
 //!
 //! ```
-//! use crate::http_client::framing::NdjsonFramer;
+//! use rig::http_client::framing::NdjsonFramer;
 //!
 //! let mut framer = NdjsonFramer::new();
 //! assert_eq!(framer.push(b"{}\n").collect::<Vec<_>>(), vec![Ok(b"{}".to_vec())]);
@@ -66,7 +66,7 @@ impl Framing {
     /// refused for its size.
     ///
     /// ```
-    /// use crate::http_client::framing::{Framing, WireFrame};
+    /// use rig::http_client::framing::{Framing, WireFrame};
     ///
     /// let frames = Framing::Sse.split(b"data: {}\n\ndata: [DONE]\n\n");
     /// assert_eq!(frames.len(), 2);

@@ -1,8 +1,8 @@
 //! Native MCP calls, metadata preservation, and dynamic tool conversion.
 //!
 //! ```
-//! use crate::providers::rmcp::McpMeta;
-//! use crate::providers::rmcp::rmcp::model::RequestMetaObject;
+//! use rig::providers::rmcp::McpMeta;
+//! use rig::providers::rmcp::rmcp::model::RequestMetaObject;
 //!
 //! let metadata = McpMeta(RequestMetaObject::new());
 //! ```
@@ -88,7 +88,7 @@ pub struct McpTool {
     pub(crate) name: Option<ToolName>,
     pub(crate) peer: ServerSink,
     /// Keeps a directly built tool's connection open. Tools a
-    /// [`McpClientHandler`](crate::providers::rmcp::McpClientHandler) manages leave it to the
+    /// [`McpClientHandler`](rig::providers::rmcp::McpClientHandler) manages leave it to the
     /// connection its `connect` returns, which owns them through the sink.
     pub(crate) _connection: Option<McpConnection>,
     /// Optional per-call deadline. Timeout triggers best-effort cancellation
@@ -537,7 +537,7 @@ impl TryFrom<McpTool> for DynamicTool {
 /// The hints an MCP server gives about what calling `tool` does, as rig's
 /// tool annotations. They are the server's word, for display and policy: a
 /// host derives what a call touches from them with
-/// [`Touches::from_hints`](crate::tool::Touches::from_hints), so a call
+/// [`Touches::from_hints`](rig::tool::Touches::from_hints), so a call
 /// is never run again after a restart because a server said it only reads.
 pub(crate) fn annotations(tool: &rmcp::model::Tool) -> crate::completion::ToolAnnotations {
     let mut annotations = crate::completion::ToolAnnotations::default();

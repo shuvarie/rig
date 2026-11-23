@@ -8,14 +8,14 @@ use serde::{Deserialize, Serialize};
 use super::Usage;
 
 /// Prices of one model and tier, in USD per 1M tokens (storage: per 1M
-/// token-hours). The built-in catalog's [`Pricing`](crate::catalog::Pricing)
+/// token-hours). The built-in catalog's [`Pricing`](rig::catalog::Pricing)
 /// holds the input, cached-read and cache-write prices of the models it
 /// lists, but no storage price. A provider without a separate write price
 /// bills writes at `input`; one without storage leaves `storage_per_hour`
 /// at zero.
 ///
 /// ```no_run
-/// use crate::completion::CacheRates;
+/// use rig::completion::CacheRates;
 ///
 /// // A 5-minute cache write at 1.25 times the input price, reads at a tenth.
 /// let rates = CacheRates { input: 3.0, cached_read: 0.3, cache_write: 3.75, storage_per_hour: 0.0 };
@@ -42,8 +42,8 @@ pub struct CacheRates {
 /// the provider's price list:
 ///
 /// ```no_run
-/// use crate::completion::{CacheCost, CacheRates, Usage};
-/// use crate::providers::gemini::{AutoCache, CacheBook};
+/// use rig::completion::{CacheCost, CacheRates, Usage};
+/// use rig::providers::gemini::{AutoCache, CacheBook};
 ///
 /// # let calls: Vec<Usage> = Vec::new();
 /// # let book = CacheBook::new(AutoCache::default());

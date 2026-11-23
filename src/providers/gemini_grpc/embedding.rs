@@ -1,10 +1,10 @@
 //! The Gemini text-embedding wire over gRPC: one `EmbedContent` call per text.
 //!
 //! ```no_run
-//! use crate::Model;
-//! use crate::providers::gemini_grpc::{GeminiGrpc, embedding::{EMBEDDING_001, Embeddings}};
+//! use rig::Model;
+//! use rig::providers::gemini_grpc::{GeminiGrpc, embedding::{EMBEDDING_001, Embeddings}};
 //!
-//! # async fn example() -> Result<(), crate::providers::gemini_grpc::GeminiGrpcError> {
+//! # async fn example() -> Result<(), rig::providers::gemini_grpc::GeminiGrpcError> {
 //! let model = GeminiGrpc::new("API_KEY").await?.embedding(EMBEDDING_001, None);
 //! # let _ = model;
 //! # Ok(())
@@ -32,10 +32,10 @@ pub struct Embeddings {
 impl Embeddings {
     /// The endpoint for `model`, `dims` wide, or else as wide as the Gemini
     /// API embeds it by default
-    /// ([`default_ndims`](crate::providers::gemini::embedding::default_ndims)).
+    /// ([`default_ndims`](rig::providers::gemini::embedding::default_ndims)).
     ///
     /// ```
-    /// use crate::providers::gemini_grpc::embedding::{EMBEDDING_001, Embeddings};
+    /// use rig::providers::gemini_grpc::embedding::{EMBEDDING_001, Embeddings};
     ///
     /// assert_eq!(Embeddings::new(EMBEDDING_001, None).ndims, 3072);
     /// assert_eq!(Embeddings::new(EMBEDDING_001, Some(256)).ndims, 256);

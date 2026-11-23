@@ -3,7 +3,7 @@
 //! and replaced answers retain the handler's original outcome for replay.
 //!
 //! ```
-//! use crate::serve::BeforeServe;
+//! use rig::serve::BeforeServe;
 //!
 //! let decision = BeforeServe::deny("Not authorized");
 //! assert!(matches!(decision, BeforeServe::Deny(_)));
@@ -55,7 +55,7 @@ pub enum AfterServe {
     /// answer. Over a streaming dispatch the events were already delivered
     /// as they came, so a replacement is the reply's end: a completion
     /// replaces the response the stream ends with (its
-    /// [`Relayed::Done`](crate::streaming::Relayed::Done)), which is what
+    /// [`Relayed::Done`](rig::streaming::Relayed::Done)), which is what
     /// the consumer's fold returns, and an error ends the stream with that
     /// error. A replacement of another family reaches the consumer as an
     /// `Internal` error naming the layer.

@@ -1,11 +1,11 @@
 //! Hyperbolic's model identifiers.
 //!
-//! [`from_env`] and [`new`] build a client on the [`HYPERBOLIC`](crate::providers::openai::wire::HYPERBOLIC) dialect.
+//! [`from_env`] and [`new`] build a client on the [`HYPERBOLIC`](rig::providers::openai::wire::HYPERBOLIC) dialect.
 //! Chat and image operations use model identifiers; speech uses a language tag
 //! such as `EN` in place of a model.
 //!
 //! ```no_run
-//! use crate::providers::hyperbolic;
+//! use rig::providers::hyperbolic;
 //!
 //! # fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let provider = hyperbolic::from_env()?;

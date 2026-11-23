@@ -1,6 +1,6 @@
 //! The events of a completion stream. A completion decoder never builds one:
 //! it writes through the reply's part handles
-//! ([`Out`](crate::wire::Out)), and the writer emits each part's start, its
+//! ([`Out`](rig::wire::Out)), and the writer emits each part's start, its
 //! fragments and its end, in that order. A [`Part`] is a part's position in
 //! the response's `choice`. A stream transform that splits or adds parts
 //! (reasoning a model wrote inside its text, tool calls written as text)
@@ -10,7 +10,7 @@
 //! is checked.
 //!
 //! ```
-//! use crate::streaming::{PartKind, StreamEvent, StreamRecord};
+//! use rig::streaming::{PartKind, StreamEvent, StreamRecord};
 //!
 //! let transcript = StreamRecord::parse(serde_json::json!([
 //!     {"item": "event", "value": {"event": "start", "part": 0, "kind": "text"}},
@@ -22,7 +22,7 @@
 //!     transcript.events().next(),
 //!     Some(StreamEvent::Start { kind: PartKind::Text, .. })
 //! ));
-//! # Ok::<(), crate::streaming::SequenceError>(())
+//! # Ok::<(), rig::streaming::SequenceError>(())
 //! ```
 
 use serde::{Deserialize, Serialize};
@@ -37,7 +37,7 @@ use super::UnknownPayload;
 /// parts are numbered in the order they start.
 ///
 /// ```
-/// use crate::streaming::Part;
+/// use rig::streaming::Part;
 ///
 /// assert_eq!(Part::new(2).index(), 2);
 /// ```

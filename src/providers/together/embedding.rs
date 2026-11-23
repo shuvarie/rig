@@ -1,7 +1,7 @@
 //! Together AI's embedding model identifiers.
 //!
 //! ```no_run
-//! use crate::providers::together;
+//! use rig::providers::together;
 //! let model = together::from_env()?.embedding(together::BGE_BASE_EN_V1_5, None);
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```

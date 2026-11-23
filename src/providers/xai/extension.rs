@@ -2,8 +2,8 @@
 //! Responses alike (<https://docs.x.ai/developers/cost-tracking>).
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::xai::extension::{XaiOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::xai::extension::{XaiOptions};
 //!
 //! let options = XaiOptions::new().prompt_cache_key("conversation-42");
 //! let request = CompletionRequest::new("hi").provider_option(options);

@@ -7,7 +7,7 @@
 //! catalog keeps the registration it pinned and runs it directly.
 //!
 //! ```
-//! use crate::agent::tool::server::ToolServer;
+//! use rig::agent::tool::server::ToolServer;
 //! let registry = ToolServer::new().owner("assistant").run();
 //! assert!(registry.snapshot().is_empty());
 //! ```
@@ -32,7 +32,7 @@ use indexmap::IndexMap;
 use crate::agent::{
     agent::register_generated,
     completion::ToolDefinition,
-    tool::{DynamicTool, RegisteredTool, Tool, ToolCatalog, ToolSet},
+    tool::{DynamicTool, RegisteredTool, Tool, ToolCatalog, ToolSet, ToolSource},
 };
 
 /// The per-process counter behind a registry's default owner label.
@@ -229,6 +229,11 @@ impl ToolServer {
         tools.into_iter().fold(self, Self::dynamic_tool)
     }
 
+    /// Add every tool `source` offers now, in its own order.
+    pub fn tool_source(self, source: impl ToolSource + 'static) -> Self {
+        self.dynamic_tools(source.tools())
+    }
+
     /// Add a registration built elsewhere.
     pub fn registered_tool(mut self, tool: RegisteredTool) -> Self {
         self.toolset.add_registered_tool(tool);
@@ -319,6 +324,13 @@ impl ToolServerHandle {
     /// Add a runtime-defined tool.
     pub fn add_dynamic_tool(&self, tool: DynamicTool) {
         self.register(RegisteredTool::from_dynamic(tool));
+    }
+
+    /// Add every tool `source` offers now.
+    pub fn add_tool_source(&self, source: impl ToolSource) {
+        for tool in source.tools() {
+            self.add_dynamic_tool(tool);
+        }
     }
 
     /// Add a registration built elsewhere.

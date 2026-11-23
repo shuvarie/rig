@@ -6,7 +6,7 @@
 //! [`ToolExecutionError`] messages are model-visible.
 //!
 //! ```
-//! use crate::agent::tool::ToolOutput;
+//! use rig::agent::tool::ToolOutput;
 //! let output = ToolOutput::text("Search complete.");
 //! assert_eq!(output.as_content().len(), 1);
 //! ```
@@ -17,7 +17,7 @@ pub mod server;
 
 pub use crate::tool::{
     DynamicTool, IntoToolOutput, Tool, ToolEmbedding, ToolErrorKind, ToolExecutionError,
-    ToolOutput, ToolResult, tool_definition, tool_name,
+    ToolOutput, ToolResult, ToolSource, tool_definition, tool_name,
 };
 pub use crate::tool::{ToolContext, ToolContextError};
 pub use catalog::ToolCatalog;

@@ -6,7 +6,7 @@
 //! password in prose, is not found.
 //!
 //! ```
-//! use crate::redact;
+//! use rig::redact;
 //!
 //! let line = "export ANTHROPIC_API_KEY=sk-ant-api03-abcdefghijklmnopqrstuvwxyz";
 //! assert!(redact::has_secret(line));
@@ -113,7 +113,7 @@ pub struct SecretMatch {
 /// Every secret in `input`, in order and not overlapping.
 ///
 /// ```
-/// use crate::redact::{self, Kind};
+/// use rig::redact::{self, Kind};
 ///
 /// let found: Vec<_> = redact::find("id AKIA0123456789ABCDEF here").collect();
 /// assert_eq!(found.len(), 1);
@@ -199,7 +199,7 @@ const HELD_MOST: usize = 16 * 1024;
 /// 16 KiB.
 ///
 /// ```
-/// use crate::redact::{self, Streamed};
+/// use rig::redact::{self, Streamed};
 ///
 /// let mut streamed = Streamed::default();
 /// let mut shown = String::new();

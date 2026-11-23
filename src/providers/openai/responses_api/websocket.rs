@@ -2,7 +2,7 @@
 //! Sessions permit one in-flight turn and chain completed or incomplete response IDs.
 //!
 //! ```
-//! use crate::providers::openai::responses_api::websocket::ResponsesWebSocketCreateOptions;
+//! use rig::providers::openai::responses_api::websocket::ResponsesWebSocketCreateOptions;
 //! let options = ResponsesWebSocketCreateOptions::warmup();
 //! assert_eq!(options.generate, Some(false));
 //! ```
@@ -202,7 +202,7 @@ fn is_terminal_kind(kind: &str) -> bool {
 /// A builder for an OpenAI Responses WebSocket session.
 ///
 /// The default builder applies a 30 second connection timeout and the
-/// driver's [`STREAM_IDLE_TIMEOUT`](crate::driver::STREAM_IDLE_TIMEOUT) to
+/// driver's [`STREAM_IDLE_TIMEOUT`](rig::driver::STREAM_IDLE_TIMEOUT) to
 /// each wait for an event.
 pub struct ResponsesWebSocketSessionBuilder {
     wire: Responses,
@@ -253,7 +253,7 @@ impl ResponsesWebSocketSessionBuilder {
     }
 
     /// Set the prompt-cache routing key, as
-    /// [`GenerationOptions::cache_key`](crate::completion::GenerationOptions::cache_key)
+    /// [`GenerationOptions::cache_key`](rig::completion::GenerationOptions::cache_key)
     /// does on HTTP: a dialect with a session header sends it as the session
     /// id at the handshake. Without one each connection draws a fresh id.
     #[must_use]

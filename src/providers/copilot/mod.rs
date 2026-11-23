@@ -4,15 +4,15 @@
 //! Copilot is an OpenAI-shaped provider: configure it with
 //! `OpenAIConfig::with_key(&copilot::DIALECT, session_token)`. To log in with
 //! a device code or exchange a GitHub token for a session, use an
-//! [`auth::Authenticator`]; [`SignedInModel`](crate::client::signed_in::SignedInModel)
+//! [`auth::Authenticator`]; [`SignedInModel`](rig::client::signed_in::SignedInModel)
 //! serves a catalog model with the session it resolves.
 //! Completion routes are selected by model; all routes include editor-identity headers.
 //!
 //! ```no_run
-//! use crate::providers::copilot;
-//! use crate::providers::openai::OpenAIConfig;
+//! use rig::providers::copilot;
+//! use rig::providers::openai::OpenAIConfig;
 //!
-//! # fn run(http: crate::http_client::DynHttpClient) {
+//! # fn run(http: rig::http_client::DynHttpClient) {
 //! let github = OpenAIConfig::with_key(&copilot::DIALECT, "tid=session-token").connect(http);
 //!
 //! let chat = github.completion(copilot::GPT_4O);
@@ -25,7 +25,7 @@
 /// Device login, session-token exchange, refresh, and the token store that keeps them.
 ///
 /// ```no_run
-/// use crate::providers::copilot::auth::{AuthSource, Authenticator, DeviceCodeHandler, MemoryTokenStore};
+/// use rig::providers::copilot::auth::{AuthSource, Authenticator, DeviceCodeHandler, MemoryTokenStore};
 ///
 /// let auth = Authenticator::new(AuthSource::OAuth, MemoryTokenStore::default(), DeviceCodeHandler::default(), true);
 /// ```

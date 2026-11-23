@@ -1,7 +1,7 @@
 //! Handler dispatch, owned replies, and delivery observation.
 //!
 //! ```
-//! use crate::{effect::EffectId, serve::Dispatch};
+//! use rig::{effect::EffectId, serve::Dispatch};
 //!
 //! let dispatch = Dispatch::new(EffectId::from_raw(1), false);
 //! assert!(!dispatch.is_stream());
@@ -35,10 +35,10 @@ pub type HandlerFuture<'a> = WasmBoxedFuture<'a, Reply>;
 /// A registered effect handler returning an outcome or an owned stream.
 ///
 /// Provider and tool authors do not implement this directly: the adapters
-/// in [`crate::serve::adapters`] wrap models, tools and indexes
+/// in [`rig::serve::adapters`] wrap models, tools and indexes
 /// (`Model`, `Tool`, `VectorStoreIndex`). A
 /// host implements it for out-of-tree kinds ([`EffectKind::Custom`], typed
-/// through [`crate::effect::CustomEffect`]) or for a replayer.
+/// through [`rig::effect::CustomEffect`]) or for a replayer.
 ///
 /// A handler returns an outcome or an owned stream. The driver adapts that
 /// reply to the requested delivery mode. Stream execution continues after
@@ -48,13 +48,13 @@ pub type HandlerFuture<'a> = WasmBoxedFuture<'a, Reply>;
 /// task; the bound is the crate's `WasmCompatSend` marker, a no-op on
 /// browser wasm). `Self::Family` is what a typed key can be proven against
 /// (a typed registration); a handler with no one
-/// family names [`crate::effect::family::Dynamic`].
+/// family names [`rig::effect::family::Dynamic`].
 ///
 /// A handler holding an `Rc` or a `Cell` is refused natively:
 ///
 /// ```compile_fail
 /// use std::rc::Rc;
-/// use crate::{serve::{Dispatch, Reply, Serve}, effect::{EffectKind, HandlerDescriptor, family}};
+/// use rig::{serve::{Dispatch, Reply, Serve}, effect::{EffectKind, HandlerDescriptor, family}};
 ///
 /// struct Local(Rc<u8>);
 /// impl Serve for Local {
@@ -66,7 +66,7 @@ pub type HandlerFuture<'a> = WasmBoxedFuture<'a, Reply>;
 ///
 /// ```compile_fail
 /// use std::cell::Cell;
-/// use crate::{serve::{Dispatch, Reply, Serve}, effect::{EffectKind, HandlerDescriptor, family}};
+/// use rig::{serve::{Dispatch, Reply, Serve}, effect::{EffectKind, HandlerDescriptor, family}};
 ///
 /// struct Local(Cell<u8>);
 /// impl Serve for Local {
@@ -98,7 +98,7 @@ pub trait Serve: WasmCompatSend + WasmCompatSync {
     ) -> impl Future<Output = Reply> + WasmCompatSend + use<'_, Self>;
 
     /// What dispatching `kind` may read and change, for a tool's handler
-    /// ([`Tool::footprint`](crate::tool::Tool::footprint)); `None` when it
+    /// ([`Tool::footprint`](rig::tool::Tool::footprint)); `None` when it
     /// cannot say, such as for arguments that do not parse.
     fn footprint(&self, kind: &EffectKind) -> Option<Touches> {
         let _ = kind;
@@ -107,7 +107,7 @@ pub trait Serve: WasmCompatSend + WasmCompatSync {
 
     /// The options of `kind` this handler would leave out when it serves
     /// it, with nothing sent: for a model's handler, what its wire or model
-    /// cannot honour ([`DynModel::check`](crate::driver::DynModel::check)).
+    /// cannot honour ([`DynModel::check`](rig::driver::DynModel::check)).
     /// Empty when it leaves nothing out or cannot say, as by default.
     fn check(&self, kind: &EffectKind) -> Vec<UnsupportedOption> {
         let _ = kind;
@@ -234,9 +234,9 @@ impl ErasedHandler {
     /// records still name the model.
     ///
     /// ```
-    /// use crate::completion::ModelRef;
-    /// use crate::effect::{FamilyDescriptor, HandlerDescriptor, model_key};
-    /// use crate::serve::ErasedHandler;
+    /// use rig::completion::ModelRef;
+    /// use rig::effect::{FamilyDescriptor, HandlerDescriptor, model_key};
+    /// use rig::serve::ErasedHandler;
     ///
     /// let descriptor = HandlerDescriptor {
     ///     key: model_key("batch/claude"),
@@ -265,14 +265,14 @@ impl ErasedHandler {
 
     /// Rewrite this handler's completion streams: every item of each reply
     /// passes through a fresh `make(published)` in order, and the items it
-    /// returns go on in its place. It sees the [`Relayed::Done`](crate::streaming::Relayed::Done)
+    /// returns go on in its place. It sees the [`Relayed::Done`](rig::streaming::Relayed::Done)
     /// too, so a rewrite of the events also rewrites the response the reply
     /// ends with. A unary completion is rewritten as its events, so both
     /// delivery modes answer alike; other outcomes and errors pass as they
     /// are. `name` joins the descriptor's layers.
     ///
     /// `published` is the dispatch's
-    /// [`PublishedContext`](crate::tool::PublishedContext): a fact the
+    /// [`PublishedContext`](rig::tool::PublishedContext): a fact the
     /// rewrite inserts there before it passes the `Done` on, such as that
     /// it split reasoning out of this reply, comes back to the driver beside
     /// the reply and is recorded with it.
@@ -452,7 +452,7 @@ impl StreamTap {
 }
 
 /// The retryable report of a reply that ended before the provider ended it
-/// ([`ProviderError::Truncated`](crate::error::ProviderError::Truncated)).
+/// ([`ProviderError::Truncated`](rig::error::ProviderError::Truncated)).
 /// Retryability does not guarantee a subsequent attempt will succeed.
 pub fn stream_truncated() -> ErrorReport {
     ErrorReport::from(&crate::error::ProviderError::Truncated)
@@ -662,7 +662,7 @@ impl Dispatch {
     /// This dispatch observed by `recorder` under its id, as a recording
     /// driver installs it after [`begin`](super::Recorder::begin): its
     /// outcome, stream, origin and layer decisions, and the tool output its
-    /// handler publishes into a [`PublishedContext`](crate::tool::PublishedContext)
+    /// handler publishes into a [`PublishedContext`](rig::tool::PublishedContext)
     /// scope. Add the scopes first.
     pub fn recorded_by(self, recorder: Arc<dyn super::Recorder + Send + Sync>) -> Self {
         let observer = super::recorder::RecordingObserver {

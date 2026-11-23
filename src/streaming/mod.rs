@@ -2,7 +2,7 @@
 //! as.
 //!
 //! ```
-//! use crate::streaming::{Item, StreamEvent};
+//! use rig::streaming::{Item, StreamEvent};
 //!
 //! fn text(item: &Item<StreamEvent>) -> Option<&str> {
 //!     match item {
@@ -88,7 +88,7 @@ pub enum Relayed {
 pub type StreamEvents = WasmBoxedStream<'static, Result<Relayed, ErrorReport>>;
 
 /// One reply as it arrives: its events, and the fold that has seen each of
-/// them. It is what [`Model::stream`](crate::Model::stream) returns for
+/// them. It is what [`Model::stream`](rig::Model::stream) returns for
 /// every operation, and what a call finishes.
 ///
 /// An error is the last item: the stream ends after it. Stop polling to
@@ -177,7 +177,7 @@ impl<Op: Operation> Streamed<Op> {
     }
 
     /// Read the rest of the reply, then fold it with the provider's end into
-    /// the response: what [`Model::call`](crate::Model::call) returns for
+    /// the response: what [`Model::call`](rig::Model::call) returns for
     /// the same reply. An error the stream yielded, now or before, is the
     /// result; a reply the provider did not end is
     /// [`ProviderError::Truncated`].

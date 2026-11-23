@@ -2,8 +2,8 @@
 //! (<https://console.groq.com/docs/api-reference>).
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::groq::extension::{GroqOptions, ReasoningFormat};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::groq::extension::{GroqOptions, ReasoningFormat};
 //!
 //! let options = GroqOptions::new().reasoning_format(ReasoningFormat::Parsed);
 //! let request = CompletionRequest::new("hi").provider_option(options);

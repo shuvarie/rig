@@ -2,7 +2,7 @@
 //! authentication transport helpers.
 //!
 //! ```
-//! use crate::providers::chatgpt::auth::DeviceCodeHandler;
+//! use rig::providers::chatgpt::auth::DeviceCodeHandler;
 //! let handler = DeviceCodeHandler::new(|prompt| {
 //!     println!("Visit {} and enter {}", prompt.verification_uri, prompt.user_code);
 //! });
@@ -96,7 +96,7 @@ pub enum AuthError {
 /// The credential a signed-in request is sent with.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AuthContext {
-    /// The resolved key. Use [`Secret::expose`](crate::wire::Secret::expose)
+    /// The resolved key. Use [`Secret::expose`](rig::wire::Secret::expose)
     /// only when raw bytes are required.
     pub api_key: crate::wire::Secret,
     /// The account the key belongs to, when the provider names one

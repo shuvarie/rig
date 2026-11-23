@@ -43,7 +43,7 @@ impl<'a, P> EpubFileLoader<'a, Result<PathBuf, EpubLoaderError>, P> {
     /// Loads each EPUB during iteration, yielding document-loading errors.
     ///
     /// ```no_run
-    /// use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// use rig::loaders::{EpubFileLoader, RawTextProcessor};
     ///
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?.load().into_iter();
@@ -66,7 +66,7 @@ impl<'a, P> EpubFileLoader<'a, Result<PathBuf, EpubLoaderError>, P> {
     /// Loads each EPUB paired with its source path, yielding loading errors.
     ///
     /// ```no_run
-    /// use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// use rig::loaders::{EpubFileLoader, RawTextProcessor};
     ///
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?.load_with_path().into_iter();
@@ -95,7 +95,7 @@ where
     /// processing errors. Unavailable chapter text is skipped.
     ///
     /// ```no_run
-    /// # use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// # use rig::loaders::{EpubFileLoader, RawTextProcessor};
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?.read().into_iter();
     /// for result in content {
@@ -126,7 +126,7 @@ where
     /// or processing errors. Unavailable chapter text is skipped.
     ///
     /// ```no_run
-    /// # use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// # use rig::loaders::{EpubFileLoader, RawTextProcessor};
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?.read_with_path().into_iter();
     /// for result in content {
@@ -164,7 +164,7 @@ where
     /// skipping unavailable chapter text.
     ///
     /// ```no_run
-    /// # use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// # use rig::loaders::{EpubFileLoader, RawTextProcessor};
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?
     ///     .load()
@@ -194,7 +194,7 @@ impl<'a, P: TextProcessor> EpubFileLoader<'a, (PathBuf, EpubDoc<BufReader<File>>
     /// Indices count available chapter texts, not skipped source entries.
     ///
     /// ```no_run
-    /// # use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// # use rig::loaders::{EpubFileLoader, RawTextProcessor};
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?
     ///     .load_with_path()
@@ -234,7 +234,7 @@ where
     /// Documents with no successful chapters remain.
     ///
     /// ```no_run
-    /// # use crate::loaders::{EpubFileLoader, RawTextProcessor};
+    /// # use rig::loaders::{EpubFileLoader, RawTextProcessor};
     /// # fn run() -> Result<(), Box<dyn std::error::Error>> {
     /// let content = EpubFileLoader::<_, RawTextProcessor>::with_glob("tests/data/*.epub")?
     ///     .load_with_path()

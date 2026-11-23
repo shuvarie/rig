@@ -8,12 +8,12 @@ use serde::{Deserialize, Serialize};
 /// A tool name, never empty.
 ///
 /// ```
-/// use crate::message::ToolName;
+/// use rig::message::ToolName;
 ///
 /// let name = ToolName::new("add")?;
 /// assert_eq!(name.as_str(), "add");
 /// assert!(ToolName::new("").is_err());
-/// # Ok::<(), crate::message::EmptyToolName>(())
+/// # Ok::<(), rig::message::EmptyToolName>(())
 /// ```
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(try_from = "String", into = "String")]
@@ -133,7 +133,7 @@ impl PartialEq<ToolName> for str {
 /// the two always match.
 ///
 /// ```
-/// use crate::message::{CallId, ProviderCallId};
+/// use rig::message::{CallId, ProviderCallId};
 ///
 /// let id = CallId::from(ProviderCallId::new("call_1").ok_or("empty id")?);
 /// assert_eq!(id.to_string(), "call_1");

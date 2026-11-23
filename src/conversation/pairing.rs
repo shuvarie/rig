@@ -5,7 +5,7 @@
 //! where a window of it may start.
 //!
 //! ```
-//! use crate::{conversation::pairing, message::Message};
+//! use rig::{conversation::pairing, message::Message};
 //!
 //! pairing::validate(&[Message::user("Hello"), Message::assistant("Hi")])?;
 //! # Ok::<(), pairing::PairingError>(())
@@ -61,8 +61,8 @@ pub enum PairingError {
 /// conversation share one; across agents, pair it with the agent.
 ///
 /// ```
-/// use crate::conversation::{CallRef, Conversation};
-/// use crate::message::{AssistantContent, AssistantMessage, Message, ToolCall, ToolFunction, ToolName};
+/// use rig::conversation::{CallRef, Conversation};
+/// use rig::message::{AssistantContent, AssistantMessage, Message, ToolCall, ToolFunction, ToolName};
 ///
 /// let look = ToolFunction::new(ToolName::new("look")?, serde_json::json!({}));
 /// let call = AssistantContent::ToolCall(ToolCall::from_wire("c1", look));
@@ -103,8 +103,8 @@ impl CallRef {
 /// call nothing answers; an answer no call waits for is dropped.
 ///
 /// ```
-/// use crate::conversation::pairing::answered_by;
-/// use crate::message::CallId;
+/// use rig::conversation::pairing::answered_by;
+/// use rig::message::CallId;
 ///
 /// let id = CallId::from_wire("c1");
 /// let answers = [(&id, "first"), (&id, "second")];

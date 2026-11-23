@@ -1,17 +1,17 @@
 //! Venice model identifiers and request parameters.
 //!
-//! [`from_env`] and [`new`] build a client on the [`VENICE`](crate::providers::openai::wire::VENICE) dialect.
+//! [`from_env`] and [`new`] build a client on the [`VENICE`](rig::providers::openai::wire::VENICE) dialect.
 //! Its `venice_parameters` request block and the reply's cost and echoed
 //! parameters are typed in [`extension`].
 //!
 //! ```no_run
-//! use crate::providers::venice;
+//! use rig::providers::venice;
 //! let model = venice::from_env()?.chat(venice::QWEN3_5_9B);
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```
 
 /// Venice's API root, and the default base URL of
-/// [`openai::wire::VENICE`](crate::providers::openai::wire::VENICE).
+/// [`openai::wire::VENICE`](rig::providers::openai::wire::VENICE).
 pub const VENICE_API_BASE_URL: &str = "https://api.venice.ai/api/v1";
 
 #[cfg(feature = "audio")]

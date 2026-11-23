@@ -3,9 +3,9 @@
 //! speaks, so its transport is the runtime itself.
 //!
 //! ```
-//! use crate::driver::Local;
-//! use crate::operation::Embedding;
-//! use crate::wire::{Capabilities, Wire};
+//! use rig::driver::Local;
+//! use rig::operation::Embedding;
+//! use rig::wire::{Capabilities, Wire};
 //!
 //! let wire = Local::<Embedding>::new("local").with_capabilities(Capabilities::embedding(8, 3));
 //! assert_eq!(wire.describe().name, "local");
@@ -16,8 +16,8 @@
 //! is no local completion wire:
 //!
 //! ```compile_fail
-//! use crate::driver::Local;
-//! use crate::operation::Completion;
+//! use rig::driver::Local;
+//! use rig::operation::Completion;
 //!
 //! let wire = Local::<Completion>::new("scripted");
 //! ```

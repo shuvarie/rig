@@ -7,8 +7,8 @@
 //! [`Finish`], which the fold needs to produce the response.
 //!
 //! ```
-//! use crate::operation::Finish;
-//! use crate::completion::FinishReason;
+//! use rig::operation::Finish;
+//! use rig::completion::FinishReason;
 //!
 //! let finish = Finish {
 //!     reason: Some(FinishReason::Stop),
@@ -101,11 +101,11 @@ impl Operation for Completion {
     /// Resolve the model the request addresses once, as the request's
     /// `model`: the one it names, else the wire's. The history is checked
     /// with [`CompletionRequest::validate_message_content`], then
-    /// [`adapt`](crate::completion::adapt)ed for that model on the wire's
+    /// [`adapt`](rig::completion::adapt)ed for that model on the wire's
     /// replay target and checked again. Encoders, the fold and replay all
     /// read the one resolved model. Each option the routed target refuses
     /// is reported first, through
-    /// [`options::check`](crate::completion::options::check).
+    /// [`options::check`](rig::completion::options::check).
     fn prepare(
         mut request: Self::Request,
         wire: &Descriptor<'_>,
@@ -205,7 +205,7 @@ pub struct Finish {
     /// Token usage the provider reported. A counter it did not report is
     /// `None`. A cost the provider reported goes in `usage.cost` and is
     /// kept; without one the fold prices the counters at the catalog's
-    /// [`Pricing`](crate::catalog::Pricing) for the request's model, and
+    /// [`Pricing`](rig::catalog::Pricing) for the request's model, and
     /// leaves the cost `None` when the catalog has no price for it.
     pub usage: Usage,
     /// Why the model stopped, when the provider said.
@@ -272,17 +272,17 @@ pub struct ReplyFold {
     wire: bool,
     /// Where the wire's call items hold their id ([`ReplayTarget::call_id_slot`]).
     ///
-    /// [`ReplayTarget::call_id_slot`]: crate::completion::ReplayTarget::call_id_slot
+    /// [`ReplayTarget::call_id_slot`]: rig::completion::ReplayTarget::call_id_slot
     call_id_slot: Option<&'static str>,
     /// Whether the catalog prices the reply, as its wire's target answers
     /// ([`ReplayTarget::catalog_priced`]). `None` for a relayed or written
     /// reply, which the registered dialect of its origin's provider answers.
     ///
-    /// [`ReplayTarget::catalog_priced`]: crate::completion::ReplayTarget::catalog_priced
+    /// [`ReplayTarget::catalog_priced`]: rig::completion::ReplayTarget::catalog_priced
     catalog_priced: Option<bool>,
     /// Where the wire's items keep a reasoning blob ([`ReplayTarget::blob_slots`]).
     ///
-    /// [`ReplayTarget::blob_slots`]: crate::completion::ReplayTarget::blob_slots
+    /// [`ReplayTarget::blob_slots`]: rig::completion::ReplayTarget::blob_slots
     blob_slots: &'static [&'static str],
     /// Whether the request accepts an unknown finish reason as a normal stop
     /// ([`CompletionRequest::accept_unknown_finish_reasons`]).

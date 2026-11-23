@@ -10,8 +10,8 @@
 //! own dispatch.
 //!
 //! ```
-//! use crate::agent::handlers::{Handlers, ModelHandle};
-//! use crate::effect::HandlerKey;
+//! use rig::agent::handlers::{Handlers, ModelHandle};
+//! use rig::effect::HandlerKey;
 //! let handlers = Handlers::default();
 //! let model: Result<ModelHandle, _> = handlers.handle(&HandlerKey::from("model"));
 //! assert!(model.is_err());
@@ -63,9 +63,9 @@ use crate::{
 ///
 /// ```
 /// use std::sync::{Arc, atomic::{AtomicUsize, Ordering}};
-/// use crate::agent::handlers::Handlers;
-/// use crate::effect::{family, Answered, EffectKind, FamilyDescriptor, HandlerDescriptor};
-/// use crate::serve::{Dispatch, Reply, Serve};
+/// use rig::agent::handlers::Handlers;
+/// use rig::effect::{family, Answered, EffectKind, FamilyDescriptor, HandlerDescriptor};
+/// use rig::serve::{Dispatch, Reply, Serve};
 /// use tokio::sync::{Mutex, Semaphore};
 ///
 /// fn describe(key: &str) -> HandlerDescriptor {
@@ -105,7 +105,7 @@ use crate::{
 /// }
 ///
 /// # #[tokio::main(flavor = "current_thread")]
-/// # async fn main() -> Result<(), crate::error::ErrorReport> {
+/// # async fn main() -> Result<(), rig::error::ErrorReport> {
 /// let handlers = Handlers::default();
 /// let peak = Arc::new(AtomicUsize::new(0));
 /// let lookup = Lookup { permits: Semaphore::new(2), running: AtomicUsize::new(0), peak: peak.clone() };
@@ -238,7 +238,7 @@ impl Handlers {
     /// tables recording into one recorder issue the same ids, and the
     /// recorder mixes up their records. Programs that write one log
     /// dispatch through one table, such as agents built over it with
-    /// [`AgentBuilder::over_handlers`](crate::agent::agent::AgentBuilder::over_handlers).
+    /// [`AgentBuilder::over_handlers`](rig::agent::agent::AgentBuilder::over_handlers).
     pub fn record_to(&self, recorder: impl Recorder + Send + Sync) {
         self.record_with(Arc::new(recorder));
     }

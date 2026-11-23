@@ -6,8 +6,8 @@
 //! sources are provided by the native-only `providers::rmcp`.
 //!
 //! ```
-//! use crate::agent::agent::AgentBuilder;
-//! use crate::test_utils::MockCompletionModel;
+//! use rig::agent::agent::AgentBuilder;
+//! use rig::test_utils::MockCompletionModel;
 //!
 //! let agent = AgentBuilder::new(MockCompletionModel::default()).build();
 //! # let _ = agent;
@@ -39,8 +39,8 @@ pub mod streaming;
 pub mod test_utils;
 pub mod tool;
 
-/// Everything the runtime's inner module exports, so `crate::agent::Agent`
-/// and `crate::agent::HookStack` resolve as they did when this was a crate
+/// Everything the runtime's inner module exports, so `rig::agent::Agent`
+/// and `rig::agent::HookStack` resolve as they did when this was a crate
 /// root.
 pub use self::agent::*;
 

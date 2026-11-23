@@ -1,7 +1,7 @@
 //! A live MCP client connection shared by the tools and resources taken from it.
 //!
 //! ```no_run
-//! use crate::providers::rmcp::{McpConnection, rmcp};
+//! use rig::providers::rmcp::{McpConnection, rmcp};
 //! use rmcp::{RoleClient, ServiceExt, transport::IntoTransport};
 //!
 //! async fn connect<T, E, A>(transport: T) -> Result<(), Box<dyn std::error::Error>>
@@ -35,6 +35,7 @@ use crate::effect::{
 };
 use crate::error::{ErrorKind, ErrorReport};
 use crate::serve::{Dispatch, Reply, Serve};
+use crate::tool::DynamicTool;
 
 use crate::providers::rmcp::{
     DEFAULT_MCP_REFRESH_TIMEOUT, McpClientError, McpTool, send_mcp_request,
@@ -115,6 +116,35 @@ impl McpConnection {
             .await?
             .into_iter()
             .map(|definition| McpTool::new(definition, self))
+            .collect())
+    }
+
+    /// Every tool the server lists as a [`ToolSource`](crate::tool::ToolSource),
+    /// so an agent takes its tools without the host converting each one.
+    ///
+    /// A tool the server lists with no name is skipped: it cannot be
+    /// registered. The tools keep this connection open, as [`Self::tools`]
+    /// does.
+    ///
+    /// ```
+    /// # use rig::providers::rmcp::McpConnection;
+    /// # use rig::tool::ToolSource;
+    /// # async fn tools(connection: &McpConnection) -> Result<(), Box<dyn std::error::Error>> {
+    /// let source = connection.dynamic_tools().await?;
+    /// assert_eq!(source.tools().len(), source.len());
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    /// # Errors
+    ///
+    /// Fails as [`Self::tools`] does.
+    pub async fn dynamic_tools(&self) -> Result<Vec<DynamicTool>, McpClientError> {
+        Ok(self
+            .tools()
+            .await?
+            .into_iter()
+            .filter_map(|tool| DynamicTool::try_from(tool).ok())
             .collect())
     }
 

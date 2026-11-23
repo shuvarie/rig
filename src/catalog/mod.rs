@@ -12,7 +12,7 @@
 //!
 //! ```no_run
 //! use std::path::Path;
-//! use crate::catalog::Catalog;
+//! use rig::catalog::Catalog;
 //!
 //! fn catalog(cache: &Path, config: &Path) -> Result<Catalog, Box<dyn std::error::Error>> {
 //!     let mut catalog = Catalog::builtin().clone();
@@ -36,13 +36,13 @@
 //! checks a request's options before anything is sent:
 //!
 //! ```
-//! use crate::catalog::Catalog;
-//! use crate::completion::{Effort, GenerationOptions};
+//! use rig::catalog::Catalog;
+//! use rig::completion::{Effort, GenerationOptions};
 //!
 //! let haiku = Catalog::builtin().resolve("anthropic/claude-haiku-4-5")?.spec;
 //! let options = GenerationOptions::default().reasoning(Effort::High);
 //! assert!(haiku.validate(&options).is_err(), "Haiku 4.5 takes a budget");
-//! # Ok::<(), crate::catalog::NotFound>(())
+//! # Ok::<(), rig::catalog::NotFound>(())
 //! ```
 
 mod connector;

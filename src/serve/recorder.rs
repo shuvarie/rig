@@ -1,7 +1,7 @@
 //! Runtime-independent recording of handler dispatches.
 //!
 //! ```
-//! use crate::serve::DispatchContext;
+//! use rig::serve::DispatchContext;
 //!
 //! let origin = DispatchContext::default();
 //! assert!(origin.parent.is_none());

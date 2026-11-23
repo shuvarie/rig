@@ -1,7 +1,7 @@
 //! Embeddable tool descriptions and serialized tool context.
 //!
 //! ```
-//! use crate::embeddings::ToolSchema;
+//! use rig::embeddings::ToolSchema;
 //!
 //! let schema = ToolSchema {
 //!     name: "search".into(),

@@ -10,8 +10,8 @@
 //! use std::pin::pin;
 //! use std::task::{Context, Poll, Waker};
 //!
-//! use crate::memory::MemoryStore;
-//! use crate::memory::conformance::check_store;
+//! use rig::memory::MemoryStore;
+//! use rig::memory::conformance::check_store;
 //!
 //! let store = MemoryStore::default();
 //! let other = store.clone();
@@ -212,7 +212,7 @@ async fn files<S: AsyncStore + ?Sized>(a: &S, b: &S) -> Result<(), Violation> {
     })
 }
 
-/// Names that [`check_name`](crate::memory::check_name) refuses, and log names in
+/// Names that [`check_name`](rig::memory::check_name) refuses, and log names in
 /// more than one part, are refused with [`io::ErrorKind::InvalidInput`].
 async fn names<S: AsyncStore + ?Sized>(a: &S) -> Result<(), Violation> {
     let check = "a name that is no name in a session is refused";

@@ -1,7 +1,7 @@
 //! Portable streaming types re-exported for classic runtime users.
 //!
 //! ```
-//! use crate::agent::streaming::{Item, StreamEvent};
+//! use rig::agent::streaming::{Item, StreamEvent};
 //!
 //! fn text(item: &Item<StreamEvent>) -> Option<&str> {
 //!     match item {

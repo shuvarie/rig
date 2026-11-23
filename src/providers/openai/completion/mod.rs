@@ -1,7 +1,7 @@
 //! OpenAI's completion model identifiers.
 //!
 //! ```
-//! use crate::providers::openai::completion::GPT_4O;
+//! use rig::providers::openai::completion::GPT_4O;
 //! assert_eq!(GPT_4O, "gpt-4o");
 //! ```
 
@@ -28,7 +28,7 @@ pub const GPT_6_1_TERRA: &str = "gpt-6.1-terra";
 /// holds the rules the encoders check, through `on_unsupported`, for a
 /// request that sets generation options: sampling parameters only at effort
 /// `none`
-/// ([`GenerationOptions::reasoning`](crate::completion::GenerationOptions::reasoning)
+/// ([`GenerationOptions::reasoning`](rig::completion::GenerationOptions::reasoning)
 /// `(Reasoning::Off)`). OpenAI itself refuses Chat Completions tools at
 /// any other effort; Responses takes tools at any effort.
 pub const GPT_6_SOL: &str = "gpt-6-sol";
@@ -37,7 +37,7 @@ pub const GPT_6_SOL: &str = "gpt-6-sol";
 /// holds the rules the encoders check, through `on_unsupported`, for a
 /// request that sets generation options: sampling parameters only at effort
 /// `none`
-/// ([`GenerationOptions::reasoning`](crate::completion::GenerationOptions::reasoning)
+/// ([`GenerationOptions::reasoning`](rig::completion::GenerationOptions::reasoning)
 /// `(Reasoning::Off)`). OpenAI itself refuses Chat Completions tools at
 /// any other effort; Responses takes tools at any effort.
 pub const GPT_6_LUNA: &str = "gpt-6-luna";

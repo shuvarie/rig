@@ -1,7 +1,7 @@
 //! OpenRouter model identifiers.
 //!
 //! ```
-//! use crate::providers::openrouter::PERPLEXITY_SONAR_PRO;
+//! use rig::providers::openrouter::PERPLEXITY_SONAR_PRO;
 //! assert_eq!(PERPLEXITY_SONAR_PRO, "perplexity/sonar-pro");
 //! ```
 

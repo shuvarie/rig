@@ -4,9 +4,9 @@
 //! fields its proto declares; [`GeminiGrpcExtras`] reads its reply.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::gemini::extension::GeminiOptions;
-//! use crate::providers::gemini_grpc::extension::GeminiGrpcOptions;
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::gemini::extension::GeminiOptions;
+//! use rig::providers::gemini_grpc::extension::GeminiGrpcOptions;
 //!
 //! let options = GeminiOptions::new().top_k(40);
 //! let request =

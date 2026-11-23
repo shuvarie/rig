@@ -2,14 +2,14 @@
 //!
 //! Each scenario drives raw wire bytes (SSE or NDJSON) through a provider's
 //! complete streaming path, from decode through the writer's parts and
-//! [`CompletionStream`](crate::streaming::CompletionStream) to its response,
+//! [`CompletionStream`](rig::streaming::CompletionStream) to its response,
 //! and asserts the streaming contract: an error is the stream's last item, a
 //! reply the provider did not end has no response, and every part the stream
 //! emits reaches the response exactly once. A per-provider
 //! [`ProviderWireFixture`] supplies the frames, since each wire format spells
 //! the same event differently.
 //!
-//! [`streaming_conformance_suite!`](crate::streaming_conformance_suite)
+//! [`streaming_conformance_suite!`](rig::streaming_conformance_suite)
 //! expands the suites per wire family. A scenario a wire cannot spell returns
 //! [`ScenarioOutcome::Skipped`], which the macro checks against the suite's
 //! declared [`SuiteCapabilities`], so the executed count is the declared grid
@@ -65,7 +65,7 @@ impl ConformanceError {
 /// because the wire family cannot spell the sequence shape.
 ///
 /// A skip is an explicit, named outcome — never a silent pass. The
-/// [`streaming_conformance_suite!`](crate::streaming_conformance_suite)
+/// [`streaming_conformance_suite!`](rig::streaming_conformance_suite)
 /// macro cross-checks it against the suite's declared capability flags via
 /// [`check_gated_outcome`], so a fixture cannot vacuously pass a scenario its
 /// capabilities claim to cover.
@@ -166,7 +166,7 @@ pub const CANONICAL_SCENARIOS: &[&str] = &[
 
 /// Every streaming wire family in the workspace. The workspace registry test
 /// (`all_wire_families_have_conformance_suites`) fails CI when any family
-/// lacks a [`streaming_conformance_suite!`](crate::streaming_conformance_suite)
+/// lacks a [`streaming_conformance_suite!`](rig::streaming_conformance_suite)
 /// invocation naming it.
 pub const WIRE_FAMILIES: &[&str] = &[
     "openai_chat",
@@ -317,7 +317,7 @@ pub fn transport_error_chunk() -> http_client::Result<WireInput> {
 ///    the stream appears in the aggregated choice exactly once, and vice
 ///    versa (counts match; aggregation neither drops nor duplicates).
 /// 4. **Sequence.** The events read back through
-///    [`StreamRecord::parse_prefix`](crate::streaming::StreamRecord::parse_prefix):
+///    [`StreamRecord::parse_prefix`](rig::streaming::StreamRecord::parse_prefix):
 ///    each part starts once, in position, grows only while open, and ends
 ///    once.
 /// 5. **Reasoning provenance.** The response contains a reasoning part only
@@ -1106,7 +1106,7 @@ pub async fn bare_terminal_after_only_unparseable_frames_fabricates_nothing(
 /// The genuine terminal must report the provider's usage; a terminal without
 /// usage metrics must complete with no counter reported rather than being
 /// suppressed or invented, as
-/// [`CompletionResponse::usage`](crate::completion::CompletionResponse::usage)
+/// [`CompletionResponse::usage`](rig::completion::CompletionResponse::usage)
 /// documents.
 pub async fn usage_variants_are_reported_or_absent(
     fixture: &ProviderWireFixture,

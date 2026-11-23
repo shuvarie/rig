@@ -1,7 +1,7 @@
 //! Request-scoped tool advertisements and their pinned registrations.
 //!
 //! ```
-//! use crate::agent::tool::ToolCatalog;
+//! use rig::agent::tool::ToolCatalog;
 //! fn advertised_names(catalog: &ToolCatalog) -> Vec<&str> {
 //!     catalog.names().collect()
 //! }

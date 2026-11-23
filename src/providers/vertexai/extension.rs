@@ -3,8 +3,8 @@
 //! AI's request declares, and [`VertexExtras`] reads its reply.
 //!
 //! ```
-//! use crate::completion::CompletionRequest;
-//! use crate::providers::vertexai::extension::{VertexOptions};
+//! use rig::completion::CompletionRequest;
+//! use rig::providers::vertexai::extension::{VertexOptions};
 //!
 //! let options = VertexOptions::new()
 //!     .label("team", "rig")

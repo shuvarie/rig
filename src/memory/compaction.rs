@@ -4,10 +4,10 @@
 //! [pi coding agent](https://github.com/badlogic/pi-mono).
 //!
 //! ```
-//! use crate::memory::{CompactionPolicy, SummaryState};
+//! use rig::memory::{CompactionPolicy, SummaryState};
 //!
 //! let policy = CompactionPolicy::default();
-//! let reason = crate::memory::CompactReason::Threshold;
+//! let reason = rig::memory::CompactReason::Threshold;
 //! assert_eq!(policy.cut(&[], 0, &reason, None), None);
 //! assert_eq!(SummaryState::default().message(), None);
 //! ```
@@ -243,7 +243,7 @@ const KEEP_RECENT: usize = 20_000;
 /// and an unknown one is refused.
 ///
 /// ```
-/// use crate::memory::CompactionPolicy;
+/// use rig::memory::CompactionPolicy;
 ///
 /// let policy: CompactionPolicy =
 ///     serde_json::from_value(serde_json::json!({"keep_recent": 1000, "limits": {"reserve": 1}}))?;
@@ -769,7 +769,7 @@ impl Provenance {
 ///
 /// # Errors
 ///
-/// As [`load`](crate::memory::load).
+/// As [`load`](rig::memory::load).
 pub fn summarized_in_log(store: &dyn Store, log: &str) -> Result<Summarized, SessionError> {
     let known = provenance(store, log)?;
     let found = known.first.into_iter();
@@ -1358,7 +1358,7 @@ impl ClearToolOutputs {
     /// that names only `keep_tokens`.
     ///
     /// ```
-    /// use crate::memory::ClearToolOutputs;
+    /// use rig::memory::ClearToolOutputs;
     ///
     /// let config: ClearToolOutputs = serde_json::from_str(r#"{"keep_tokens": 8000}"#)?;
     /// assert_eq!(ClearToolOutputs::new(8000), config);

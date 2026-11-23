@@ -17,8 +17,8 @@
 //! not serialize fail the request's encode.
 //!
 //! ```
-//! use crate::completion::{CompletionRequest, ProviderOptions};
-//! use crate::providers::openrouter::extension::{OpenRouterExt, OpenRouterOptions};
+//! use rig::completion::{CompletionRequest, ProviderOptions};
+//! use rig::providers::openrouter::extension::{OpenRouterExt, OpenRouterOptions};
 //!
 //! let request =
 //!     CompletionRequest::new("hi").provider_option(OpenRouterOptions::new().session_id("s-1"));
@@ -71,9 +71,9 @@ pub trait ExtensionOptions:
 
     /// The fields `target` cannot send for `request`, each a top-level body
     /// key with the reason. Each one set is reported through the request's
-    /// [`OnUnsupported`](crate::completion::OnUnsupported) policy under the
+    /// [`OnUnsupported`](rig::completion::OnUnsupported) policy under the
     /// name `"<provider>.<section>.<field>"`. It must not call
-    /// [`options::param`](crate::completion::options::param), which reads
+    /// [`options::param`](rig::completion::options::param), which reads
     /// it. By default every field is sent.
     fn unsupported(
         &self,
@@ -248,8 +248,8 @@ impl ProviderOptions {
     /// [`Self::with::<P>`](Self::with) instead, or its wire never reads them.
     ///
     /// ```
-    /// use crate::completion::ProviderOptions;
-    /// use crate::providers::openrouter::extension::{OpenRouterExt, OpenRouterOptions};
+    /// use rig::completion::ProviderOptions;
+    /// use rig::providers::openrouter::extension::{OpenRouterExt, OpenRouterOptions};
     ///
     /// let options = ProviderOptions::new().set(OpenRouterOptions::new().session_id("s-1"));
     /// assert!(options.contains::<OpenRouterExt>());
