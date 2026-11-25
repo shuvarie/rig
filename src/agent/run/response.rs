@@ -284,6 +284,24 @@ pub enum PromptError {
         reason: String,
     },
 
+    /// The run stopped where it stood, and its state survives as a
+    /// [`Checkpoint`](crate::checkpoint::Checkpoint).
+    ///
+    /// Unlike [`Self::Cancelled`], which keeps only the history, this carries
+    /// the whole run: continuing it re-issues the call it was waiting on,
+    /// answers only the tool calls still open, or sends the prompt again, as
+    /// [`ResumePlan`](crate::checkpoint::ResumePlan) says. See
+    /// [`Agent::resume_checkpoint`](crate::agent::Agent::resume_checkpoint).
+    #[error("the run was interrupted: {reason}")]
+    Interrupted {
+        /// Where to continue from.
+        checkpoint: Box<crate::checkpoint::Checkpoint>,
+        /// The run's history at the interruption, every open call closed.
+        history: Vec<Message>,
+        /// Why it stopped.
+        reason: String,
+    },
+
     /// The final answer missed the run's output schema, as
     /// [`rig::tool::validate::validate`] checks it, once the
     /// output-retry budget was spent. The message names the problems and the

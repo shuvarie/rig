@@ -646,6 +646,17 @@ impl Agent {
         AgentRunner::resuming(self, run)
     }
 
+    /// Continue the run a [`Checkpoint`](crate::checkpoint::Checkpoint) saved,
+    /// as [`Self::resume`] continues a run.
+    ///
+    /// The checkpoint's [`ResumePlan`](crate::checkpoint::ResumePlan) says what
+    /// the continuation is; the run's own state drives it, so a run interrupted
+    /// mid-tool-call asks for the calls still open and a run interrupted before
+    /// its reply was accepted re-issues that call.
+    pub fn resume_checkpoint(&self, checkpoint: crate::checkpoint::Checkpoint) -> AgentRunner {
+        AgentRunner::resuming(self, checkpoint.into_run())
+    }
+
     /// Run `prompt` against caller-owned history with the agent's defaults,
     /// then append the messages the run committed to `chat_history`. This is
     /// [`prompt`](Self::prompt) with [`history`](AgentRunner::history) plus

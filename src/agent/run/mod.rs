@@ -805,6 +805,70 @@ impl AgentRun {
         PromptError::cancelled(self.canonical_history(), reason)
     }
 
+    /// The tool calls the run is still waiting on, in call order: what a
+    /// resumed driver must answer, and nothing else.
+    ///
+    /// A run whose turn was accepted but has not yet advanced to its tool step
+    /// reports that turn's calls, so an interruption between the two resumes by
+    /// running them rather than by re-asking the model.
+    pub fn pending_tool_calls(&self) -> Vec<PendingToolCall> {
+        match &self.state {
+            RunState::ExecutingTools(batch, _) => batch.pending(self.current_turn),
+            RunState::AwaitingAdvance(turn_state) if turn_state.has_tool_calls => {
+                let slots = turn_state
+                    .items
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(index, item)| match item {
+                        AssistantContent::ToolCall(tool_call) => Some(ToolSlot::classify(
+                            tool_call.clone(),
+                            turn_state.skipped.get(&index).cloned(),
+                        )),
+                        _ => None,
+                    })
+                    .collect();
+                ToolBatch { slots }.pending(self.current_turn)
+            }
+            _ => Vec::new(),
+        }
+    }
+
+    /// Whether the run is waiting on a model call, so continuing it re-issues
+    /// that call rather than running tools.
+    pub fn awaits_model(&self) -> bool {
+        matches!(
+            self.state,
+            RunState::PreparingRequest { .. } | RunState::AwaitingModel { .. }
+        )
+    }
+
+    /// The message the next model call sends as its prompt, when the run has
+    /// one committed.
+    pub fn next_prompt(&self) -> Option<&Arc<Message>> {
+        self.history.last()
+    }
+
+    /// Save the run where it stopped, as a checkpoint.
+    ///
+    /// The run is not changed. Its history in the checkpoint is repaired by
+    /// [`Self::canonical_history`], so every call it left open is closed before
+    /// a provider sees it again; see [`crate::checkpoint::ResumePlan`] for the
+    /// request that continues it.
+    pub fn interrupt(&self, reason: impl Into<String>) -> crate::checkpoint::InterruptedRun {
+        crate::checkpoint::Checkpoint::of(self.clone(), reason).interrupted()
+    }
+
+    /// [`Self::interrupt`], keeping the reply that had arrived when it stopped.
+    pub fn interrupt_with(
+        &self,
+        reason: impl Into<String>,
+        partial: crate::checkpoint::PartialReply,
+    ) -> crate::checkpoint::InterruptedRun {
+        crate::checkpoint::Checkpoint::of(self.clone(), reason)
+            .with_partial(partial)
+            .interrupted()
+    }
+
     /// [`Self::cancel_error`], then fail the run, its history ending as the
     /// error's does.
     fn fail(&mut self, reason: impl Into<String>) -> PromptError {

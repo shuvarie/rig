@@ -14,7 +14,7 @@ use crate::memory::OUTPUT_MARGIN;
 /// let budget = Budget::new(8_000).reserved(2_000);
 /// assert_eq!(budget.allowed(), 6_000);
 /// assert!(budget.over(6_001));
-/// assert!(!budget.fits(6_000));
+/// assert!(budget.fits(6_000));
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Budget {
