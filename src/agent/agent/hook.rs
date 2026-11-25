@@ -943,6 +943,20 @@ impl CompletionCallAction {
 }
 
 /// Action for observe-only lifecycle events.
+/// The request a model call actually sends.
+///
+/// [`on_request_prepared`](AgentHook::on_request_prepared) sees this after
+/// every per-turn [`RequestPatch`] has merged and the tools have narrowed, so
+/// it is what the provider receives rather than what the run proposed.
+#[derive(Clone, Copy)]
+pub struct PreparedRequest<'a> {
+    /// The request, with its history, tools, and sampling fields final.
+    pub request: &'a crate::completion::CompletionRequest,
+    /// One-based model-call index.
+    pub turn: usize,
+}
+
+/// Action for observe-only lifecycle events.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ObservationAction {
     /// Continue the run.
@@ -1025,6 +1039,22 @@ pub trait AgentHook: WasmCompatSend + WasmCompatSync {
         _event: CompletionCallEvent<'_>,
     ) -> impl Future<Output = CompletionCallAction> + WasmCompatSend {
         async { CompletionCallAction::Continue }
+    }
+
+    /// Observes the request a model call is about to send.
+    ///
+    /// This runs after [`on_completion_call`](Self::on_completion_call) and
+    /// [`on_model_select`](Self::on_model_select), once every
+    /// [`RequestPatch`] has merged and the tools have narrowed to the ones the
+    /// provider receives, so a ledger or a budgeting hook records what was
+    /// actually sent. The event cannot change the request; it is observe-only
+    /// and is called on every issued attempt, retries included.
+    fn on_request_prepared(
+        &self,
+        _ctx: &HookContext,
+        _event: PreparedRequest<'_>,
+    ) -> impl Future<Output = ()> + WasmCompatSend {
+        async {}
     }
 
     /// Observes or rejects the content produced at the end of a model turn.
@@ -1174,6 +1204,7 @@ macro_rules! for_each_boxed_hook_event {
             CompletionCallEvent,
             CompletionCallAction
         );
+        $m!(request_prepared, on_request_prepared, PreparedRequest, ());
         $m!(
             model_turn_finished,
             on_model_turn_finished,
@@ -1401,6 +1432,12 @@ impl AgentHook for HookStack {
     async fn on_run_settled(&self, ctx: &HookContext, event: RunSettled<'_>) {
         for hook in &self.hooks {
             hook.run_settled(ctx, event).await;
+        }
+    }
+
+    async fn on_request_prepared(&self, ctx: &HookContext, event: PreparedRequest<'_>) {
+        for hook in &self.hooks {
+            hook.request_prepared(ctx, event).await;
         }
     }
 

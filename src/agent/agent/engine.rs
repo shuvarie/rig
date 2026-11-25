@@ -341,6 +341,17 @@ where
                         Err(err) => fail!(PromptError::from(err), break 'outer),
                     };
                     let turn_tool_snapshot = prepared.tool_snapshot.clone();
+                    runner
+                        .config
+                        .hooks
+                        .on_request_prepared(
+                            &hook_ctx,
+                            crate::agent::agent::hook::PreparedRequest {
+                                request: &request,
+                                turn,
+                            },
+                        )
+                        .await;
                     // What this request advertises becomes run data, so a
                     // resumed run or another driver can re-pair the calls
                     // that come back with the tools that were offered.

@@ -18,7 +18,9 @@ use tokio::sync::{Barrier, Notify};
 
 use crate::agent::agent::AgentBuilder;
 use crate::agent::agent::MultiTurnStreamItem;
-use crate::agent::agent::hook::{AgentHook, HookContext, RequestPatch, StepEventKind};
+use crate::agent::agent::hook::{
+    AgentHook, HookContext, PreparedRequest, RequestPatch, StepEventKind,
+};
 use crate::agent::completion::{Message, PromptError, Usage};
 use crate::agent::run::OutputMode;
 use crate::agent::streaming::{Item, StreamEvent};
@@ -2321,6 +2323,57 @@ async fn stream_hook_skip_surfaces_result_without_execution_commit() {
             .map(|s| s.contains("blocked by policy"))
             .unwrap_or(false)),
         "the skip result is committed to history"
+    );
+}
+
+/// A hook's `on_request_prepared` sees the history a later hook patched, not
+/// the one the run proposed: the effective view, after the merge.
+#[tokio::test]
+async fn the_prepared_request_carries_the_patched_history() {
+    #[derive(Clone, Default)]
+    struct Seen(Arc<std::sync::Mutex<Option<Vec<String>>>>);
+
+    impl AgentHook for Seen {
+        async fn on_request_prepared(&self, _ctx: &HookContext, event: PreparedRequest<'_>) {
+            let sent: Vec<String> = event
+                .request
+                .chat_history
+                .iter()
+                .map(|message| message.rag_text().unwrap_or_default().to_string())
+                .collect();
+            *self.0.lock().expect("the recorded request") = Some(sent);
+        }
+    }
+
+    struct OneMessageHook;
+    impl AgentHook for OneMessageHook {
+        async fn on_completion_call(
+            &self,
+            _ctx: &HookContext,
+            _event: CompletionCallEvent<'_>,
+        ) -> CompletionCallAction {
+            CompletionCallAction::patch(
+                RequestPatch::new().history([crate::completion::Message::user("patched")]),
+            )
+        }
+    }
+
+    let seen = Seen::default();
+    let model = MockCompletionModel::from_turns([MockTurn::text("done")]);
+    AgentBuilder::new(model)
+        .add_hook(OneMessageHook)
+        .add_hook(seen.clone())
+        .build()
+        .prompt("go")
+        .run()
+        .await
+        .expect("the run completes");
+
+    let sent = seen.0.lock().expect("the recorded request").clone();
+    assert_eq!(
+        sent,
+        Some(vec!["patched".to_string(), "go".to_string()]),
+        "the prepared request holds the patched history, then the prompt"
     );
 }
 
