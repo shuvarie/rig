@@ -46,6 +46,7 @@ pub mod audio_generation;
 pub mod catalog;
 pub mod client;
 pub mod completion;
+pub mod context;
 pub mod conversation;
 pub mod driver;
 pub mod effect;
